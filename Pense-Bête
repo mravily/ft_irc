@@ -1,0 +1,9 @@
+/* 
+** Fonction pour créer un socket
+*/
+socket(int domain, int type, int protocol) {}
+
+/*
+** Fonction pour envoyer des messages pour le socket
+*/
+send(int socket, char *buffer, int len, int flags) {}

@@ -1,0 +1,126 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   User.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
+/*   Updated: 2022/07/04 21:59:56 by mravily          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef USER_HPP
+# define USER_HPP
+
+#include <string>
+#include <vector>
+#include <map>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <arpa/inet.h>
+#include <iostream>
+#include <stdarg.h>
+
+#define BUFFER_SIZE 4096
+#define CRLF "\r\n"
+ 
+namespace irc
+{
+	class Server;
+	class Command;
+	
+	enum stats
+	{
+		CONNECTED,
+		AUTHENTICATED,
+		REGISTERED,
+		ONLINE,
+		LEAVE
+	};
+	
+	class User
+	{
+		friend class Server;
+		
+		public:
+			typedef void (*cmd_funct)(irc::Server *, irc::User *, irc::Command *);
+			typedef std::string (*rpl_funct)(irc::Server *, irc::User);
+
+		private:
+			Server *_server;
+			int _fd;
+			struct sockaddr_in _address;
+			
+			stats _status;
+			std::string _mode;
+			std::string _nickname;
+			std::string _username;
+			std::string _realname;
+			std::string _hostaddr;
+			std::string _hostname;
+		
+			std::vector<Command *> _cmds;
+			
+			std::map<int, rpl_funct> _rpl;
+			std::map<std::string, cmd_funct> _funct;
+			
+			std::vector<std::string> _waitingSend;
+		public:
+			User(irc::Server *srv, int socket, sockaddr_in address);
+			~User();
+		
+		void setNickname(std::string nickname);
+		void setUsername(std::string username);
+		void setRealname(std::string realname);
+		void setStatus(stats newStatus);
+		void setHostname(std::string hostname);
+		void setMode(std::string mode);
+		
+		int			getFd();
+		stats		getStatus();
+		irc::Server* getServer();
+		std::string getMode();
+		std::string getNickname();
+		std::string getUsername();
+		std::string getRealname();
+		std::string getHostname();
+		std::string getHostaddr();
+		std::string getClient();
+		
+		void addWaitingSend(std::string newReply);
+		std::string printStatus();
+		
+		void setReplies();
+		void setCmd();
+		std::string getReplies(int code);
+		void getMessages();
+		void reply(int code);
+		void registration();
+		void processReply();
+		void processCommand();
+
+		void printUser();
+		void DisplayError(std::string message)
+		{
+			int errn = errno;
+			std::cout << message << strerror(errn) << std::endl;
+			exit(1);
+		}
+
+	};
+}
+
+std::vector<std::string> split(std::string s, std::string delimiter);
+
+void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+
+#endif 

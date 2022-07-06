@@ -1,0 +1,80 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
+/*   Updated: 2022/07/03 15:11:46 by mravily          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SERVER_HPP
+#define SERVER_HPP
+
+#include <map>
+#include <vector>
+#include <poll.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <iostream>
+#include <ctime>
+
+#include "User.hpp"
+
+namespace irc
+{
+	class User;
+	
+	class Server
+	{
+		private:
+			std::string _version;
+			int _socketServer;
+			struct sockaddr_in _addrServer;
+			std::vector<pollfd> _pollFds;
+			std::map<int, User *> _users;
+			std::string _password;
+			std::string _datatime;
+			std::string _usrMode;
+			std::string _chanMode;
+	
+		public:
+			Server(char *port, char *password);
+			~Server();
+			
+			std::string getPassword();
+			std::string getVersion();
+			std::string getDatatime();
+			std::map<int, User *> getUsers();
+			std::string getUsrMode();
+			std::string getChanMode();
+			
+			void setDatatime();
+			void setPassword(std::string pass);
+			void setSocketServer(int domain, int type, int protocol);
+			
+			void addSocket(int socket);
+			void configSocketServer();
+			void manipSocket(int fd, int cmd, int arg);
+			void setAddressServer(char *port);
+			void bindAddress();
+			void listenAddress();
+
+			void monitoring();
+			void acceptClient();
+			void monitoringClient();
+			void runtime();
+			
+			void DisplayError(std::string message)
+			{
+				int errn = errno;
+				std::cout << message << strerror(errn) << std::endl;
+				exit(1);
+			}
+	};
+
+	
+}
+#endif
