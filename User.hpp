@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 19:43:48 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 17:33:16 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define USER_HPP
 
 #include <string>
+#include <string.h>
 #include <vector>
 #include <map>
 #include <netinet/in.h>

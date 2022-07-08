@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 19:53:07 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 18:40:40 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,9 @@ std::string ERR_NONICKNAMEGIVEN(irc::Server *srv, irc::User usr, irc::Channel *c
 std::string ERR_ERRONEUSNICKNAME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Erroneus nickname"); (void)srv; (void)usr; (void)chan;};
 std::string ERR_NICKNAMEINUSE(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Nickname is already in use"); (void)srv; (void)usr; (void)chan;};
 
+// (JOIN) 331 - 353 - 366 
 std::string RPL_NOTOPIC(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :No topic is set"); (void)srv; (void)usr;}
+std::string RPL_NAMEREPLY(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("= " + chan->getName() + " :" + chan->getListUsers()); (void)srv; (void)usr;}
+std::string RPL_ENDNAMES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :END on /NAMES list."); (void)srv; (void)usr;}
+
 #endif

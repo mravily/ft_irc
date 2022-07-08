@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 19:43:32 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 18:37:37 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(004, RPL_MYINFO));
 	_rpl.insert(std::make_pair<int, rpl_funct>(221, RPL_UMODEIS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
+	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
+	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));

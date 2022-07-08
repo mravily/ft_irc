@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 19:53:01 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 18:38:09 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,24 +166,27 @@ bool getType(std::string name) {return (name[0] == '&');};
 void irc::Server::createChan(std::vector<std::string> infos, irc::User* usr)
 {
 	std::vector<std::string> names = split(infos[0], ",");
+	std::vector<std::string> keys;
 	//Check la validité des names
-	std::vector<std::string> keys = split(infos[1], ",");
+	std::vector<std::string>::iterator itp;
+	if (infos.size() > 1)
+	{
+		std::vector<std::string> keys = split(infos[1], ",");
+		itp = keys.begin();
+	}	
 	std::vector<std::string>::iterator itn(names.begin());
-	std::vector<std::string>::iterator itp(keys.begin());
 	for (; itn != names.end(); itn++)
 	{
-		if (itp != keys.end())
-		{
+		if (infos.size() > 1 && itp != keys.end())
 			_channels.push_back(Channel(getType((*itn)), (*itn), usr, (*itp++)));
-			usr->addWaitingSend(":" + usr->getClient() + " " + (*itn) + CRLF);
-			usr->reply(331, &_channels.back());
-		}
 		else
-		{
 			_channels.push_back(Channel(getType((*itn)), (*itn), usr));
-			usr->addWaitingSend(":" + usr->getClient() + " " + (*itn) + CRLF);
-			usr->reply(331, &_channels.back());
-		}
+		
+		usr->addWaitingSend(":" + usr->getClient() + " JOIN " + (*itn) + CRLF);
+		usr->reply(331, &_channels.back());
+		usr->addWaitingSend(":" + usr->getClient() + " MODE " + (*itn) + " +" + _channels.back().getModes() + CRLF);
+		usr->reply(353, &_channels.back());
+		usr->reply(366, &_channels.back());
 	}
 }
 

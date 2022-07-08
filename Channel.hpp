@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 19:36:59 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 18:42:04 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ namespace irc
 			~Channel();
 
 			std::string getName() {return (_name);};
+			std::string getModes() { return (_mode); }
+			std::string getListUsers();
 			
 			// addUser();
 			// removeUser();
