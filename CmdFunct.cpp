@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 18:47:42 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/08 20:06:40 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,12 +167,51 @@ void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	
 }
 
+irc::Channel* findChan(irc::Server *srv, std::string toFind)
+{
+	// std::cout << "FindUser->toFind: " << toFind << std::endl;
+	std::vector<irc::Channel *> Chan(srv->getChannels());
+	std::vector<irc::Channel *>::iterator it(Chan.begin());
+	for (; it != Chan.end(); it++)
+	{
+		std::cout << (*it)->getName() << std::endl;	
+		if (!toFind.compare((*it)->getName()))
+			return (*it);
+	}
+	return (nullptr);
+}
+
+void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	std::cout << "Size: " << cmd->getParams().size() << std::endl;
+	irc::Channel* chan = nullptr;
+	chan = findChan(srv, cmd->getParams()[0]);
+	std::cout << chan->getName() << "Yolo" << std::endl;	
+	if (!chan)
+		usr->reply(403);
+	// else if (user != usr && usr->getMode().find("o") == std::string::npos)
+	// 	usr->reply(502);
+	else if (cmd->getParams().size() == 1)
+	{
+		usr->reply(324, chan);
+		usr->reply(329, chan);
+	}
+	// else
+	// {
+	// 	if (!checkUsrMode(srv->getUsrMode(), cmd->getParams()[1]))
+	// 		user->reply(501);
+	// 	user->setMode(cmd->getParams()[1]);
+	// }
+	puts("out MODE");
+	
+}
+
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (!cmd->getParams().size())
 		usr->reply(461);
-	// if (cmd->getParams()[0].find("#") != std::string::npos)
-	// 	chanMode(cmd);
+	if (cmd->getParams()[0].find("#") != std::string::npos)
+		chanMode(srv, usr, cmd);
 	else
 		userMode(srv, usr, cmd);		
 }

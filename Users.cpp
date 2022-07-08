@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 18:37:37 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/08 19:56:35 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,13 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(003, RPL_CREATED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(004, RPL_MYINFO));
 	_rpl.insert(std::make_pair<int, rpl_funct>(221, RPL_UMODEIS));
+	_rpl.insert(std::make_pair<int, rpl_funct>(324, RPL_CHANNELMODEIS));
+	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
+	_rpl.insert(std::make_pair<int, rpl_funct>(403, ERR_NOSUCHCHANNEL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(433, ERR_NICKNAMEINUSE));

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.hpp                                         :+:      :+:    :+:   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/07 18:21:47 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/08 19:17:52 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ namespace irc
 			Server(char *port, char *password);
 			~Server();
 			
+			std::vector<irc::Channel *> getChannels();
 			std::string getPassword();
 			std::string getVersion();
 			std::string getDatatime();

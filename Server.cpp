@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 18:38:09 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/08 20:07:00 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,16 @@ void irc::Server::runtime()
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
 	}
+}
+
+std::vector<irc::Channel *> irc::Server::getChannels()
+{
+    std::vector<Channel *> vec;
+
+    for (std::vector<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+        vec.push_back(&(*it));
+
+    return (vec);
 }
 
 bool getType(std::string name) {return (name[0] == '&');};
