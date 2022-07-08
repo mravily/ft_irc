@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/03 15:11:46 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 18:21:47 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <ctime>
 
 #include "User.hpp"
+#include "Channel.hpp"
 
 namespace irc
 {
@@ -35,11 +36,13 @@ namespace irc
 			struct sockaddr_in _addrServer;
 			std::vector<pollfd> _pollFds;
 			std::map<int, User *> _users;
+			std::vector<Channel> _channels;
 			std::string _password;
 			std::string _datatime;
 			std::string _usrMode;
 			std::string _chanMode;
-	
+			int 		_chanLimit;
+			
 		public:
 			Server(char *port, char *password);
 			~Server();
@@ -50,6 +53,7 @@ namespace irc
 			std::map<int, User *> getUsers();
 			std::string getUsrMode();
 			std::string getChanMode();
+			int getchanLimit();
 			
 			void setDatatime();
 			void setPassword(std::string pass);
@@ -67,6 +71,7 @@ namespace irc
 			void monitoringClient();
 			void runtime();
 			
+			void createChan(std::vector<std::string> infos, irc::User* usr);
 			void DisplayError(std::string message)
 			{
 				int errn = errno;

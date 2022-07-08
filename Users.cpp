@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/06 16:13:34 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 19:43:32 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,19 @@ void irc::User::addWaitingSend(std::string newReply)
 	_waitingSend.push_back(newReply);
 }
 
-std::string irc::User::getReplies(int code)
+std::string irc::User::getReplies(int code, irc::Channel *chan)
 {
 	std::string scode = std::to_string(code);
 	while (scode.length() < 3)
 		scode = "0" + scode;
-	std::string toSent(":" + getClient() + " " + scode + " " + getNickname() + " " + _rpl.find(code)->second(getServer(), *this));
+	std::string toSent(":" + getClient() + " " + scode + " " + getNickname() + " " + _rpl.find(code)->second(getServer(), *this, chan));
 	// std::cout << toSent << std::endl;
 	return(toSent);
 }
 
-void irc::User::reply(int code)
+void irc::User::reply(int code, irc::Channel *chan)
 {
-	std::string answer(getReplies(code));
+	std::string answer(getReplies(code, chan));
 	_waitingSend.push_back(answer + CRLF);
 }
 
@@ -210,7 +210,8 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("USER", USER));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
-	
+	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
+
 }
 
 void irc::User::setReplies()
@@ -220,6 +221,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(003, RPL_CREATED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(004, RPL_MYINFO));
 	_rpl.insert(std::make_pair<int, rpl_funct>(221, RPL_UMODEIS));
+	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));
@@ -229,6 +231,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
+	
+	// _rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMREPLY));
 }
 
 void irc::User::printUser()

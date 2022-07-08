@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:19:02 by mravily           #+#    #+#             */
-/*   Updated: 2022/06/27 19:47:32 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 19:22:48 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ namespace irc
 	class Command
 	{
 		private:
+			std::string _message;
 			std::string _prefix;
 			std::vector<std::string> _params;
 			std::string _trailer;
-			std::string _message;
 		public:
 			Command(std::string message);
 			~Command();

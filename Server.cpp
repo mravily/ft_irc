@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/06 13:42:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 19:53:01 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,32 @@ void irc::Server::runtime()
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
+	}
+}
+
+bool getType(std::string name) {return (name[0] == '&');};
+
+void irc::Server::createChan(std::vector<std::string> infos, irc::User* usr)
+{
+	std::vector<std::string> names = split(infos[0], ",");
+	//Check la validité des names
+	std::vector<std::string> keys = split(infos[1], ",");
+	std::vector<std::string>::iterator itn(names.begin());
+	std::vector<std::string>::iterator itp(keys.begin());
+	for (; itn != names.end(); itn++)
+	{
+		if (itp != keys.end())
+		{
+			_channels.push_back(Channel(getType((*itn)), (*itn), usr, (*itp++)));
+			usr->addWaitingSend(":" + usr->getClient() + " " + (*itn) + CRLF);
+			usr->reply(331, &_channels.back());
+		}
+		else
+		{
+			_channels.push_back(Channel(getType((*itn)), (*itn), usr));
+			usr->addWaitingSend(":" + usr->getClient() + " " + (*itn) + CRLF);
+			usr->reply(331, &_channels.back());
+		}
 	}
 }
 

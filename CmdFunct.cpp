@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/06 13:52:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 19:38:51 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,34 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	else if (!checkChar(cmd->getParams()[0]))
 		usr->reply(432);  // ERR_ERRONEUSNICKNAME
 	else if (!checkNickname(srv, cmd->getParams()[0]))
+	{
+		usr->setNickname(" " + cmd->getParams()[0]);
 		usr->reply(433);  // ERR_NICKNAMEINUSE
+		return ;
+	}
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
 	usr->setNickname(cmd->getParams()[0]);
 }
+
+void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams().size())
+		usr->reply(461);
+	// if (!checkChan(srv, cmd))
+	// 	usr->reply(405);
+	// if (!checkChanLimit(srv))
+	// 	usr->reply(405);
+	srv->createChan(cmd->getParams(), usr);
+	// if (chanExist())
+	// std::vector<std::string> names = split(cmd->getParams()[0], ",");
+	// std::vector<std::string> keys = split(cmd->getParams()[1], ",");
+	//Check la validité des names
+	// usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
+
+	// usr->addWaitingSend(usr->getNickname() + "[" + usr->getClient() + "] has joined #" + chan->getID() + CRLF);
+}
+
 
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {

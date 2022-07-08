@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/04 21:59:56 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/07 19:43:48 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
  
+#include "Channel.hpp"
+
 namespace irc
 {
 	class Server;
 	class Command;
+	class Channel;
 	
 	enum stats
 	{
@@ -46,10 +49,11 @@ namespace irc
 	class User
 	{
 		friend class Server;
+		friend class Channel;
 		
 		public:
 			typedef void (*cmd_funct)(irc::Server *, irc::User *, irc::Command *);
-			typedef std::string (*rpl_funct)(irc::Server *, irc::User);
+			typedef std::string (*rpl_funct)(irc::Server *srv, irc::User usr, irc::Channel *chan);
 
 		private:
 			Server *_server;
@@ -64,6 +68,8 @@ namespace irc
 			std::string _hostaddr;
 			std::string _hostname;
 		
+			int			_chanLimit;
+			
 			std::vector<Command *> _cmds;
 			
 			std::map<int, rpl_funct> _rpl;
@@ -97,9 +103,9 @@ namespace irc
 		
 		void setReplies();
 		void setCmd();
-		std::string getReplies(int code);
+		std::string getReplies(int code, irc::Channel *chan);
 		void getMessages();
-		void reply(int code);
+		void reply(int code, irc::Channel *chan = nullptr);
 		void registration();
 		void processReply();
 		void processCommand();
@@ -122,5 +128,6 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif 
