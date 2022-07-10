@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 17:52:38 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/10 18:53:49 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,6 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
 	usr->setNickname(cmd->getParams()[0]);
 }
-
-
-
 
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
@@ -246,31 +243,35 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (!cmd->getParams().size())
 		usr->reply(461);
 	usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " " + "PONG :" + cmd->getParams()[0] + CRLF);
+	usr->setStatus(irc::ONLINE);
 }
 
+
 /* @brief Recherche dans les channels existant et quitte le channel avec une reason
+** @param channel list des channels à quitter
+** @param reason Raison pour la quel l'user quitte le channel
 */
-// void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-// {
-// 	if (!cmd->getParams().size())
-// 		usr->reply(461);
+void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams().size())
+		usr->reply(461);
 
-// 	irc::Channel* chan = nullptr;
-// 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
-// 	std::vector<std::string>::iterator itNames(chanNames.begin());
-// 	for (; itNames != chanNames.end(); itNames++)
-// 	{
-// 		if (!(chan = findChan(srv, (*itNames))))
-// 		{
-// 			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
-// 			usr->reply(403, tmp);
-// 			delete tmp;
-// 		}
-// 		else
-// 			chan->removeUser(usr);
-// 	}
+	irc::Channel* chan = nullptr;
+	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+	std::vector<std::string>::iterator itNames(chanNames.begin());
+	for (; itNames != chanNames.end(); itNames++)
+	{
+		if (!(chan = findChan(srv, (*itNames))))
+		{
+			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
+			usr->reply(403, tmp);
+			delete tmp;
+		}
+		else
+			chan->removeUser(usr);
+	}
 
-// }
+}
 
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
