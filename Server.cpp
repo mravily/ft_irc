@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 20:07:00 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 16:32:10 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,31 +173,34 @@ std::vector<irc::Channel *> irc::Server::getChannels()
 
 bool getType(std::string name) {return (name[0] == '&');};
 
-void irc::Server::createChan(std::vector<std::string> infos, irc::User* usr)
+void irc::Server::createChan(std::string name, irc::User* usr)
 {
-	std::vector<std::string> names = split(infos[0], ",");
-	std::vector<std::string> keys;
-	//Check la validité des names
-	std::vector<std::string>::iterator itp;
-	if (infos.size() > 1)
-	{
-		std::vector<std::string> keys = split(infos[1], ",");
-		itp = keys.begin();
-	}	
-	std::vector<std::string>::iterator itn(names.begin());
-	for (; itn != names.end(); itn++)
-	{
-		if (infos.size() > 1 && itp != keys.end())
-			_channels.push_back(Channel(getType((*itn)), (*itn), usr, (*itp++)));
-		else
-			_channels.push_back(Channel(getType((*itn)), (*itn), usr));
-		
-		usr->addWaitingSend(":" + usr->getClient() + " JOIN " + (*itn) + CRLF);
-		usr->reply(331, &_channels.back());
-		usr->addWaitingSend(":" + usr->getClient() + " MODE " + (*itn) + " +" + _channels.back().getModes() + CRLF);
-		usr->reply(353, &_channels.back());
-		usr->reply(366, &_channels.back());
-	}
+	_channels.push_back(Channel(getType(name), name, usr));
+
+	usr->addWaitingSend(":" + usr->getClient() + " JOIN " + name + CRLF);
+	usr->reply(331, &_channels.back());
+	usr->addWaitingSend(":" + usr->getClient() + " MODE " + name + " +" + _channels.back().getModes() + CRLF);
+	usr->reply(353, &_channels.back());
+	usr->reply(366, &_channels.back());
+	
+	std::cout << "[SERVER] " + usr->getNickname() + " à créer le channel " + _channels.back().getName() << std::endl;
+}
+
+void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string password)
+{
+	(void)password;
+	// if (chan->getModes().find('l') && chan->getCapacity() >= _chanLimit)
+	// 	usr->reply(475, chan); return ;  //ERR_CHANNELISFULL
+	// if (chan->getModes().find('k') && password.compare(chan->getPassword()))
+	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
+	chan->addUser(usr);
+	
+	puts("Replies to join exist chan");
+	usr->addWaitingSend(":" + usr->getClient() + " JOIN " + chan->getName() + CRLF);
+	usr->reply(331, chan);
+	usr->addWaitingSend(":" + usr->getClient() + " MODE " + chan->getName() + " +" + chan->getModes() + CRLF);
+	usr->reply(353, chan);
+	usr->reply(366, chan);
 }
 
 irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk")
