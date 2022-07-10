@@ -6,12 +6,14 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 16:32:10 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 18:33:57 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "User.hpp"
+#include "Replies.hpp"
+
 #include <iostream>
 
 void irc::Server::setDatatime()
@@ -177,9 +179,9 @@ void irc::Server::createChan(std::string name, irc::User* usr)
 {
 	_channels.push_back(Channel(getType(name), name, usr));
 
-	usr->addWaitingSend(":" + usr->getClient() + " JOIN " + name + CRLF);
+	usr->reply(RPL_JOIN_, &_channels.back());
 	usr->reply(331, &_channels.back());
-	usr->addWaitingSend(":" + usr->getClient() + " MODE " + name + " +" + _channels.back().getModes() + CRLF);
+	usr->reply(RPL_MODE_, &_channels.back());
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
 	
@@ -196,9 +198,9 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	chan->addUser(usr);
 	
 	puts("Replies to join exist chan");
-	usr->addWaitingSend(":" + usr->getClient() + " JOIN " + chan->getName() + CRLF);
+	usr->reply(RPL_JOIN_, chan);
 	usr->reply(331, chan);
-	usr->addWaitingSend(":" + usr->getClient() + " MODE " + chan->getName() + " +" + chan->getModes() + CRLF);
+	usr->reply(RPL_MODE_, chan);
 	usr->reply(353, chan);
 	usr->reply(366, chan);
 }

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 16:10:44 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 18:32:33 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,16 @@
 
 #include "Server.hpp"
 #include "User.hpp"
+
+#define RPL_JOIN_ 011
+#define RPL_MODE_ 012
+
+/*
+** EXTRA REPLIES
+*/ 
+std::string RPL_JOIN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" JOIN " + chan->getName());};
+std::string RPL_MODE(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" MODE " + chan->getName() + " +" + chan->getModes());};
+
 
 /*
 ** Réponses minimum à renvoyer lors d'une connexion au server
@@ -50,4 +60,5 @@ std::string RPL_CREATIONTIME(irc::Server *srv, irc::User usr, irc::Channel *chan
 
 std::string ERR_BADCHANNELKEY(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (incorrect channel key)"; (void)usr; (void)srv;};
 std::string ERR_CHANNELISFULL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (channel is full)"; (void)usr; (void)srv;};
+std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :You're not on that channel"; (void)usr; (void)srv;};
 #endif
