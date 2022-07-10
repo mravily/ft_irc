@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 19:56:35 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/10 16:16:29 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ std::string irc::User::printStatus()
 	if (_status == 0)
 		return ("CONNECTED");
 	else if (_status == 1)
-		return ("REGISTERED");
+		return ("AUTHENTICATED")
 	else if (_status == 2)
-		return ("ONLINE");
+		return ("REGISTERED");
 	else if (_status == 3)
+		return ("ONLINE");
+	else if (_status == 4)
 		return ("LEAVE");
 	else
 		return ("NONE");
@@ -109,7 +111,7 @@ void irc::User::processReply()
 		buffer += (*it);
 	}
 	send(getFd(), buffer.c_str(), buffer.length(), 0);
-	
+
 	_cmds.erase(_cmds.begin(), _cmds.end());
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
 	buffer.clear();
@@ -126,14 +128,14 @@ void irc::User::getMessages()
 	char buffer[BUFFER_SIZE + 1];
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
-	
+
 	std::string buf(buffer);
 	std::vector<std::string> messages(split(buf, CRLF));
 	std::vector<std::string>::iterator it(messages.begin());
 	for (; it != messages.end(); it++)
 	{
 		if (!(*it).length())
-			continue ;	
+			continue ;
 		_cmds.push_back(new Command((*it)));
 	}
 
@@ -148,7 +150,7 @@ void irc::User::getMessages()
 	// 			(*itm).second(getServer(), this, (*its));
 	// 	}
 	// }
-	
+
 	// Compare les prefix des commandes reçu avec les commandes users disponible
 	std::vector<Command *>::iterator its(_cmds.begin());
 	for (; its != _cmds.end(); its++)
@@ -156,17 +158,17 @@ void irc::User::getMessages()
 		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
 		// std::cout << "Get Message->prefix: " << (*its)->getPrefix() << std::endl;
 		for(; itm != _funct.end(); itm++)
-		{ 
+		{
 			// std::cout << "(*itm).first: " << (*itm).first << std::endl;
 			// std::cout << "(*its)->getPrefix(): " << (*its)->getPrefix() << std::endl;
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
 				(*itm).second(getServer(), this, (*its));
 		}
 	}
-	
+
 	// processCommand();
 	processReply();
-	
+
 	// printUser();
 		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
 		// sendBuf += ":localhost 002 LeM :Your host is localhost, running version UnrealIRCd-6.0.4\r\n";
@@ -174,7 +176,7 @@ void irc::User::getMessages()
 		// sendBuf += ":localhost 004 LeM localhost UnrealIRCd-6.0.4 diopqrstwxzBDGHIRSTWZ beIacdfhijklmnopqrstvzCDGHKLMNOPQRSTVZ\r\n";
 		// // sendBuf += ":localhost 221 LeM\r\n";
 		// // printf("sendBuf: %s\n", sendBuf.c_str());
-		
+
 		// send((*it).fd, sendBuf.c_str(), sendBuf.length(), 0);
 
 }
@@ -190,7 +192,7 @@ irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv)
 	setHostname(hostname);
 	setCmd();
 	setReplies();
-	
+
 	// printf("hostname: %s\n", hostname);
 	// printf("hostaddr: %s\n", _hostaddr.c_str());
 };
@@ -236,7 +238,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
-	
+
 	// _rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMREPLY));
 }
 
