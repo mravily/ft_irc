@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 16:22:17 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 16:34:13 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,25 +248,26 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " " + "PONG :" + cmd->getParams()[0] + CRLF);
 }
 
-/* @brief Recherche dans les channels existant et quitte le channel avec 
-void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	if (!cmd->getParams().size())
-		usr->reply(461);
+/* @brief Recherche dans les channels existant et quitte le channel avec une reason
+*/
+// void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+// {
+// 	if (!cmd->getParams().size())
+// 		usr->reply(461);
 	
-	irc::Channel* chan = nullptr;
-	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
-	std::vector<std::string>::iterator itNames(chanNames.begin());
-	for (; itNames != chanNames.end(); itNames++)
-	{
-		if (!(chan = findChan(srv, (*itNames))))
-		{
-			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
-			usr->reply(403, tmp);
-			delete tmp;
-		}
-		else
-			chan->removeUser(usr);
-	}
+// 	irc::Channel* chan = nullptr;
+// 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+// 	std::vector<std::string>::iterator itNames(chanNames.begin());
+// 	for (; itNames != chanNames.end(); itNames++)
+// 	{
+// 		if (!(chan = findChan(srv, (*itNames))))
+// 		{
+// 			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
+// 			usr->reply(403, tmp);
+// 			delete tmp;
+// 		}
+// 		else
+// 			chan->removeUser(usr);
+// 	}
 	
-}
+// }
