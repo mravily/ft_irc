@@ -6,13 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 18:25:43 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 21:11:45 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "User.hpp"
-#include "Command.hpp"
 
 void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
@@ -151,7 +149,7 @@ void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 irc::Channel* findChan(irc::Server *srv, std::string toFind)
 {
-	// std::cout << "FindUser->toFind: " << toFind << std::endl;
+	std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
@@ -235,6 +233,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			srv->joinChan(chan, usr);
 		}
 	}
+	puts("OUT JOIN");
 }
 
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)

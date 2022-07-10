@@ -6,45 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 14:50:12 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/06 13:34:50 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 20:10:36 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-#include <sys/types.h> /* Voir NOTES */
-#include <sys/socket.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-	   
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/socket.h> /* constantes, familles... */
-#include <netinet/in.h> /* struct sockaddr_in */
-#include <arpa/inet.h>  /* prototypes pour les fonctions dans inet(3N) */
-#include <netdb.h>      /* struct hostent */
-#include <poll.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <string.h>
-
-#include <iostream>
-#include <string>
-
-// #include "server.hpp"
-#include <vector>
-
-
 
 std::vector<std::string> split(std::string s, std::string delimiter)
 {

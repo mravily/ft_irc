@@ -6,12 +6,22 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 18:43:21 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 21:34:04 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
-#include <sstream>
+
+std::vector<irc::User *> irc::Channel::getUsers()
+{
+	std::vector<irc::User *> Users(this->getOperator());
+	Users.insert(Users.end(), _users.begin(), _users.end());
+	
+	std::vector<User *>::iterator it(Users.begin());
+	for (; it != Users.end(); it++)
+		std::cout << "User: " << (*it)->getNickname() << std::endl;
+	return (Users);
+}
 
 void irc::Channel::setDatatime()
 {
@@ -26,13 +36,14 @@ std::string irc::Channel::getListUsers()
 {
 	std::string responseList;
 
-	for (std::vector<User*>::iterator it = _operator.begin(); it != _operator.end(); it++)
+	for (std::vector<irc::User*>::iterator it = _operator.begin(); it != _operator.end(); it++)
 		responseList += "@" + (*it)->getNickname() + " ";
-	for (std::vector<User*>::iterator it = _users.begin(); it != _users.end(); it++)
+	for (std::vector<irc::User*>::iterator it = _users.begin(); it != _users.end(); it++)
 		responseList += (*it)->getNickname() + " ";
 
 	return (responseList);
 }
+
 void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;};
 
 /*
@@ -41,13 +52,14 @@ void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;}
 ** @param toFind User à trouver
 ** @return Renvoi true si l'user a été trouver
 */
-bool findUser(std::vector<irc::User *> &list, irc::User *toFind)
+bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan)
 {
 	std::vector<irc::User *>::iterator itOpe(list.begin());
 	for (; itOpe != list.end(); itOpe++)
 	{
 		if ((*itOpe) == toFind)
 		{
+			toFind->broadcast(chan, (" PART :" + chan->getName()));
 			list.erase(itOpe);
 			return (true);
 			if (!list.size())
@@ -60,8 +72,8 @@ bool findUser(std::vector<irc::User *> &list, irc::User *toFind)
 void irc::Channel::removeUser(irc::User *usr)
 {
 	bool find = false;
-	if (!(find = findUser(_operator, usr)))
-		find = findUser(_users, usr);
+	if (!(find = findUser(_operator, usr, this)))
+		find = findUser(_users, usr, this);
 	// Si le dernier OPE quitte le server, les droits OPE sont attribuer a un autre USER
 	std::cout << "Ope.size: " << _operator.size() << std::endl;
 	std::cout << "Usr.size: " << _users.size() << std::endl;
@@ -69,9 +81,6 @@ void irc::Channel::removeUser(irc::User *usr)
 		puts("NO MORE OPE BUT LEFT USER, DO SOMETHING");
 	if (find == false)
 		usr->reply(442, this); return ;
-	
-	// STAND-BY BROADCAST FUNCTION
-	// usr->addWaitingSend(":" + usr->getClient() + " PART :" + this->getName() + CRLF);
 }
 
 irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _capacity(1)

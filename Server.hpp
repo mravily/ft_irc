@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 15:19:51 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 20:22:36 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,33 @@
 #include <fcntl.h>
 #include <iostream>
 #include <ctime>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
 
-#include "User.hpp"
 #include "Channel.hpp"
+#include "User.hpp"
+
+#define RPL_JOIN_ 011
+#define RPL_MODE_ 012
 
 namespace irc
 {
 	class User;
+	class Channel;
 	
 	class Server
 	{
+		friend class User;
+		friend class Channel;
+		
 		private:
 			std::string _version;
 			int _socketServer;
 			struct sockaddr_in _addrServer;
 			std::vector<pollfd> _pollFds;
-			std::map<int, User *> _users;
-			std::vector<Channel> _channels;
+			std::map<int, irc::User *> _users;
+			std::vector<irc::Channel> _channels;
 			std::string _password;
 			std::string _datatime;
 			std::string _usrMode;
@@ -83,6 +93,6 @@ namespace irc
 			}
 	};
 
-	
 }
+
 #endif

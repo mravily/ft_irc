@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 18:41:02 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 21:30:23 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,15 @@
 
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
- 
+
 #include "Channel.hpp"
+#include "Command.hpp"
 
 namespace irc
 {
 	class Server;
-	class Command;
 	class Channel;
+	class Command;
 	
 	enum stats
 	{
@@ -111,7 +112,7 @@ namespace irc
 		void registration();
 		void processReply();
 		void processCommand();
-
+		void broadcast(irc::Channel *chan, std::string message);
 		void printUser();
 		void DisplayError(std::string message)
 		{
