@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 20:09:41 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 15:44:22 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ std::string irc::Channel::getListUsers()
 
 	return (responseList);
 }
+void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;};
 
-
-irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass)
+irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _capacity(1)
 {
 	this->_operator.push_back(ope);
 }

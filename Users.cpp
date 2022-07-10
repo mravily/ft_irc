@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 19:56:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 14:57:55 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(461, ERR_NEEDMOREPARAMS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(462, ERR_ALREADYREGISTERED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
+	_rpl.insert(std::make_pair<int, rpl_funct>(471, ERR_CHANNELISFULL));
+	_rpl.insert(std::make_pair<int, rpl_funct>(475, ERR_BADCHANNELKEY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
 	

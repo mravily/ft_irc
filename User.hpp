@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 17:33:16 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/09 17:31:27 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ namespace irc
 			int _fd;
 			struct sockaddr_in _address;
 			
-			stats _status;
+			bool		_operator;
+			stats 		_status;
 			std::string _mode;
 			std::string _nickname;
 			std::string _username;

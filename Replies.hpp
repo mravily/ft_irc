@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/08 20:02:44 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/10 16:10:44 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ std::string ERR_NOSUCHCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *cha
 std::string RPL_CHANNELMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()  + " +" + chan->getModes()); (void)srv; (void)usr;}
 std::string RPL_CREATIONTIME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()  + " :" + chan->getDatatime()); (void)srv; (void)usr;}
 
-
+std::string ERR_BADCHANNELKEY(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (incorrect channel key)"; (void)usr; (void)srv;};
+std::string ERR_CHANNELISFULL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (channel is full)"; (void)usr; (void)srv;};
 #endif
