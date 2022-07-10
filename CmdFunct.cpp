@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 18:53:49 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/10 19:00:28 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,5 +275,5 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	srv->deleteUser(usr->getFd(), cmd->getParams);
+	srv->deleteUser(usr->getFd(), cmd->getParams());
 }
