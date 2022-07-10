@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 16:32:10 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/10 18:25:49 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void irc::Server::setDatatime()
 {
-	time_t tmm = time(0); 
+	time_t tmm = time(0);
 	this->_datatime = asctime(gmtime(&tmm));
 	this->_datatime.erase(--_datatime.end());
 };
@@ -30,8 +30,8 @@ std::string irc::Server::getUsrMode() {return (_usrMode);};
 std::string irc::Server::getChanMode() {return (_chanMode);};
 
 /*
-** @brief Créer un point de communication 
-** @param domain cette constante désigne les protocoles internet IPv4 
+** @brief Créer un point de communication
+** @param domain cette constante désigne les protocoles internet IPv4
 ** @param type le type indique le style de communication désiré entre les deux participants
 ** @param protocol le protocole est souvent mis à zéro car l'association de la famille de protocole et du type de communication définit explicitement le protocole de transport.
 */
@@ -66,7 +66,7 @@ void	irc::Server::manipSocket(int fd, int cmd, int arg)
 /*
 ** @brief Configure les options du socket
 ** @param fd Socket à modifier les options
-** @param level lvl approprier au protocol TCP 
+** @param level lvl approprier au protocol TCP
 ** @param optname Indique les règles permettant la validation des adresses fournies dans un appel bind doivent autoriser la réutilisation des adresses locales
 ** @param optval un paramètre non nul valide une option booléenne, et zéro l'invalide
 ** @param optlen taille du param optval
@@ -87,7 +87,7 @@ void	irc::Server::configSocketServer()
 ** @param sin_port indique sur quel port le serveur se met en attente de connexion
 */
 void irc::Server::setAddressServer(char *port)
-{	
+{
 	(this->_addrServer.sin_family) = AF_INET;
 	(this->_addrServer.sin_addr.s_addr) = htonl(INADDR_ANY);
 	(this->_addrServer.sin_port) = htons(atoi(port));
@@ -131,7 +131,7 @@ void irc::Server::monitoring()
 /*
 ** Si le socketServer est en attente de donnée de lecture
 ** Ajout du client a la list des socket surveiler par poll
-*/	
+*/
 void irc::Server::acceptClient()
 {
 	struct sockaddr_in addrClient;
@@ -144,7 +144,7 @@ void irc::Server::acceptClient()
 	std::cout << "[SERVER] Nouvelle connexion client sur le server\n"
 	<< "[SERVER] Socket [" << socketClient << "] | IP [" <<  _users[socketClient]->getHostaddr().c_str() << "]\n"
 	<< "[SERVER] Authentification en cours..." << std::endl;
-	
+
 	addSocket(socketClient);
 }
 
@@ -182,7 +182,7 @@ void irc::Server::createChan(std::string name, irc::User* usr)
 	usr->addWaitingSend(":" + usr->getClient() + " MODE " + name + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
-	
+
 	std::cout << "[SERVER] " + usr->getNickname() + " à créer le channel " + _channels.back().getName() << std::endl;
 }
 
@@ -194,7 +194,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	// if (chan->getModes().find('k') && password.compare(chan->getPassword()))
 	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
 	chan->addUser(usr);
-	
+
 	puts("Replies to join exist chan");
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN " + chan->getName() + CRLF);
 	usr->reply(331, chan);
@@ -219,4 +219,14 @@ irc::Server::~Server()
 	close(this->_socketServer);
 	for (std::vector<pollfd>::iterator it(_pollFds.begin()); it != _pollFds.end(); it++)
 		close((*it).fd);
+}
+
+irc::Server::deleteUser(int fd, std::vector<std::string> params)
+{
+	std::vector<pollfd>::iterator it = _pollFds.begin();
+	while (it != _pollFds.end() && (*it).fd != fd)
+		it++;
+	_channels.removeUser(_users[fd]);
+	_pollFds.erase(it);
+	_users.erase(fd);
 }

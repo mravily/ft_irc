@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/09 17:31:27 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/10 17:12:16 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
- 
+
 #include "Channel.hpp"
 
 namespace irc
@@ -37,7 +37,7 @@ namespace irc
 	class Server;
 	class Command;
 	class Channel;
-	
+
 	enum stats
 	{
 		CONNECTED,
@@ -46,12 +46,12 @@ namespace irc
 		ONLINE,
 		LEAVE
 	};
-	
+
 	class User
 	{
 		friend class Server;
 		friend class Channel;
-		
+
 		public:
 			typedef void (*cmd_funct)(irc::Server *, irc::User *, irc::Command *);
 			typedef std::string (*rpl_funct)(irc::Server *srv, irc::User usr, irc::Channel *chan);
@@ -60,7 +60,7 @@ namespace irc
 			Server *_server;
 			int _fd;
 			struct sockaddr_in _address;
-			
+
 			bool		_operator;
 			stats 		_status;
 			std::string _mode;
@@ -69,26 +69,26 @@ namespace irc
 			std::string _realname;
 			std::string _hostaddr;
 			std::string _hostname;
-		
+
 			int			_chanLimit;
-			
+
 			std::vector<Command *> _cmds;
-			
+
 			std::map<int, rpl_funct> _rpl;
 			std::map<std::string, cmd_funct> _funct;
-			
+
 			std::vector<std::string> _waitingSend;
 		public:
 			User(irc::Server *srv, int socket, sockaddr_in address);
 			~User();
-		
+
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);
 		void setRealname(std::string realname);
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
 		void setMode(std::string mode);
-		
+
 		int			getFd();
 		stats		getStatus();
 		irc::Server* getServer();
@@ -99,10 +99,10 @@ namespace irc
 		std::string getHostname();
 		std::string getHostaddr();
 		std::string getClient();
-		
+
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();
-		
+
 		void setReplies();
 		void setCmd();
 		std::string getReplies(int code, irc::Channel *chan);
@@ -131,5 +131,6 @@ void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
-#endif 
+#endif
