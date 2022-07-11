@@ -35,7 +35,7 @@ bool checkNickname(irc::Server *srv, std::string nickname)
 	std::map<int, irc::User *>::iterator it(Users.begin());
 	for (; it != Users.end(); it++)
 	{
-		// std::cout << nickname << ".compare(" << (*it).second->getNickname() << ")" << std::endl;	
+		// std::cout << nickname << ".compare(" << (*it).second->getNickname() << ")" << std::endl;
 		if (!nickname.compare((*it).second->getNickname()))
 		{
 			// std::cout << "false" << std::endl;
@@ -108,7 +108,7 @@ irc::User* findUser(irc::Server *srv, std::string toFind)
 	std::map<int, irc::User *>::iterator it(Users.begin());
 	for (; it != Users.end(); it++)
 	{
-		std::cout << (*it).second->getNickname() << std::endl;	
+		std::cout << (*it).second->getNickname() << std::endl;
 		if (!toFind.compare((*it).second->getNickname()))
 			return ((*it).second);
 	}
@@ -144,7 +144,7 @@ void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			user->reply(501);
 		user->setMode(cmd->getParams()[1]);
 	}
-	
+
 }
 
 irc::Channel* findChan(irc::Server *srv, std::string toFind)
@@ -154,7 +154,7 @@ irc::Channel* findChan(irc::Server *srv, std::string toFind)
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
 	{
-		std::cout << (*it)->getName() << std::endl;	
+		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (*it);
 	}
@@ -164,7 +164,7 @@ irc::Channel* findChan(irc::Server *srv, std::string toFind)
 void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	irc::Channel* chan = nullptr;
-	chan = findChan(srv, cmd->getParams()[0]);	
+	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
 		usr->reply(403);
 	// else if (user != usr && usr->getMode().find("o") == std::string::npos)
@@ -180,7 +180,7 @@ void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	// 		user->reply(501);
 	// 	user->setMode(cmd->getParams()[1]);
 	// }
-	
+
 }
 
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
@@ -190,17 +190,17 @@ void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (cmd->getParams()[0].find("#") != std::string::npos)
 		chanMode(srv, usr, cmd);
 	else
-		userMode(srv, usr, cmd);		
+		userMode(srv, usr, cmd);
 }
 
 bool chanExist(irc::Server *srv, std::string toFind)
 {
-	
+
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
 	{
-		std::cout << (*it)->getName() << std::endl;	
+		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (true);
 	}
@@ -211,7 +211,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (!cmd->getParams().size())
 		usr->reply(461);
-		
+
 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
 	std::vector<std::string> keys;
 	std::vector<std::string>::iterator itPass;
@@ -219,7 +219,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		std::vector<std::string> keys = split(cmd->getParams()[1], ",");
 		itPass = keys.begin();
-	}	
+	}
 	std::vector<std::string>::iterator itNames(chanNames.begin());
 	irc::Channel* chan = nullptr;
 	for (; itNames != chanNames.end(); itNames++)
@@ -253,7 +253,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (!cmd->getParams().size())
 		usr->reply(461);
-	
+
 	irc::Channel* chan = nullptr;
 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
 	std::vector<std::string>::iterator itNames(chanNames.begin());
@@ -268,7 +268,11 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		else
 			chan->removeUser(usr, (" PART :" + chan->getName()));
 	}
-	
+}
+
+void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	srv->deleteUser(usr->getFd(), cmd->getParams());
 }
 
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
@@ -299,10 +303,10 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	(void)cmd;
 	usr->reply(321);
-	
+
 	std::vector<irc::Channel *> Channels = srv->getChannels();
 	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
 		usr->reply(322, (*it));
-	
+
 	usr->reply(323);
 }
