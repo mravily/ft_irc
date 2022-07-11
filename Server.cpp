@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 21:19:07 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 18:12:08 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,8 +176,8 @@ void irc::Server::createChan(std::string name, irc::User* usr)
 	_channels.push_back(Channel(getType(name), name, usr));
 	
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);
-	usr->reply(331, &_channels.back());
-	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + name + " +" + _channels.back().getModes() + CRLF);
+	// usr->reply(331, &_channels.back());
+	// usr->addWaitingSend(":" + usr->getClient() + " MODE :" + name + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
 	

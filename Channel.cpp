@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 21:34:04 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 05:49:34 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ std::vector<irc::User *> irc::Channel::getUsers()
 {
 	std::vector<irc::User *> Users(this->getOperator());
 	Users.insert(Users.end(), _users.begin(), _users.end());
-	
-	std::vector<User *>::iterator it(Users.begin());
-	for (; it != Users.end(); it++)
-		std::cout << "User: " << (*it)->getNickname() << std::endl;
 	return (Users);
 }
 
@@ -80,7 +76,10 @@ void irc::Channel::removeUser(irc::User *usr)
 	if (!_operator.size() && _users.size())
 		puts("NO MORE OPE BUT LEFT USER, DO SOMETHING");
 	if (find == false)
-		usr->reply(442, this); return ;
+	{
+		usr->reply(442, this); 
+		return ;
+	}
 }
 
 irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _capacity(1)
