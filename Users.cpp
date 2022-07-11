@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 17:09:48 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 19:34:08 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,9 @@ void irc::User::getMessages()
 			}
 		}
 	}
-	puts("IN");
-	processReply();
-	puts("OUT");
+//	puts("IN");
+//	processReply();
+//	puts("OUT");
 
 	// printUser();
 		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
