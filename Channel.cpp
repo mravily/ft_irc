@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:54:17 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 18:59:31 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *c
 void irc::Channel::removeUser(irc::User *usr, std::string message)
 {
 	bool find = false;
-	if (!(find = findUser(_operator, usr, this)))
-		find = findUser(_users, usr, this);
+	if (!(find = findUser(_operator, usr, this, message)))
+		find = findUser(_users, usr, this, message);
 	// Si le dernier OPE quitte le server, les droits OPE sont attribuer a un autre USER
 	std::cout << "Ope.size: " << _operator.size() << std::endl;
 	std::cout << "Usr.size: " << _users.size() << std::endl;

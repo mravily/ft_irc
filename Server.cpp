@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:19:03 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 19:13:04 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,9 +237,7 @@ void irc::Server::deleteUser(int fd, std::vector<std::string> params)
 		it++;
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
-	{
-		(*chit++).removeUser(_users[fd]);
-	}
+		(*chit++).removeUser(_users[fd], (" QUIT :" + _user[fd].getReason());
 	_pollFds.erase(it);
 	_users.erase(fd);
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
