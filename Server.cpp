@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 19:13:04 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 19:43:51 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,8 @@ void irc::Server::runtime()
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
 	}
+	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+        (*it).second->processReply();
 }
 
 std::vector<irc::Channel *> irc::Server::getChannels()
@@ -230,15 +232,15 @@ irc::Server::~Server()
 		close((*it).fd);
 }
 
-void irc::Server::deleteUser(int fd, std::vector<std::string> params)
-{
-	std::vector<pollfd>::iterator it = _pollFds.begin();
-	while (it != _pollFds.end() && (*it).fd != fd)
-		it++;
-	std::vector<Channel>::iterator chit = _channels.begin();
-	while (chit != _channels.end())
-		(*chit++).removeUser(_users[fd], (" QUIT :" + _user[fd].getReason());
-	_pollFds.erase(it);
-	_users.erase(fd);
-	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
-}
+// // void irc::Server::deleteUser(int fd)
+// // {
+// // 	std::vector<pollfd>::iterator it = _pollFds.begin();
+// // 	while (it != _pollFds.end() && (*it).fd != fd)
+// // 		it++;
+// // 	std::vector<Channel>::iterator chit = _channels.begin();
+// // 	while (chit != _channels.end())
+// // 		(*chit++).removeUser(_users[fd], (" QUIT :" + _user[fd].getReason());
+// // 	_pollFds.erase(it);
+// // 	_users.erase(fd);
+// 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
+// }
