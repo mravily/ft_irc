@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 19:34:52 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/12 00:57:27 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,11 +176,11 @@ void irc::Server::runtime()
 			//}
 		}
 	}
-	for (std::vector<irc::User *>::iterator it = users.begin(); it != users.end(); ++it) {
-        if ((*it)->getStatus() == LEAVE)
-            this->deleteUser((*it).getFd());
+	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); ++it) {
+        if ((*it).second->getStatus() == LEAVE)
+            this->deleteUser((*it).second->getFd());
 		else
-			(*it)->processReply();
+			(*it).second->processReply();
 	}
 	//check if stat LEAVE to erase user
 	puts("OUT runtime");
@@ -203,8 +203,8 @@ void irc::Server::createChan(std::string name, irc::User* usr)
 	_channels.push_back(Channel(getType(name), name, usr));
 
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);
-	usr->reply(331, &_channels.back());
-	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + name + " +" + _channels.back().getModes() + CRLF);
+	// usr->reply(331, &_channels.back());
+	// usr->addWaitingSend(":" + usr->getClient() + " MODE :" + name + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
 
@@ -254,9 +254,7 @@ void irc::Server::deleteUser(int fd)
 	_pollFds.erase(it);
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
-	{
-		(*chit++).removeUser(_users[fd], (" QUIT :" + _user[fd].getReason()));
-	}
+		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
 	puts("out deleUser");
 	_users.erase(fd);
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
