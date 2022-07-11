@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 17:13:05 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/11 18:59:56 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,6 @@ namespace irc
 		void setDatatime();
 		void setPassword(std::string pass);
 		void setSocketServer(int domain, int type, int protocol);
-
-		void addSocket(int socket);
-		void configSocketServer();
-		void manipSocket(int fd, int cmd, int arg);
-		void setAddressServer(char *port);
-		void bindAddress();
-		void listenAddress();
 
 		void addSocket(int socket);
 		void configSocketServer();

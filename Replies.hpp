@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 16:16:28 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 18:18:10 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan
 
 // (LIST) 321 - 322 - 323
 std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\002Channels List: "); (void)srv; (void)usr; (void)chan;}
-std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :" + chan->getTopic()); (void)srv; (void)usr;}
+std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :[+" + chan->getModes() + "] " + chan->getTopic()); (void)srv; (void)usr;}
 std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
 
 #endif

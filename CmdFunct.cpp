@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 17:15:34 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/11 18:55:26 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,6 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	irc::Channel* chan = nullptr;
 	for (; itNames != chanNames.end(); itNames++)
 	{
-		std::cout << "ChanName: " << (*itNames) << std::endl;
 		if (!(chan = findChan(srv, (*itNames))))
 			srv->createChan((*itNames), usr);
 		else
@@ -267,7 +266,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			delete tmp;
 		}
 		else
-			chan->removeUser(usr);
+			chan->removeUser(usr, (" PART :" + chan->getName()));
 	}
 }
 
@@ -310,5 +309,4 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(322, (*it));
 
 	usr->reply(323);
->>>>>>> main
 }

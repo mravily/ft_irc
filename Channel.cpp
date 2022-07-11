@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 16:12:33 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 18:59:31 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ std::vector<irc::User *> irc::Channel::getUsers()
 {
 	std::vector<irc::User *> Users(this->getOperator());
 	Users.insert(Users.end(), _users.begin(), _users.end());
-	
-	std::vector<User *>::iterator it(Users.begin());
-	for (; it != Users.end(); it++)
-		std::cout << "User: " << (*it)->getNickname() << std::endl;
 	return (Users);
 }
 
@@ -59,14 +55,14 @@ void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;}
 ** @param toFind User à trouver
 ** @return Renvoi true si l'user a été trouver
 */
-bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan)
+bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan, std::string message)
 {
 	std::vector<irc::User *>::iterator itOpe(list.begin());
 	for (; itOpe != list.end(); itOpe++)
 	{
 		if ((*itOpe) == toFind)
 		{
-			toFind->broadcast(chan, (" PART :" + chan->getName()), 0);
+			toFind->broadcast(chan, message, 0);
 			list.erase(itOpe);
 			return (true);
 			if (!list.size())
@@ -76,11 +72,11 @@ bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *c
 	return (false);
 }
 
-void irc::Channel::removeUser(irc::User *usr)
+void irc::Channel::removeUser(irc::User *usr, std::string message)
 {
 	bool find = false;
-	if (!(find = findUser(_operator, usr, this)))
-		find = findUser(_users, usr, this);
+	if (!(find = findUser(_operator, usr, this, message)))
+		find = findUser(_users, usr, this, message);
 	// Si le dernier OPE quitte le server, les droits OPE sont attribuer a un autre USER
 	std::cout << "Ope.size: " << _operator.size() << std::endl;
 	std::cout << "Usr.size: " << _users.size() << std::endl;
@@ -92,6 +88,7 @@ void irc::Channel::removeUser(irc::User *usr)
 
 irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _capacity(1)
 {
+	setDatatime();
 	this->_operator.push_back(ope);
 }
 
