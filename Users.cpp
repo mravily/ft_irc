@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 21:18:46 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 01:32:38 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,8 +159,11 @@ void irc::User::getMessages()
 		{
 			// std::cout << "(*itm).first: " << (*itm).first << std::endl;
 			// std::cout << "(*its)->getPrefix(): " << (*its)->getPrefix() << std::endl;
+			std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
+			{
 				(*itm).second(getServer(), this, (*its));
+			}
 		}
 	}
 	puts("IN");
@@ -195,13 +198,14 @@ irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv)
 	// printf("hostaddr: %s\n", _hostaddr.c_str());
 };
 
-void irc::User::broadcast(irc::Channel *chan, std::string message)
+void irc::User::broadcast(irc::Channel *chan, std::string message, irc::User *without)
 {
 	std::vector<User *> users(chan->getUsers());
 	std::vector<User *>::iterator itUsers(users.begin());
 	for (; itUsers != users.end(); itUsers++)
 	{
-		(*itUsers)->addWaitingSend(":" + this->getClient() + message + CRLF);
+		if ((*itUsers) != without)
+			(*itUsers)->addWaitingSend(":" + this->getClient() + message + CRLF);
 		if ((*itUsers) != this)
 			(*itUsers)->processReply();
 	}
@@ -224,6 +228,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 }
 
 void irc::User::setReplies()

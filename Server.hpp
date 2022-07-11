@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 20:22:36 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 01:17:13 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ namespace irc
 			std::string getUsrMode();
 			std::string getChanMode();
 			int getchanLimit();
+			irc::User* getUserByNick(std::string nick);
 			
 			void setDatatime();
 			void setPassword(std::string pass);
