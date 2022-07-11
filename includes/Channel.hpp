@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:55:38 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 16:10:21 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ namespace irc
 			std::vector<User *> getOperator() {return (_operator);};
 			std::vector<User *> getUsers();
 			std::string getUserSize();
+			std::string getCurrentDate();
+			std::string getDate() {return (this->_datatime);}
 			void setLastTry(std::string value) {this->_lastTry = value;};
-			void setDatatime();
+			void setDateTopic() {this->_topicDate = getCurrentDate();}
+			void setTopic(std::string newTopic) {setDateTopic(); this->_topic = newTopic;}
 			void addUser(irc::User* usr);
 			void removeUser(irc::User* usr, std::string message);
 	};

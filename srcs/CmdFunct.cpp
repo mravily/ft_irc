@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 20:22:47 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 16:12:45 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,4 +306,22 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(322, (*it));
 
 	usr->reply(323);
+}
+
+void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	irc::Channel *chan;
+
+	if ((chan = findChan(srv, cmd->getParams()[0])) == nullptr)
+		return;
+	
+	std::string newTopic = cmd->getTrailer();
+	
+	if (!newTopic.size())
+		usr->reply(331, chan);
+	else
+	{
+		chan->setTopic(newTopic);
+		usr->reply(332, chan);
+	}
 }
