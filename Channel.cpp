@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 01:33:17 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 16:12:33 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ std::string irc::Channel::getListUsers()
 		responseList += (*it)->getNickname() + " ";
 
 	return (responseList);
+}
+
+std::string irc::Channel::getUserSize()
+{
+	std::stringstream ss;
+	ss << this->_users.size() + this->_operator.size();
+	return (ss.str());
 }
 
 void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;};

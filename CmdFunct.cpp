@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 01:30:28 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 16:02:16 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,4 +294,16 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			}
 		}
 	}
+}
+
+void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)cmd;
+	usr->reply(321);
+	
+	std::vector<irc::Channel *> Channels = srv->getChannels();
+	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
+		usr->reply(322, (*it));
+	
+	usr->reply(323);
 }

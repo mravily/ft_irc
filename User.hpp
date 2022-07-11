@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 01:31:31 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 15:46:32 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,5 +134,6 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif 
