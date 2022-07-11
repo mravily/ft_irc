@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 21:30:23 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 15:46:32 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ namespace irc
 		void registration();
 		void processReply();
 		void processCommand();
-		void broadcast(irc::Channel *chan, std::string message);
+		void broadcast(irc::Channel *chan, std::string message, irc::User *without);
 		void printUser();
 		void DisplayError(std::string message)
 		{
@@ -133,5 +133,7 @@ void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif 
