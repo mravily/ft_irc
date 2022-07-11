@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 01:32:38 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/11 15:56:12 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 }
 
 void irc::User::setReplies()
@@ -238,6 +239,9 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(003, RPL_CREATED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(004, RPL_MYINFO));
 	_rpl.insert(std::make_pair<int, rpl_funct>(221, RPL_UMODEIS));
+	_rpl.insert(std::make_pair<int, rpl_funct>(321, RPL_LISTSTART));
+	_rpl.insert(std::make_pair<int, rpl_funct>(322, RPL_LIST));
+	_rpl.insert(std::make_pair<int, rpl_funct>(323, RPL_LISTEND));
 	_rpl.insert(std::make_pair<int, rpl_funct>(324, RPL_CHANNELMODEIS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
