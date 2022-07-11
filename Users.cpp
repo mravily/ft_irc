@@ -6,12 +6,10 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 19:40:36 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 17:09:48 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "User.hpp"
-#include "Command.hpp"
 #include "Server.hpp"
 #include "Replies.hpp"
 
@@ -136,7 +134,7 @@ void irc::User::getMessages()
 	{
 		if (!(*it).length())
 			continue ;
-		_cmds.push_back(new Command((*it)));
+		_cmds.push_back(new irc::Command((*it)));
 	}
 
 	// // Récupère le Nickname du client
@@ -161,13 +159,16 @@ void irc::User::getMessages()
 		{
 			// std::cout << "(*itm).first: " << (*itm).first << std::endl;
 			// std::cout << "(*its)->getPrefix(): " << (*its)->getPrefix() << std::endl;
+			std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
+			{
 				(*itm).second(getServer(), this, (*its));
+			}
 		}
 	}
-
-	// processCommand();
+	puts("IN");
 	processReply();
+	puts("OUT");
 
 	// printUser();
 		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
@@ -197,6 +198,19 @@ irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv)
 	// printf("hostaddr: %s\n", _hostaddr.c_str());
 };
 
+void irc::User::broadcast(irc::Channel *chan, std::string message, irc::User *without)
+{
+	std::vector<User *> users(chan->getUsers());
+	std::vector<User *>::iterator itUsers(users.begin());
+	for (; itUsers != users.end(); itUsers++)
+	{
+		if ((*itUsers) != without)
+			(*itUsers)->addWaitingSend(":" + this->getClient() + message + CRLF);
+		if ((*itUsers) != this)
+			(*itUsers)->processReply();
+	}
+}
+
 irc::User::~User()
 {
 	// std::vector<Command *>::iterator it(_cmds.begin());
@@ -215,17 +229,20 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 }
 
 void irc::User::setReplies()
 {
-	_rpl.insert(std::make_pair<int, rpl_funct>(RPL_JOIN_, RPL_JOIN));
-
 	_rpl.insert(std::make_pair<int, rpl_funct>(001, RPL_WELCOME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(002, RPL_YOURHOST));
 	_rpl.insert(std::make_pair<int, rpl_funct>(003, RPL_CREATED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(004, RPL_MYINFO));
 	_rpl.insert(std::make_pair<int, rpl_funct>(221, RPL_UMODEIS));
+	_rpl.insert(std::make_pair<int, rpl_funct>(321, RPL_LISTSTART));
+	_rpl.insert(std::make_pair<int, rpl_funct>(322, RPL_LIST));
+	_rpl.insert(std::make_pair<int, rpl_funct>(323, RPL_LISTEND));
 	_rpl.insert(std::make_pair<int, rpl_funct>(324, RPL_CHANNELMODEIS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));

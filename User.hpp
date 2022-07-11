@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 19:40:26 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 17:10:35 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@
 #define CRLF "\r\n"
 
 #include "Channel.hpp"
+#include "Command.hpp"
 
 namespace irc
 {
 	class Server;
-	class Command;
 	class Channel;
-
+	class Command;
 	enum stats
 	{
 		CONNECTED,
@@ -111,7 +111,7 @@ namespace irc
 		void registration();
 		void processReply();
 		void processCommand();
-
+		void broadcast(irc::Channel *chan, std::string message, irc::User *without);
 		void printUser();
 		void DisplayError(std::string message)
 		{
@@ -133,5 +133,7 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif

@@ -6,17 +6,19 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 16:57:10 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 16:01:21 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "User.hpp"
-
 #include <string>
 #include <vector>
+#include <iostream>
+#include <sstream>
+
+#include "User.hpp"
 
 namespace irc
 {
@@ -52,8 +54,11 @@ namespace irc
 			std::string getDatatime() {return (_datatime);};
 			int			getCapacity() {return (_capacity);};
 			std::string getLastTry() {return (_lastTry);};
+			std::string getTopic() {return (_topic);}
 			std::vector<User *> getUser() {return (_users);};
 			std::vector<User *> getOperator() {return (_operator);};
+			std::vector<User *> getUsers();
+			std::string getUserSize();
 			void setLastTry(std::string value) {this->_lastTry = value;};
 			void setDatatime();
 			void addUser(irc::User* usr);

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 18:32:33 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 16:16:28 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,6 @@
 
 #include "Server.hpp"
 #include "User.hpp"
-
-#define RPL_JOIN_ 011
-#define RPL_MODE_ 012
-
-/*
-** EXTRA REPLIES
-*/ 
-std::string RPL_JOIN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" JOIN " + chan->getName());};
-std::string RPL_MODE(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" MODE " + chan->getName() + " +" + chan->getModes());};
 
 
 /*
@@ -61,4 +52,10 @@ std::string RPL_CREATIONTIME(irc::Server *srv, irc::User usr, irc::Channel *chan
 std::string ERR_BADCHANNELKEY(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (incorrect channel key)"; (void)usr; (void)srv;};
 std::string ERR_CHANNELISFULL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (channel is full)"; (void)usr; (void)srv;};
 std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :You're not on that channel"; (void)usr; (void)srv;};
+
+// (LIST) 321 - 322 - 323
+std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\002Channels List: "); (void)srv; (void)usr; (void)chan;}
+std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :" + chan->getTopic()); (void)srv; (void)usr;}
+std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
+
 #endif

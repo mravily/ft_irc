@@ -6,15 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 19:40:34 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 17:13:38 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "User.hpp"
-#include "Replies.hpp"
-
-#include <iostream>
 
 void irc::Server::setDatatime()
 {
@@ -30,6 +26,17 @@ std::string irc::Server::getDatatime() {return (_datatime);};
 std::map<int, irc::User *> irc::Server::getUsers() {return (_users);};
 std::string irc::Server::getUsrMode() {return (_usrMode);};
 std::string irc::Server::getChanMode() {return (_chanMode);};
+
+
+irc::User* irc::Server::getUserByNick(std::string nick)
+{
+	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		if (nick.compare(it->second->getNickname()) == 0)
+			return (it->second);
+	}
+	return (nullptr);
+}
 
 /*
 ** @brief Créer un point de communication
@@ -179,9 +186,9 @@ void irc::Server::createChan(std::string name, irc::User* usr)
 {
 	_channels.push_back(Channel(getType(name), name, usr));
 
-	usr->reply(RPL_JOIN_, &_channels.back());
+	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);
 	usr->reply(331, &_channels.back());
-	usr->reply(RPL_MODE_, &_channels.back());
+	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + name + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
 
@@ -198,9 +205,9 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	chan->addUser(usr);
 
 	puts("Replies to join exist chan");
-	usr->reply(RPL_JOIN_, chan);
+	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
 	usr->reply(331, chan);
-	usr->reply(RPL_MODE_, chan);
+	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, chan);
 	usr->reply(366, chan);
 }

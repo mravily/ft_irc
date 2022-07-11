@@ -6,13 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/10 19:00:28 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 17:15:34 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "User.hpp"
-#include "Command.hpp"
 
 void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
@@ -151,7 +149,7 @@ void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 irc::Channel* findChan(irc::Server *srv, std::string toFind)
 {
-	// std::cout << "FindUser->toFind: " << toFind << std::endl;
+	std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
@@ -235,6 +233,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			srv->joinChan(chan, usr);
 		}
 	}
+	puts("OUT JOIN");
 }
 
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
@@ -270,10 +269,46 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		else
 			chan->removeUser(usr);
 	}
-
 }
 
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	srv->deleteUser(usr->getFd(), cmd->getParams());
+}
+
+void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	std::vector<std::string> Targets = split(cmd->getParams()[0], ",");
+	std::string msg = cmd->getTrailer();
+
+	irc::Channel* chan;
+	irc::User* userTarget;
+	// si arg n'est pas channel, go msg prive to user
+	for (std::vector<std::string>::iterator it = Targets.begin(); it != Targets.end(); it++)
+	{
+		if ((chan = findChan(srv, (*it))) != nullptr) // si channel diffusion message dans le channel
+			usr->broadcast(chan, ":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF, usr);
+		else // sinon msg prive to user
+		{
+			userTarget = srv->getUserByNick(*it);
+			if (userTarget != nullptr)
+			{
+				userTarget->addWaitingSend(":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF);
+				userTarget->processReply();
+			}
+		}
+	}
+}
+
+void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)cmd;
+	usr->reply(321);
+
+	std::vector<irc::Channel *> Channels = srv->getChannels();
+	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
+		usr->reply(322, (*it));
+
+	usr->reply(323);
+>>>>>>> main
 }
