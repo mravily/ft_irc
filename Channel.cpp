@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:17:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/11 18:54:17 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;}
 ** @param toFind User à trouver
 ** @return Renvoi true si l'user a été trouver
 */
-bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan)
+bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan, std::string message)
 {
 	std::vector<irc::User *>::iterator itOpe(list.begin());
 	for (; itOpe != list.end(); itOpe++)
 	{
 		if ((*itOpe) == toFind)
 		{
-			toFind->broadcast(chan, (" PART :" + chan->getName()), 0);
+			toFind->broadcast(chan, message, 0);
 			list.erase(itOpe);
 			return (true);
 			if (!list.size())
@@ -72,7 +72,7 @@ bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *c
 	return (false);
 }
 
-void irc::Channel::removeUser(irc::User *usr)
+void irc::Channel::removeUser(irc::User *usr, std::string message)
 {
 	bool find = false;
 	if (!(find = findUser(_operator, usr, this)))
