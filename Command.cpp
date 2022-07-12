@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:25:35 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 19:43:32 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 18:52:07 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ std::vector<std::string> irc::Command::getParams() {return (_params);};
 
 irc::Command::Command(std::string message) : _message(message)
 {
-	
+	std::string::iterator ite(--message.end());
+	if (*ite == '\n')	
+		message.erase(--message.end());
 	std::string delimiter(":");
 	size_t position;
 	if ((position = message.find(delimiter)) != std::string::npos)
@@ -41,7 +43,7 @@ irc::Command::Command(std::string message) : _message(message)
 	std::cout << "message: " << message << std::endl;
 	std::cout << "Prefix: " << _prefix << std::endl;
 	for (std::vector<std::string>::iterator it(_params.begin()); it != _params.end(); ++it)
-		std::cout << "Params: " << (*it) << std::endl;
+		std::cout << "Params: [" << (*it) << "]" << std::endl;
 	std::cout << "trailer: " << _trailer << "\n" << std::endl;
 }
 

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 19:43:51 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 17:19:34 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void irc::Server::acceptClient()
 	std::cout << "[SERVER] Nouvelle connexion client sur le server\n"
 	<< "[SERVER] Socket [" << socketClient << "] | IP [" <<  _users[socketClient]->getHostaddr().c_str() << "]\n"
 	<< "[SERVER] Authentification en cours..." << std::endl;
-
+	_users[socketClient]->setStatus(CONNECTED);
 	addSocket(socketClient);
 }
 
@@ -169,7 +169,14 @@ void irc::Server::runtime()
 				this->_users[(*it).fd]->getMessages();
 	}
 	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if ((*it).second->getStatus() == ERROR)
+		{
+			puts("DISCONNECT");
+			//disconnect
+		}
         (*it).second->processReply();
+	}
 }
 
 std::vector<irc::Channel *> irc::Server::getChannels()

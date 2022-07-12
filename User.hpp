@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 17:10:35 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/12 17:30:34 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ namespace irc
 		AUTHENTICATED,
 		REGISTERED,
 		ONLINE,
-		LEAVE
+		LEAVE,
+		ERROR
 	};
 
 	class User
@@ -61,6 +62,7 @@ namespace irc
 			int _fd;
 			struct sockaddr_in _address;
 
+			int			_mandatory:4;
 			bool		_operator;
 			stats 		_status;
 			std::string _mode;
@@ -88,7 +90,8 @@ namespace irc
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
 		void setMode(std::string mode);
-
+		void setBits(int index);
+		
 		int			getFd();
 		stats		getStatus();
 		irc::Server* getServer();
