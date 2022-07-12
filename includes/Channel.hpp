@@ -41,6 +41,7 @@ namespace irc
 			std::string			_datatime;
 			int					_capacity;
 			std::string			_lastTry;
+			// int test;
 			
 		public:
 			Channel(bool type, std::string name, irc::User* ope, std::string password = "");

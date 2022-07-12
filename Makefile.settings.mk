@@ -16,6 +16,9 @@ NAME = ft_irc
 # Port to host the server
 PORT = 6667
 
+# Password for the server
+PSWD = test
+
 # sources needed to compile
 SRC =	Channel.cpp \
 		CmdFunct.cpp \

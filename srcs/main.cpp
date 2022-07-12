@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "color.hpp"
 
 std::vector<std::string> split(std::string s, std::string delimiter)
 {
@@ -65,6 +66,8 @@ int main(int ac, char **av)
 
 	irc::Server Server(av[1], av[2]);
 	
+	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
+
 	while (1)
 		Server.runtime();
 	return (0);

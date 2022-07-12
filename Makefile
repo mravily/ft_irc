@@ -24,6 +24,8 @@ OBJ_DIR = .obj
 
 OBJ = $(addprefix $(OBJ_DIR)/,$(SRC:.cpp=.o))
 
+DEP = $(addprefix $(OBJ_DIR)/,$(SRC:.cpp=.d))
+
 MAKEFLAGS += --no-print-directory
 
 BEGIN = 0
@@ -61,8 +63,8 @@ endif
 	printf "$(ERASE)$(MOVE_UP)$(_ORANGE)$(_ORANGE)┃ Compiling : $(_WHITE)%-26s$(_ORANGE)┃$(ESC_STOP)                      \n" $<
 	$(DRAW_PROGRESS_BAR)
 	printf "\n"
-	$(CXX) $(CXXFLAGS) -I $(INCLUDES) -c $< -o $@
-	
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I $(INCLUDES) -MMD -MP -c $< -o $@
 	if [ '$(NUM_FILE_BEING_COMPILED)' -eq '$(NB_FILE_TO_COMPILE)' ]; then \
 		printf "$(MOVE_UP)$(_ORANGE)┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                      \n$(_R)"; \
 		$(DRAW_PROGRESS_BAR); \
@@ -76,14 +78,14 @@ project:
 
 
 $(NAME): $(OBJ)
-	
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -I $(INCLUDES) $(OBJ) -o $(NAME)
 	printf "$(_BOLD)$(_GREEN)$(NAME) successfully compiles !$(_R)\n"
 	chmod 777 $(NAME)
 
 clean:
 	printf "$(_RED)[Clean] Removing .o ...\e[0m\n"
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) $(DEP)
 
 fclean: clean
 	printf "$(_RED)[Fclean] Removing $(NAME) ...$(_R)\n"
@@ -92,10 +94,14 @@ fclean: clean
 re: clean all
 
 run: all
-	./$(NAME) $(PORT)
+	clear
+	./$(NAME) $(PORT) $(PSWD)
 
 rerun: re
-	./$(NAME) $(PORT)
+	clear
+	./$(NAME) $(PORT) $(PSWD)
+
+-include $(addprefix $(OBJ_DIR)/,$(SRC:.cpp=.d))
 
 ########################################## colors
 
