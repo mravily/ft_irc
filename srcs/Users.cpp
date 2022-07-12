@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 18:59:11 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 20:13:15 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void irc::User::processReply()
 		registration();
 
 	// Bufferize toutes les réponses pour les envoyer avec send()
-	std::cout << "[SERVER] Réponse du server" << std::endl;
+	// std::cout << "[SERVER] Réponse du server" << std::endl;
 	std::string buffer;
 	std::vector<std::string>::iterator it(_waitingSend.begin());
 	for (; it != _waitingSend.end(); it++)

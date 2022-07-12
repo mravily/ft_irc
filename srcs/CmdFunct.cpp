@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 19:20:39 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 20:22:47 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool checkChar(std::string nickname)
 	std::string::iterator it(nickname.begin());
 	std::string::iterator ite(nickname.end());
 	for (; it != ite; ++it)
-		if (!isalnum((*it)))
+		if (!isalnum((*it)) && (*it) != '_')
 			return (false);
 	return (true);
 }
@@ -72,7 +72,7 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		usr->setNickname(cmd->getParams()[0]);
 		usr->reply(433);  // ERR_NICKNAMEINUSE
-		usr->setNickname(cmd->getParams()[0] + "_");
+		usr->setNickname(usr->getNickname() + "_");
 		return ;
 	}
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
