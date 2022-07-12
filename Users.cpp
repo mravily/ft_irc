@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 19:34:08 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/12 16:20:01 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,17 +159,13 @@ void irc::User::getMessages()
 		{
 			// std::cout << "(*itm).first: " << (*itm).first << std::endl;
 			// std::cout << "(*its)->getPrefix(): " << (*its)->getPrefix() << std::endl;
-			std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
+			// std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
 			{
 				(*itm).second(getServer(), this, (*its));
 			}
 		}
 	}
-//	puts("IN");
-//	processReply();
-//	puts("OUT");
-
 	// printUser();
 		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
 		// sendBuf += ":localhost 002 LeM :Your host is localhost, running version UnrealIRCd-6.0.4\r\n";
@@ -227,7 +223,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
-	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
+	// _funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
