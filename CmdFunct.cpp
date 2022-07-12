@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 18:48:22 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 19:20:39 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,6 @@ void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
 		usr->reply(403);
-	// else if (user != usr && usr->getMode().find("o") == std::string::npos)
-	// 	usr->reply(502);
 	else if (cmd->getParams().size() == 1)
 	{
 		usr->reply(324, chan);
@@ -267,10 +265,12 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 }
 
-// void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-// {
-// 	srv->deleteUser(usr->getFd(), cmd->getParams());
-// }
+void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)srv;
+	usr->setReason(cmd->getParams());
+	usr->setStatus(irc::LEAVE);
+}
 
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {

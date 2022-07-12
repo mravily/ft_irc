@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 17:19:34 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/12 19:47:01 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void irc::Server::acceptClient()
 void irc::Server::runtime()
 {
 	monitoring();
+	//check time out user
 	if (this->_pollFds[0].revents == POLLIN)
 		acceptClient();
 	else
@@ -168,14 +169,15 @@ void irc::Server::runtime()
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
 	}
-	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); ++it)
+	
+	for (std::map<int, irc::User *>::iterator it(_users.begin()); it != _users.end(); ++it)
 	{
-		if ((*it).second->getStatus() == ERROR)
-		{
-			puts("DISCONNECT");
-			//disconnect
-		}
-        (*it).second->processReply();
+		if ((*it).second->getStatus() == LEAVE)
+			this->deleteUser((*it).second->getFd());
+		else
+			(*it).second->processReply();
+		if (!_users.size())
+			break ;
 	}
 }
 
@@ -239,15 +241,17 @@ irc::Server::~Server()
 		close((*it).fd);
 }
 
-// // void irc::Server::deleteUser(int fd)
-// // {
-// // 	std::vector<pollfd>::iterator it = _pollFds.begin();
-// // 	while (it != _pollFds.end() && (*it).fd != fd)
-// // 		it++;
-// // 	std::vector<Channel>::iterator chit = _channels.begin();
-// // 	while (chit != _channels.end())
-// // 		(*chit++).removeUser(_users[fd], (" QUIT :" + _user[fd].getReason());
-// // 	_pollFds.erase(it);
-// // 	_users.erase(fd);
-// 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
-// }
+void irc::Server::deleteUser(int fd)
+{
+	std::vector<pollfd>::iterator it = _pollFds.begin();
+	while (it != _pollFds.end() && (*it).fd != fd)
+		it++;
+	_pollFds.erase(it);
+	std::vector<Channel>::iterator chit = _channels.begin();
+	while (chit != _channels.end())
+		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+	_users.erase(fd);
+	std::cout << "user.size_3: " << _users.size() << std::endl;
+	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
+	puts("out deleUser");
+}
