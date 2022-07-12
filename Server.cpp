@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 16:22:11 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/12 16:53:35 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,5 +257,6 @@ void irc::Server::deleteUser(int fd)
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
 	puts("out deleUser");
 	_users.erase(fd);
+	close(fd);
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
 }

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 16:33:48 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/12 17:12:07 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,14 +271,6 @@ void irc::User::printUser()
 	<< "Hostname: " << getHostname() << std::endl;
 }
 
-void irc::User::setReason(std::vector<std::string> params) {
-	std::stringstream stm;
-	std::vector<std::string>::iterator it = params.begin();
-
-	for (;it != params.end(); it++) {
-		stm << *it << " ";
-	}
-	this->_reason = stm.str();
-}
+void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
 
 std::string irc::User::getReason() { return _reason; }
