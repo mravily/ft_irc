@@ -101,6 +101,22 @@ rerun: re
 	clear
 	./$(NAME) $(PORT) $(PSWD)
 
+add_g3:
+	$(eval CXXFLAGS = $(CXXFLAGS) -g3)
+
+add_sanitize:
+	$(eval CXXFLAGS = $(CXXFLAGS) -fsanitize=address)
+
+debug: add_g3 add_sanitize rerun
+
+leaks:  add_g3 re
+ifeq ($(UNAME_S), $(LINUX))
+	printf "$(_BOLD)$(_GREEN)$(NAME) execute with valgrind ...$(_R)\n"
+	valgrind --leak-check=full --track-origins=yes ./$(NAME) $(PORT) $(PSWD)
+else
+	printf "$(_RED)Valgrind deprecated on Macos...\e[0m\n"
+endif
+
 -include $(addprefix $(OBJ_DIR)/,$(SRC:.cpp=.d))
 
 ########################################## colors
@@ -121,4 +137,4 @@ ERASE_ALL = $(ESC_SEQ)M
 
 ##########################################
 
-.PHONY: all clean fclean re project
+.PHONY: all clean fclean re project debug leaks
