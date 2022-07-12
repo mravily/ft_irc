@@ -26,6 +26,7 @@
 
 #include "Channel.hpp"
 #include "User.hpp"
+#include "color.hpp"
 
 #define RPL_JOIN_ 011
 #define RPL_MODE_ 012
@@ -89,7 +90,7 @@ namespace irc
 		void DisplayError(std::string message)
 			{
 				int errn = errno;
-				std::cout << message << strerror(errn) << std::endl;
+				std::cout << RED << message << strerror(errn) << STOP << std::endl;
 				exit(1);
 			}
 		void deleteUser(int fd, std::vector<std::string> params);
