@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:59:56 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/12 00:58:13 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ namespace irc
 				std::cout << message << strerror(errn) << std::endl;
 				exit(1);
 			}
-		void deleteUser(int fd, std::vector<std::string> params);
+		void deleteUser(int fd);
 	};
 }
 #endif

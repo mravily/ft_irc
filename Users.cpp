@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 19:41:22 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/12 16:33:48 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ void irc::User::getMessages()
 			}
 		}
 	}
-
 	// printUser();
 		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
 		// sendBuf += ":localhost 002 LeM :Your host is localhost, running version UnrealIRCd-6.0.4\r\n";
@@ -224,7 +223,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
-	// _funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
@@ -271,3 +270,15 @@ void irc::User::printUser()
 	<< "Hostaddr: " << getHostaddr() << "\n"
 	<< "Hostname: " << getHostname() << std::endl;
 }
+
+void irc::User::setReason(std::vector<std::string> params) {
+	std::stringstream stm;
+	std::vector<std::string>::iterator it = params.begin();
+
+	for (;it != params.end(); it++) {
+		stm << *it << " ";
+	}
+	this->_reason = stm.str();
+}
+
+std::string irc::User::getReason() { return _reason; }

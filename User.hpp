@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/11 17:10:35 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/11 19:09:29 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ namespace irc
 			std::map<std::string, cmd_funct> _funct;
 
 			std::vector<std::string> _waitingSend;
+		std::string _reason;
 		public:
 			User(irc::Server *srv, int socket, sockaddr_in address);
 			~User();
@@ -88,6 +89,7 @@ namespace irc
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
 		void setMode(std::string mode);
+		void setReason(std::vector<std::string> params);
 
 		int			getFd();
 		stats		getStatus();
@@ -99,6 +101,7 @@ namespace irc
 		std::string getHostname();
 		std::string getHostaddr();
 		std::string getClient();
+		std::string getReason();
 
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();

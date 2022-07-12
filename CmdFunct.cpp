@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 19:38:24 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/12 16:22:52 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,10 +270,12 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 }
 
-// void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-// {
-// 	srv->deleteUser(usr->getFd(), cmd->getParams());
-// }
+void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)srv;
+	usr->setReason(cmd->getParams());
+	usr->setStatus(irc::LEAVE);
+}
 
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
