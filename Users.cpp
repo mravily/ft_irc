@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 16:20:01 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/12 16:33:48 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
-	// _funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
@@ -270,3 +270,15 @@ void irc::User::printUser()
 	<< "Hostaddr: " << getHostaddr() << "\n"
 	<< "Hostname: " << getHostname() << std::endl;
 }
+
+void irc::User::setReason(std::vector<std::string> params) {
+	std::stringstream stm;
+	std::vector<std::string>::iterator it = params.begin();
+
+	for (;it != params.end(); it++) {
+		stm << *it << " ";
+	}
+	this->_reason = stm.str();
+}
+
+std::string irc::User::getReason() { return _reason; }
