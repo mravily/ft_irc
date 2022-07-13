@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 19:47:01 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 17:43:29 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,30 @@ std::map<int, irc::User *> irc::Server::getUsers() {return (_users);};
 std::string irc::Server::getUsrMode() {return (_usrMode);};
 std::string irc::Server::getChanMode() {return (_chanMode);};
 
+irc::Channel* irc::Server::getChannelByName(std::string name)
+{
+	for (std::vector<irc::Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		std::string currentName = it->getName();
+		if (currentName == name || !currentName.compare(1, name.size(), name))
+			return (&(*it));
+	}
+	return (NULL);
+}
+// fonction pour renvoyer un vector de channels bases sur une liste de noms
+// exemple /LIST <channel1>,<channel2> ..(on doit lister seulement channel1 et channel2)
+std::vector<irc::Channel *> irc::Server::getListChannelByName(std::vector<std::string> name)
+{
+	std::vector<Channel *> list;
+	
+	for (std::vector<std::string>::iterator it = name.begin(); it != name.end(); it++)
+	{
+		Channel* chan = getChannelByName((*it));
+		if (chan != NULL)
+			list.push_back(chan);
+	}
+	return (list);	
+}
 
 irc::User* irc::Server::getUserByNick(std::string nick)
 {

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 16:16:26 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 17:31:18 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ bool irc::Channel::knowUser(irc::User* usr)
 	std::vector<User *> users = getUsers();
 	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
 	{
-		std::cout << "compare : " << *it << " " << usr << std::endl;
 		if ((*it) == usr)
 			return (true);
 	}

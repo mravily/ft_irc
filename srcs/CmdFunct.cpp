@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 16:16:14 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 17:44:33 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,11 +300,20 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	(void)cmd;
 	usr->reply(321);
-
-	std::vector<irc::Channel *> Channels = srv->getChannels();
-	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
+	
+	std::vector<irc::Channel *> channels; // va devenir la list des channels a afficher
+	
+	if (cmd->getParams()[0].size() != 0) // si il y a arguments (LIST <channel>,<channel>...)
 	{
-		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true)
+		std::vector<std::string> channelNames = split(cmd->getParams()[0], ","); //recup les differents names channel
+		channels = srv->getListChannelByName(channelNames);
+	}
+	else // sinon recup all channels du serveur pour les afficher
+		channels = srv->getChannels();
+	
+	for (std::vector<irc::Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true) // si channel prive (&) affiche seulement si user dedans
 			usr->reply(322, (*it));
 	}
 	usr->reply(323);
