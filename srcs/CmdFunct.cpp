@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 17:44:33 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 19:05:10 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,7 +324,10 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	irc::Channel *chan;
 
 	if ((chan = findChan(srv, cmd->getParams()[0])) == nullptr)
+	{
+		usr->reply(461, chan); // no parametres
 		return;
+	}
 	
 	std::string newTopic = cmd->getTrailer();
 	
@@ -332,7 +335,15 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(331, chan);
 	else
 	{
-		chan->setTopic(newTopic);
-		usr->reply(332, chan);
+		if (chan->knowUser(usr) == false) // si user pas present dans channel
+			usr->reply(442, chan);
+		else if (chan->findMode("t") == true && chan->isOperator(usr) == false) // si channel mode +t et usr n'est pas operator
+			usr->reply(482, chan);
+		else
+		{
+			chan->setTopic(newTopic);
+			std::string response = usr->getReplies(332, chan);
+			usr->broadcast(chan, response, 0);
+		}
 	}
 }

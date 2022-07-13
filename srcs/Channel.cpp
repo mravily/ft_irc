@@ -6,11 +6,33 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 17:31:18 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 18:41:59 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+
+bool irc::Channel::isOperator(irc::User *usr)
+{
+	for (std::vector<irc::User*>::iterator it = _operator.begin(); it != _operator.end(); it++)
+	{
+		if ((*it) == usr)
+			return (true);
+	}
+	return (false);
+}
+
+bool irc::Channel::findMode(std::string modes)
+{
+	std::size_t found = 0;
+	for (std::string::iterator it = modes.begin(); it != modes.end(); it++)
+	{
+		found = this->_mode.find_first_of(modes, found + 1);
+		if (found == std::string::npos)
+			return (false);
+	}
+	return (true);
+}
 
 std::vector<irc::User *> irc::Channel::getUsers()
 {
