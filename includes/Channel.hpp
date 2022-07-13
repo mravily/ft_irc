@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 17:00:29 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 18:42:39 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ namespace irc
 			Channel(bool type, std::string name, irc::User* ope, std::string password = "");
 			~Channel();
 
+			bool		isOperator(irc::User *usr);
+			bool		findMode(std::string modes);
 			std::string getName() {return (_name);};
 			std::string getModes() {return (_mode);};
 			bool 		getMode(char toFind) {return (_mode.find(toFind));};
