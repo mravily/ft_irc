@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 16:11:45 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/13 18:04:17 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,8 @@ namespace irc
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
 		void setMode(std::string mode);
+		void setReason(std::string trailer);
 		void setBits(int index);
-		
-		void setReason(std::vector<std::string> params);
 
 		int			getFd();
 		stats		getStatus();

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 17:43:29 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/13 18:02:19 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ irc::Channel* irc::Server::getChannelByName(std::string name)
 std::vector<irc::Channel *> irc::Server::getListChannelByName(std::vector<std::string> name)
 {
 	std::vector<Channel *> list;
-	
+
 	for (std::vector<std::string>::iterator it = name.begin(); it != name.end(); it++)
 	{
 		Channel* chan = getChannelByName((*it));
 		if (chan != NULL)
 			list.push_back(chan);
 	}
-	return (list);	
+	return (list);
 }
 
 irc::User* irc::Server::getUserByNick(std::string nick)
@@ -193,7 +193,7 @@ void irc::Server::runtime()
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
 	}
-	
+
 	for (std::map<int, irc::User *>::iterator it(_users.begin()); it != _users.end(); ++it)
 	{
 		if ((*it).second->getStatus() == LEAVE)
@@ -275,6 +275,7 @@ void irc::Server::deleteUser(int fd)
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
 	_users.erase(fd);
+	close(fd);
 	std::cout << "user.size_3: " << _users.size() << std::endl;
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
 	puts("out deleUser");

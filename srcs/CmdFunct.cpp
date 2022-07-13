@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 17:44:33 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/13 18:03:19 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	(void)srv;
-	usr->setReason(cmd->getParams());
+	usr->setReason(cmd->getTrailer());
 	usr->setStatus(irc::LEAVE);
 }
 
@@ -300,9 +300,9 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	(void)cmd;
 	usr->reply(321);
-	
+
 	std::vector<irc::Channel *> channels; // va devenir la list des channels a afficher
-	
+
 	if (cmd->getParams()[0].size() != 0) // si il y a arguments (LIST <channel>,<channel>...)
 	{
 		std::vector<std::string> channelNames = split(cmd->getParams()[0], ","); //recup les differents names channel
@@ -310,7 +310,7 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 	else // sinon recup all channels du serveur pour les afficher
 		channels = srv->getChannels();
-	
+
 	for (std::vector<irc::Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true) // si channel prive (&) affiche seulement si user dedans
@@ -325,9 +325,9 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 	if ((chan = findChan(srv, cmd->getParams()[0])) == nullptr)
 		return;
-	
+
 	std::string newTopic = cmd->getTrailer();
-	
+
 	if (!newTopic.size())
 		usr->reply(331, chan);
 	else
