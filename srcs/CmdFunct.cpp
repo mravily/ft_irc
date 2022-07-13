@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 19:13:12 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 19:25:53 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,12 +327,8 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		usr->reply(461, chan); // no parametres
 		return;
-<<<<<<< HEAD
-
-=======
 	}
 	
->>>>>>> TOPIC ajout des ERR replies
 	std::string newTopic = cmd->getTrailer();
 
 	if (!newTopic.size())
