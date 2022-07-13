@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 20:19:47 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 16:17:03 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ std::string ERR_NICKNAMEINUSE(irc::Server *srv, irc::User usr, irc::Channel *cha
 
 // (JOIN) 331 - 353 - 366 - 324 - 403
 std::string RPL_NOTOPIC(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :No topic is set"); (void)srv; (void)usr;}
+std::string RPL_TOPIC(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :" + chan->getTopic()); (void)srv; (void)usr;}
 std::string RPL_NAMEREPLY(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("= " + chan->getName() + " :" + chan->getListUsers()); (void)srv; (void)usr;}
 std::string RPL_ENDNAMES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :END on /NAMES list."); (void)srv; (void)usr;}
 std::string ERR_NOSUCHCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :No such channel"); (void)srv; (void)usr;}
@@ -57,5 +58,8 @@ std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan
 std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\002Channels List: "); (void)srv; (void)usr; (void)chan;}
 std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :[+" + chan->getModes() + "] " + chan->getTopic()); (void)srv; (void)usr;}
 std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
+
+// 402
+std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
 
 #endif
