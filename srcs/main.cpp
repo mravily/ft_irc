@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "color.hpp"
 
 std::vector<std::string> split(std::string s, std::string delimiter)
 {
@@ -32,8 +33,8 @@ bool checkArgs(int ac, char *port)
 {
 	if (ac != 3)
 	{
-		std::cout << "Error: Args provides isn't not well formatted\n"
-		<< "./irc [port] [password]" << std::endl;
+		std::cout << RED << "Error: Args provides isn't not well formatted\n"
+		<< "./irc [port] [password]" << STOP << std::endl;
 		return (false);
 	}
 	
@@ -42,8 +43,8 @@ bool checkArgs(int ac, char *port)
 	{
 		if (std::isdigit(port[i]) == 0)
 		{
-			std::cout << "Error: Port not a number\n"
-			<< "Provide a port between 0 - 65535" << std::endl;
+			std::cout << RED << "Error: Port not a number\n"
+			<< "Provide a port between 0 - 65535" << STOP << std::endl;
 			return (false);
 		}
 		i++;
@@ -51,8 +52,8 @@ bool checkArgs(int ac, char *port)
 	int tmp = atoi(port);
 	if (tmp < 0 || tmp > 65535)
 	{
-		std::cout << "Error: Port not a number\n"
-		<< "Provide a port between 0 - 65535" << std::endl;
+		std::cout << RED << "Error: Port not a number\n"
+		<< "Provide a port between 0 - 65535"<< STOP  << std::endl;
 		return (false);
 	}
 	return (true);
@@ -65,6 +66,8 @@ int main(int ac, char **av)
 
 	irc::Server Server(av[1], av[2]);
 	
+	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
+
 	while (1)
 		Server.runtime();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 17:12:07 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/13 18:01:36 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ std::string irc::User::printStatus()
 		return ("ONLINE");
 	else if (_status == 4)
 		return ("LEAVE");
+	else if (_status == 5)
+		return ("ERROR");
 	else
 		return ("NONE");
 };
@@ -96,11 +98,16 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	if (getStatus() == AUTHENTICATED)
+	if (!(_server->getPassword().size()))
+	{
+		this->setStatus(irc::LEAVE);
+		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
+	}
+	else if (_mandatory == 7 && getStatus() != REGISTERED && getStatus() != ONLINE && getStatus() != LEAVE)
 		registration();
 
 	// Bufferize toutes les réponses pour les envoyer avec send()
-	std::cout << "[SERVER] Réponse du server" << std::endl;
+	// std::cout << "[SERVER] Réponse du server" << std::endl;
 	std::string buffer;
 	std::vector<std::string>::iterator it(_waitingSend.begin());
 	for (; it != _waitingSend.end(); it++)
@@ -127,6 +134,7 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
+	std::cout << "Buffer: " << buffer << std::endl;
 	std::string buf(buffer);
 	std::vector<std::string> messages(split(buf, CRLF));
 	std::vector<std::string>::iterator it(messages.begin());
@@ -166,20 +174,17 @@ void irc::User::getMessages()
 			}
 		}
 	}
-	// printUser();
-		// sendBuf += ":localhost 001 LeM :Welcome to the Internet Relay Network LeM!LeM@127.0.0.1\r\n";
-		// sendBuf += ":localhost 002 LeM :Your host is localhost, running version UnrealIRCd-6.0.4\r\n";
-		// sendBuf += ":localhost 003 LeM :This server was created Sat Jun 18 2022 at 16:28:52 UTC\r\n";
-		// sendBuf += ":localhost 004 LeM localhost UnrealIRCd-6.0.4 diopqrstwxzBDGHIRSTWZ beIacdfhijklmnopqrstvzCDGHKLMNOPQRSTVZ\r\n";
-		// // sendBuf += ":localhost 221 LeM\r\n";
-		// // printf("sendBuf: %s\n", sendBuf.c_str());
 
-		// send((*it).fd, sendBuf.c_str(), sendBuf.length(), 0);
+}
 
+void irc::User::setBits(int index)
+{
+	_mandatory = _mandatory | (1 << index);
 }
 
 irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*")
 {
+	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);
 
 	_hostaddr = inet_ntoa(address.sin_addr);
@@ -227,6 +232,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 }
 
 void irc::User::setReplies()
@@ -242,6 +248,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(324, RPL_CHANNELMODEIS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
+	_rpl.insert(std::make_pair<int, rpl_funct>(332, RPL_TOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));

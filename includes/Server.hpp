@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 00:58:13 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/13 17:21:31 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <cctype>
 
 #include "Channel.hpp"
 #include "User.hpp"
+#include "color.hpp"
 
 #define RPL_JOIN_ 011
 #define RPL_MODE_ 012
@@ -66,6 +68,8 @@ namespace irc
 		std::string getChanMode();
 		int getchanLimit();
 		irc::User* getUserByNick(std::string nick);
+		Channel* getChannelByName(std::string name);
+		std::vector<irc::Channel *> getListChannelByName(std::vector<std::string> name);
 
 		void setDatatime();
 		void setPassword(std::string pass);
@@ -89,7 +93,7 @@ namespace irc
 		void DisplayError(std::string message)
 			{
 				int errn = errno;
-				std::cout << message << strerror(errn) << std::endl;
+				std::cout << RED << message << strerror(errn) << STOP << std::endl;
 				exit(1);
 			}
 		void deleteUser(int fd);

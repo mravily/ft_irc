@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 16:53:35 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/13 18:02:19 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,30 @@ std::map<int, irc::User *> irc::Server::getUsers() {return (_users);};
 std::string irc::Server::getUsrMode() {return (_usrMode);};
 std::string irc::Server::getChanMode() {return (_chanMode);};
 
+irc::Channel* irc::Server::getChannelByName(std::string name)
+{
+	for (std::vector<irc::Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		std::string currentName = it->getName();
+		if (currentName == name || !currentName.compare(1, name.size(), name))
+			return (&(*it));
+	}
+	return (NULL);
+}
+// fonction pour renvoyer un vector de channels bases sur une liste de noms
+// exemple /LIST <channel1>,<channel2> ..(on doit lister seulement channel1 et channel2)
+std::vector<irc::Channel *> irc::Server::getListChannelByName(std::vector<std::string> name)
+{
+	std::vector<Channel *> list;
+
+	for (std::vector<std::string>::iterator it = name.begin(); it != name.end(); it++)
+	{
+		Channel* chan = getChannelByName((*it));
+		if (chan != NULL)
+			list.push_back(chan);
+	}
+	return (list);
+}
 
 irc::User* irc::Server::getUserByNick(std::string nick)
 {
@@ -133,10 +157,8 @@ void irc::Server::listenAddress()
 */
 void irc::Server::monitoring()
 {
-	puts("IN monit");
 	if (poll(&(this->_pollFds[0]), (this->_pollFds.size()), (60 * 1000) / 10) < 0)
 		DisplayError("Poll: ");
-	puts("OUT monit");
 }
 
 /*
@@ -155,7 +177,7 @@ void irc::Server::acceptClient()
 	std::cout << "[SERVER] Nouvelle connexion client sur le server\n"
 	<< "[SERVER] Socket [" << socketClient << "] | IP [" <<  _users[socketClient]->getHostaddr().c_str() << "]\n"
 	<< "[SERVER] Authentification en cours..." << std::endl;
-
+	_users[socketClient]->setStatus(CONNECTED);
 	addSocket(socketClient);
 }
 
@@ -167,23 +189,20 @@ void irc::Server::runtime()
 		acceptClient();
 	else
 	{
-		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it) {
+		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
-			//if (this->_users[(*it).fd]->getStatus() == irc::LEAVE){
-			//	it++;
-			//	this->deleteUser((*(it - 1)).fd, _cmds);
-			//}
-		}
 	}
-	for (std::map<int, irc::User *>::iterator it = _users.begin(); it != _users.end(); ++it) {
-        if ((*it).second->getStatus() == LEAVE)
-            this->deleteUser((*it).second->getFd());
+
+	for (std::map<int, irc::User *>::iterator it(_users.begin()); it != _users.end(); ++it)
+	{
+		if ((*it).second->getStatus() == LEAVE)
+			this->deleteUser((*it).second->getFd());
 		else
 			(*it).second->processReply();
+		if (!_users.size())
+			break ;
 	}
-	//check if stat LEAVE to erase user
-	puts("OUT runtime");
 }
 
 std::vector<irc::Channel *> irc::Server::getChannels()
@@ -255,8 +274,9 @@ void irc::Server::deleteUser(int fd)
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
-	puts("out deleUser");
 	_users.erase(fd);
 	close(fd);
+	std::cout << "user.size_3: " << _users.size() << std::endl;
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
+	puts("out deleUser");
 }

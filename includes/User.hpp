@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/12 17:12:31 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/13 18:04:17 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <stdarg.h>
+#include <cerrno> // errno
+#include <cstdlib> // exit
+#include <cstdio> // puts
 
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
@@ -44,7 +47,8 @@ namespace irc
 		AUTHENTICATED,
 		REGISTERED,
 		ONLINE,
-		LEAVE
+		LEAVE,
+		ERROR
 	};
 
 	class User
@@ -61,6 +65,7 @@ namespace irc
 			int _fd;
 			struct sockaddr_in _address;
 
+			int			_mandatory:4;
 			bool		_operator;
 			stats 		_status;
 			std::string _mode;
@@ -90,6 +95,7 @@ namespace irc
 		void setHostname(std::string hostname);
 		void setMode(std::string mode);
 		void setReason(std::string trailer);
+		void setBits(int index);
 
 		int			getFd();
 		stats		getStatus();
@@ -110,7 +116,7 @@ namespace irc
 		void setCmd();
 		std::string getReplies(int code, irc::Channel *chan);
 		void getMessages();
-		void reply(int code, irc::Channel *chan = nullptr);
+		void reply(int code, irc::Channel *chan = NULL);
 		void registration();
 		void processReply();
 		void processCommand();
@@ -138,5 +144,6 @@ void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif

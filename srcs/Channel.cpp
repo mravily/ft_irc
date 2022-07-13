@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/11 18:59:31 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 17:31:18 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ std::vector<irc::User *> irc::Channel::getUsers()
 	return (Users);
 }
 
-void irc::Channel::setDatatime()
+std::string irc::Channel::getCurrentDate()
 {
-		time_t now = time(NULL);
-		gmtime(&now);
-		std::stringstream tt;
-		tt << now;
-		this->_datatime = tt.str();
+	time_t now = time(NULL);
+	gmtime(&now);
+	std::stringstream tt;
+	tt << now;
+	return (tt.str());
 }
 
 std::string irc::Channel::getListUsers()
@@ -86,9 +86,19 @@ void irc::Channel::removeUser(irc::User *usr, std::string message)
 		usr->reply(442, this);
 }
 
-irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _capacity(1)
+bool irc::Channel::knowUser(irc::User* usr)
 {
-	setDatatime();
+	std::vector<User *> users = getUsers();
+	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
+	{
+		if ((*it) == usr)
+			return (true);
+	}
+	return (false);
+}
+
+irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _datatime(getCurrentDate()), _capacity(1)
+{
 	this->_operator.push_back(ope);
 }
 
