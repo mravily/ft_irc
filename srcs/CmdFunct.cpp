@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 16:12:45 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/13 16:16:14 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,8 +303,10 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 	std::vector<irc::Channel *> Channels = srv->getChannels();
 	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
-		usr->reply(322, (*it));
-
+	{
+		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true)
+			usr->reply(322, (*it));
+	}
 	usr->reply(323);
 }
 
