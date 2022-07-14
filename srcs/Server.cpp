@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/13 18:02:19 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/14 18:33:05 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,12 +194,13 @@ void irc::Server::runtime()
 				this->_users[(*it).fd]->getMessages();
 	}
 
-	for (std::map<int, irc::User *>::iterator it(_users.begin()); it != _users.end(); ++it)
+	std::map<int, irc::User *>::iterator it(_users.begin());
+	while( it != _users.end())
 	{
 		if ((*it).second->getStatus() == LEAVE)
-			this->deleteUser((*it).second->getFd());
+			this->deleteUser((*(it++)).second->getFd());
 		else
-			(*it).second->processReply();
+			(*(it++)).second->processReply();
 		if (!_users.size())
 			break ;
 	}
