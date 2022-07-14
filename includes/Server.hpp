@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 18:59:45 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/13 17:21:31 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ namespace irc
 		std::string getChanMode();
 		int getchanLimit();
 		irc::User* getUserByNick(std::string nick);
+		Channel* getChannelByName(std::string name);
+		std::vector<irc::Channel *> getListChannelByName(std::vector<std::string> name);
 
 		void setDatatime();
 		void setPassword(std::string pass);

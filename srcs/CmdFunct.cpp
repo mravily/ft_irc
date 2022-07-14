@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 17:14:58 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 17:24:20 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	(void)srv;
-	usr->setReason(cmd->getParams());
+	usr->setReason(cmd->getTrailer());
 	usr->setStatus(irc::LEAVE);
 }
 
@@ -308,9 +308,49 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	(void)cmd;
 	usr->reply(321);
 
-	std::vector<irc::Channel *> Channels = srv->getChannels();
-	for (std::vector<irc::Channel *>::iterator it = Channels.begin(); it != Channels.end(); it++)
-		usr->reply(322, (*it));
+	std::vector<irc::Channel *> channels; // va devenir la list des channels a afficher
 
+	if (cmd->getParams()[0].size() != 0) // si il y a arguments (LIST <channel>,<channel>...)
+	{
+		std::vector<std::string> channelNames = split(cmd->getParams()[0], ","); //recup les differents names channel
+		channels = srv->getListChannelByName(channelNames);
+	}
+	else // sinon recup all channels du serveur pour les afficher
+		channels = srv->getChannels();
+
+	for (std::vector<irc::Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true) // si channel prive (&) affiche seulement si user dedans
+			usr->reply(322, (*it));
+	}
 	usr->reply(323);
+}
+
+void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	irc::Channel *chan;
+
+	if ((chan = findChan(srv, cmd->getParams()[0])) == nullptr)
+	{
+		usr->reply(461, chan); // no parametres
+		return;
+	}
+	
+	std::string newTopic = cmd->getTrailer();
+
+	if (!newTopic.size())
+		usr->reply(331, chan);
+	else
+	{
+		if (chan->knowUser(usr) == false) // si user pas present dans channel
+			usr->reply(442, chan);
+		else if (chan->findMode("t") == true && chan->isOperator(usr) == false) // si channel mode +t et usr n'est pas operator
+			usr->reply(482, chan);
+		else
+		{
+			chan->setTopic(newTopic);
+			std::string response = usr->getReplies(332, chan);
+			usr->broadcast(chan, response, 0);
+		}
+	}
 }

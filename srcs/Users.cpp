@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 17:10:52 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 17:23:50 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,6 +232,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 }
 
 void irc::User::setReplies()
@@ -247,6 +248,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(324, RPL_CHANNELMODEIS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
+	_rpl.insert(std::make_pair<int, rpl_funct>(332, RPL_TOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
@@ -260,6 +262,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(471, ERR_CHANNELISFULL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(475, ERR_BADCHANNELKEY));
+	_rpl.insert(std::make_pair<int, rpl_funct>(482, ERR_CHANOPRIVSNEEDED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
 }
@@ -276,14 +279,6 @@ void irc::User::printUser()
 	<< "Hostname: " << getHostname() << std::endl;
 }
 
-void irc::User::setReason(std::vector<std::string> params) {
-	std::stringstream stm;
-	std::vector<std::string>::iterator it = params.begin();
-
-	for (;it != params.end(); it++) {
-		stm << *it << " ";
-	}
-	this->_reason = stm.str();
-}
+void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
 
 std::string irc::User::getReason() { return _reason; }
