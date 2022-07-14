@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 20:13:15 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 17:10:52 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void irc::User::processReply()
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
 	}
-	else if (_mandatory == 7 && getStatus() != REGISTERED && getStatus() != ONLINE && getStatus() != LEAVE)
+	else if (_mandatory == 7 && getStatus() != REGISTERED && getStatus() != ONLINE && getStatus() != LEAVE && getStatus() != ERROR)
 		registration();
 
 	// Bufferize toutes les réponses pour les envoyer avec send()

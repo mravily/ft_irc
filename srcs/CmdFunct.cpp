@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 20:22:47 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 17:14:58 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,26 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	std::cout << "NICK Funct" << std::endl;
 	std::cout << "Nickname: " << cmd->getParams()[0]  << "\n" << std::endl;
 	if (!cmd->getParams().size())
+	{
 		usr->reply(431);  // ERR_NONICKNAMEGIVEN
+		usr->setStatus(irc::ERROR);
+	}
 	else if (!checkChar(cmd->getParams()[0]))
+	{
 		usr->reply(432);  // ERR_ERRONEUSNICKNAME
+		usr->setStatus(irc::ERROR);
+	}
 	else if (!checkNickname(srv, cmd->getParams()[0]))
 	{
 		usr->setNickname(cmd->getParams()[0]);
 		usr->reply(433);  // ERR_NICKNAMEINUSE
-		usr->setNickname(usr->getNickname() + "_");
+		usr->setStatus(irc::ERROR);
 		return ;
 	}
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
 	usr->setNickname(cmd->getParams()[0]);
+	usr->setStatus(irc::AUTHENTICATED);
 }
 
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
