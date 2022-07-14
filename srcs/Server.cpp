@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 17:23:41 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 18:04:26 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,18 +194,23 @@ void irc::Server::runtime()
 				this->_users[(*it).fd]->getMessages();
 	}
 
-	for (std::map<int, irc::User *>::iterator it(_users.begin()); it != _users.end(); ++it)
-	{
-		if ((*it).second->getStatus() == LEAVE)
+	std::map<int, irc::User *>::iterator it(_users.begin());
+    while( it != _users.end())
+    {
+        if ((*it).second->getStatus() == LEAVE)
 		{
-			this->deleteUser((*it).second->getFd());
-			puts("RIP");
-		}
-		else
-			(*it).second->processReply();
-		if (!_users.size())
-			break ;
-	}
+            std::map<int, irc::User *>::iterator tmpit(it);
+            it++;
+            this->deleteUser((*tmpit).second->getFd());
+        }
+        else
+		{
+            (*it).second->processReply();
+            it++;
+        }
+        if (!_users.size())
+            break ;
+    }
 }
 
 std::vector<irc::Channel *> irc::Server::getChannels()
@@ -280,6 +285,5 @@ void irc::Server::deleteUser(int fd)
 	_users.erase(fd);
 	close(fd);
 	std::cout << "user.size_3: " << _users.size() << std::endl;
-	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
 	puts("out deleUser");
 }

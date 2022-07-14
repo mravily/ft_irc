@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 17:23:50 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 18:35:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	if (!(_server->getPassword().size()))
+	if (!checkBit(0))
 	{
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
@@ -145,18 +145,6 @@ void irc::User::getMessages()
 		_cmds.push_back(new irc::Command((*it)));
 	}
 
-	// // Récupère le Nickname du client
-	// if (this->getStatus() == CONNECTED)
-	// {
-	// 	std::vector<Command *>::iterator its(_cmds.begin());
-	// 	std::map<std::string, cmd_funct>::iterator itm(_funct.find("NICK"));
-	// 	for (; its != _cmds.end(); its++)
-	// 	{
-	// 		if ((*its)->getPrefix() == "NICK")
-	// 			(*itm).second(getServer(), this, (*its));
-	// 	}
-	// }
-
 	// Compare les prefix des commandes reçu avec les commandes users disponible
 	std::vector<Command *>::iterator its(_cmds.begin());
 	for (; its != _cmds.end(); its++)
@@ -177,10 +165,7 @@ void irc::User::getMessages()
 
 }
 
-void irc::User::setBits(int index)
-{
-	_mandatory = _mandatory | (1 << index);
-}
+void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
 irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*")
 {

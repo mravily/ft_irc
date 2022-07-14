@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 14:50:12 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/10 20:10:36 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 18:26:14 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int main(int ac, char **av)
 	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
 
 	while (1)
+	{
 		Server.runtime();
+	}
 	return (0);
 }
