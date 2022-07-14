@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 18:35:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 19:52:12 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::string irc::User::printStatus()
 	if (_status == 0)
 		return ("CONNECTED");
 	else if (_status == 1)
-		return ("AUTHENTICATED");
+		return ("AUTHENFICATED");
 	else if (_status == 2)
 		return ("REGISTERED");
 	else if (_status == 3)
@@ -98,8 +98,13 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	if (!checkBit(0))
+	std::cout << printStatus() << std::endl;
+	
+	if (checkBit(0))
+		std::cout << (_mandatory & (1 << 0)) << std::endl;
+	if (!checkBit(0) && getStatus() == irc::CONNECTED && _cmds.size())
 	{
+		puts("IN");
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
 	}
@@ -115,11 +120,13 @@ void irc::User::processReply()
 		std::cout << (*it) << std::endl;
 		buffer += (*it);
 	}
-	send(getFd(), buffer.c_str(), buffer.length(), 0);
+	if (buffer.length())
+		send(getFd(), buffer.c_str(), buffer.length(), 0);
 
 	_cmds.erase(_cmds.begin(), _cmds.end());
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
 	buffer.clear();
+	puts("OUT PROCESS");
 }
 
 
@@ -129,6 +136,7 @@ void irc::User::processReply()
 */
 void irc::User::getMessages()
 {
+	puts("IN MESSAGE");
 	size_t size;
 	char buffer[BUFFER_SIZE + 1];
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
@@ -162,12 +170,12 @@ void irc::User::getMessages()
 			}
 		}
 	}
-
+	puts("OUT MESSAGE");
 }
 
 void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
-irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*")
+irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
 {
 	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);

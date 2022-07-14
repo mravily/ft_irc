@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 18:04:26 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 21:10:04 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,22 +195,15 @@ void irc::Server::runtime()
 	}
 
 	std::map<int, irc::User *>::iterator it(_users.begin());
-    while( it != _users.end())
-    {
-        if ((*it).second->getStatus() == LEAVE)
-		{
-            std::map<int, irc::User *>::iterator tmpit(it);
-            it++;
-            this->deleteUser((*tmpit).second->getFd());
-        }
-        else
-		{
-            (*it).second->processReply();
-            it++;
-        }
-        if (!_users.size())
-            break ;
-    }
+	while( it != _users.end())
+	{
+		if ((*it).second->getStatus() != LEAVE)
+			(*(it++)).second->processReply();
+		else
+			this->deleteUser((*(it++)).second->getFd());
+		if (!_users.size())
+			break ;
+	}
 }
 
 std::vector<irc::Channel *> irc::Server::getChannels()
@@ -247,7 +240,6 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
 	chan->addUser(usr);
 
-	puts("Replies to join exist chan");
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
 	usr->reply(331, chan);
 	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
@@ -279,11 +271,12 @@ void irc::Server::deleteUser(int fd)
 	while (it != _pollFds.end() && (*it).fd != fd)
 		it++;
 	_pollFds.erase(it);
+	
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
+	_users[fd]->processReply();
 	_users.erase(fd);
 	close(fd);
-	std::cout << "user.size_3: " << _users.size() << std::endl;
-	puts("out deleUser");
 }
