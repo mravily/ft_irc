@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 15:48:06 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 19:30:06 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,96 @@ void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	(void)srv;
 }
 
+irc::User* findUser(irc::Server *srv, std::string toFind)
+{
+	// std::cout << "FindUser->toFind: " << toFind << std::endl;
+	std::map<int, irc::User *> Users(srv->getUsers());
+	std::map<int, irc::User *>::iterator it(Users.begin());
+	for (; it != Users.end(); it++)
+	{
+		std::cout << (*it).second->getNickname() << std::endl;
+		if (!toFind.compare((*it).second->getNickname()))
+			return ((*it).second);
+	}
+	return (NULL);
+}
+
+bool checkUsrMode(std::string allowMode, std::string toCheck)
+{
+	std::string::iterator it(toCheck.begin());
+	for (; it != toCheck.end(); it++)
+	{
+		if ((*it) == '-' || (*it) == '+')
+			continue;
+		if (allowMode.find((*it)) == std::string::npos)
+			return (false);
+	}
+	return (true);
+}
+
+void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	irc::User* user = nullptr;
+	user = findUser(srv, cmd->getParams()[0]);
+	if (!user)
+		usr->reply(401);
+	else if (user != usr && usr->getMode().find("o") == std::string::npos)
+		usr->reply(502);
+	else if (!cmd->getParams()[1].size())
+		user->reply(221);
+	else
+	{
+		if (!checkUsrMode(srv->getUsrMode(), cmd->getParams()[1]))
+			user->reply(501);
+		user->setMode(cmd->getParams()[1]);
+	}
+
+}
+
+irc::Channel* findChan(irc::Server *srv, std::string toFind)
+{
+	std::cout << "FindUser->toFind: " << toFind << std::endl;
+	std::vector<irc::Channel *> Chan(srv->getChannels());
+	std::vector<irc::Channel *>::iterator it(Chan.begin());
+	for (; it != Chan.end(); it++)
+	{
+		std::cout << (*it)->getName() << " ! "  << std::endl;
+		if (!toFind.compare((*it)->getName()))
+			return (*it);
+	}
+	return (nullptr);
+}
+
+void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	irc::Channel* chan = nullptr;
+	chan = findChan(srv, cmd->getParams()[0]);
+	if (!chan)
+		usr->reply(403);
+	else if (cmd->getParams().size() == 1)
+	{
+		usr->reply(324, chan);
+		usr->reply(329, chan);
+	}
+	// else
+	// {
+	// 	if (!checkUsrMode(srv->getUsrMode(), cmd->getParams()[1]))
+	// 		user->reply(501);
+	// 	user->setMode(cmd->getParams()[1]);
+	// }
+
+}
+
+void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams().size())
+		usr->reply(461);
+	if (cmd->getParams()[0].find("#") != std::string::npos)
+		chanMode(srv, usr, cmd);
+	else
+		userMode(srv, usr, cmd);
+}
+
 bool chanExist(irc::Server *srv, std::string toFind)
 {
 
@@ -199,21 +289,34 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	std::vector<std::string> Targets = split(cmd->getParams()[0], ",");
 	std::string msg = cmd->getTrailer();
 
+	if (!msg.size())
+	{
+		usr->reply(412);
+		return;	
+	}
 	irc::Channel* chan;
 	irc::User* userTarget;
 	// si arg n'est pas channel, go msg prive to user
 	for (std::vector<std::string>::iterator it = Targets.begin(); it != Targets.end(); it++)
 	{
 		if ((chan = findChan(srv, (*it))) != nullptr) // si channel diffusion message dans le channel
-			usr->broadcast(chan, ":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF, usr);
+		{
+			//si usr n'est pas dans le channel et que le chan est mode +n et qu'il n'est pas ops
+			if (chan->knowUser(usr) == false && chan->findMode("n") == true && usr->isOper() == false)
+				usr->reply(404, chan);
+			else
+				usr->broadcast(chan, ":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF, usr);
+		}
 		else // sinon msg prive to user
 		{
 			userTarget = srv->getUserByNick(*it);
 			if (userTarget != nullptr)
 			{
-				userTarget->addWaitingSend(":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF);
+				userTarget->addWaitingSend(":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF);
 				userTarget->processReply();
 			}
+			else
+				usr->reply(401);
 		}
 	}
 }
