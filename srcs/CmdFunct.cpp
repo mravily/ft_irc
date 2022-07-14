@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 19:22:42 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/14 22:06:30 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,10 +273,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			delete tmp;
 		}
 		else
-		{
 			chan->removeUser(usr, (" PART :" + chan->getName()));
-			//REATRUBUTE OPE	
-		}
 	}
 }
 
@@ -361,4 +358,23 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->broadcast(chan, response, 0);
 		}
 	}
+}
+
+void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams().size() || cmd->getParams().size() != 2)
+		usr->reply(461); //ERR_NEEDMOREPARAMS
+	if (!usr->getMode().find('o'))
+		usr->reply(481); //ERR_NOPRIVILEGES
+	irc::User* user = NULL;
+	if (!(user = findUser(srv, cmd->getParams()[0])))
+		usr->reply(401);
+	else
+	{
+		user->setStatus(irc::LEAVE);
+		user->setReason(cmd->getParams()[1]);
+		srv->broadcast("Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")");
+		user->addWaitingSend(":" + user->getClient() + " ERROR: Closing link: IRC Hobbs Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")" + CRLF);
+	}
+	
 }
