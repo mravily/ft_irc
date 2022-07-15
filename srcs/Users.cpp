@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 18:43:41 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 20:17:59 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,11 @@ void irc::User::setMode(std::string modestring)
 				reply(481);
 			else
 			{
-				_mode += (*it);
-				addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + (*it) + CRLF);
+				if (_mode.find((*it)) != std::string::npos)
+				{
+					_mode += (*it);
+					addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + (*it) + CRLF);
+				}
 			}
 		}
 		else
