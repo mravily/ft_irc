@@ -6,7 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/07/15 18:47:05 by mravily          ###   ########.fr       */
+=======
+/*   Updated: 2022/07/15 14:15:27 by nayache          ###   ########.fr       */
+>>>>>>> add errReplies to privmsg
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +178,10 @@ void irc::Server::acceptClient()
 		DisplayError("Accept: ");
 
 	this->_users[socketClient] = new User(this, socketClient, addrClient);
+	//----met le premier user du serveur OPERATOR------
+	if (this->_users.size() == 1)
+		this->_users[socketClient]->setOper(true);
+	//------------------------------------------
 	std::cout << "[SERVER] Nouvelle connexion client sur le server\n"
 	<< "[SERVER] Socket [" << socketClient << "] | IP [" <<  _users[socketClient]->getHostaddr().c_str() << "]\n"
 	<< "[SERVER] Authentification en cours..." << std::endl;

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 18:30:06 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 19:29:21 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ namespace irc
 		void setMode(std::string mode);
 		void setReason(std::string trailer);
 		void setBits(int index);
+		void setOper(bool x);
 
 		bool checkBit(int index) {return (_mandatory & (1 << index));};
 
@@ -110,6 +111,7 @@ namespace irc
 		std::string getHostaddr();
 		std::string getClient();
 		std::string getReason();
+		bool		isOper();
 
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();

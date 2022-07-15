@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 18:43:01 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 19:28:50 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,7 @@ std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *
 
 std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
 
+// (PRIVMSG/NOTICE)  412 - 404
+std::string ERR_NOTEXTTOSEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Not enough parameters given"); (void)usr; (void)srv; (void)chan;}
+std::string ERR_CANNOTSENDTOCHAN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You cannot send external messages to this channel whilst the +n (noextmsg) mode is set."); (void)usr; (void)srv;}
 #endif
