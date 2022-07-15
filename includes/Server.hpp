@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 22:07:26 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 15:50:17 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 
 #define RPL_JOIN_ 011
 #define RPL_MODE_ 012
+
+irc::User* findUser(irc::Server *srv, std::string toFind);
+irc::Channel* findChan(irc::Server *srv, std::string toFind);
 
 namespace irc
 {

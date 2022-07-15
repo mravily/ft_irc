@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 19:52:12 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 18:43:41 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,20 @@ void irc::User::setMode(std::string modestring)
 		else if ((*it) == '+')
 			minus = false;
 		else if (minus == false)
-			_mode += (*it);
+		{
+			if ((*it) == 'o' && _operator == false)
+				reply(481);
+			else
+			{
+				_mode += (*it);
+				addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + (*it) + CRLF);
+			}
+		}
 		else
+		{
 			_mode.erase(_mode.find((*it)));
+			addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + (*it) + CRLF);	
+		}
 	}
 }
 
@@ -98,13 +109,8 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	std::cout << printStatus() << std::endl;
-	
-	if (checkBit(0))
-		std::cout << (_mandatory & (1 << 0)) << std::endl;
 	if (!checkBit(0) && getStatus() == irc::CONNECTED && _cmds.size())
 	{
-		puts("IN");
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
 	}
@@ -126,7 +132,6 @@ void irc::User::processReply()
 	_cmds.erase(_cmds.begin(), _cmds.end());
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
 	buffer.clear();
-	puts("OUT PROCESS");
 }
 
 
@@ -136,7 +141,6 @@ void irc::User::processReply()
 */
 void irc::User::getMessages()
 {
-	puts("IN MESSAGE");
 	size_t size;
 	char buffer[BUFFER_SIZE + 1];
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
@@ -170,7 +174,6 @@ void irc::User::getMessages()
 			}
 		}
 	}
-	puts("OUT MESSAGE");
 }
 
 void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
@@ -255,6 +258,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(471, ERR_CHANNELISFULL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(475, ERR_BADCHANNELKEY));
+	_rpl.insert(std::make_pair<int, rpl_funct>(481, ERR_NOPRIVILEGES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(482, ERR_CHANOPRIVSNEEDED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));

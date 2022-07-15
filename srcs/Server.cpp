@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 22:11:29 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 18:37:41 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	usr->reply(366, chan);
 }
 
-irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk")
+irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iwo"), _chanMode("opsitnmlbvk")
 {
    	setDatatime();
 	setSocketServer(AF_INET, SOCK_STREAM, 0);

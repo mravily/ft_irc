@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 22:14:49 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 18:43:01 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ std::string RPL_UMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {re
 
 /* MODE Replies 401 502 501*/
 std::string ERR_NOSUCHNICK(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":No such nick/channel"); (void)srv; (void)usr; (void)chan;};
-std::string ERR_USERSDONTMATCH(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Cant change mode for other users"); (void)srv; (void)usr; (void)chan;};
+std::string ERR_USERSDONTMATCH(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Can't view modes for other users"); (void)srv; (void)usr; (void)chan;};
 std::string ERR_UMODEUNKNOWNFLAG(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Unknown MODE flag"); (void)srv; (void)usr; (void)chan;};
 
 /* PASS Replies 461 462 464 */
@@ -63,6 +63,6 @@ std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {re
 std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
 std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You're not channel operator"); (void)usr; (void)srv;}
 
-std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
+std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
 
 #endif

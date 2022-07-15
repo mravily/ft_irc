@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile.settings.mk                               :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lusokol <lusokol@student.42.fr>            +#+  +:+       +#+         #
+#    By: mravily <mravily@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/21 21:06:11 by rotrojan          #+#    #+#              #
-#    Updated: 2022/04/06 16:04:10 by lusokol          ###   ########.fr        #
+#    Updated: 2022/07/15 15:48:55 by mravily          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ SRC =	Channel.cpp \
 		Nick.cpp \
 		Server.cpp \
 		Users.cpp \
+		Utils.cpp \
+		MODE.cpp
 
 # path of sources
 PATH_SRCS = ./srcs

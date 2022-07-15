@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 22:06:30 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/15 15:48:06 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,96 +108,6 @@ void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->setRealname(cmd->getTrailer());
 	}
 	(void)srv;
-}
-
-irc::User* findUser(irc::Server *srv, std::string toFind)
-{
-	// std::cout << "FindUser->toFind: " << toFind << std::endl;
-	std::map<int, irc::User *> Users(srv->getUsers());
-	std::map<int, irc::User *>::iterator it(Users.begin());
-	for (; it != Users.end(); it++)
-	{
-		std::cout << (*it).second->getNickname() << std::endl;
-		if (!toFind.compare((*it).second->getNickname()))
-			return ((*it).second);
-	}
-	return (NULL);
-}
-
-bool checkUsrMode(std::string allowMode, std::string toCheck)
-{
-	std::string::iterator it(toCheck.begin());
-	for (; it != toCheck.end(); it++)
-	{
-		if ((*it) == '-' || (*it) == '+')
-			continue;
-		if (allowMode.find((*it)) == std::string::npos)
-			return (false);
-	}
-	return (true);
-}
-
-void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	irc::User* user = nullptr;
-	user = findUser(srv, cmd->getParams()[0]);
-	if (!user)
-		usr->reply(401);
-	else if (user != usr && usr->getMode().find("o") == std::string::npos)
-		usr->reply(502);
-	else if (!cmd->getParams()[1].size())
-		user->reply(221);
-	else
-	{
-		if (!checkUsrMode(srv->getUsrMode(), cmd->getParams()[1]))
-			user->reply(501);
-		user->setMode(cmd->getParams()[1]);
-	}
-
-}
-
-irc::Channel* findChan(irc::Server *srv, std::string toFind)
-{
-	std::cout << "FindUser->toFind: " << toFind << std::endl;
-	std::vector<irc::Channel *> Chan(srv->getChannels());
-	std::vector<irc::Channel *>::iterator it(Chan.begin());
-	for (; it != Chan.end(); it++)
-	{
-		std::cout << (*it)->getName() << std::endl;
-		if (!toFind.compare((*it)->getName()))
-			return (*it);
-	}
-	return (nullptr);
-}
-
-void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	irc::Channel* chan = nullptr;
-	chan = findChan(srv, cmd->getParams()[0]);
-	if (!chan)
-		usr->reply(403);
-	else if (cmd->getParams().size() == 1)
-	{
-		usr->reply(324, chan);
-		usr->reply(329, chan);
-	}
-	// else
-	// {
-	// 	if (!checkUsrMode(srv->getUsrMode(), cmd->getParams()[1]))
-	// 		user->reply(501);
-	// 	user->setMode(cmd->getParams()[1]);
-	// }
-
-}
-
-void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	if (!cmd->getParams().size())
-		usr->reply(461);
-	if (cmd->getParams()[0].find("#") != std::string::npos)
-		chanMode(srv, usr, cmd);
-	else
-		userMode(srv, usr, cmd);
 }
 
 bool chanExist(irc::Server *srv, std::string toFind)
