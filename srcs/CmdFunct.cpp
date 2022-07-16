@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 12:23:16 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 21:58:35 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,8 @@ void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(461);
 	else if (!srv->getOperName().compare(cmd->getParams()[0]) && !srv->getOperPassword().compare(cmd->getParams()[1]))
 	{
-		usr->setMode("+o");
+		usr->setOper(true);
+//		usr->setMode("+o");
 		usr->reply(381);
 	}
 	else

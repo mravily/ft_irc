@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 12:33:02 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 21:59:25 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,5 +281,7 @@ void irc::User::printUser()
 }
 
 void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
+void irc::User::setOper(bool x) { this->_operator = x; }
 
 std::string irc::User::getReason() { return _reason; }
+bool	irc::User::getOper() const { return this->_operator; }
