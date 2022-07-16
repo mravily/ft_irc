@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 19:28:50 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/16 22:11:27 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,10 @@ std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {re
 // 402 - 482
 std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
 std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You're not channel operator"); (void)usr; (void)srv;}
+
+// 381
+
+std::string RPL_YOUREOPER(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("You are now an IRC operator"); (void)usr; (void)srv; (void)chan; }
 
 std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
 

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 21:56:30 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/16 22:10:13 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,37 +56,37 @@ namespace irc
 		friend class Server;
 		friend class Channel;
 
-		public:
-			typedef void (*cmd_funct)(irc::Server *, irc::User *, irc::Command *);
-			typedef std::string (*rpl_funct)(irc::Server *srv, irc::User usr, irc::Channel *chan);
+	public:
+		typedef void (*cmd_funct)(irc::Server *, irc::User *, irc::Command *);
+		typedef std::string (*rpl_funct)(irc::Server *srv, irc::User usr, irc::Channel *chan);
 
-		private:
-			Server *_server;
-			int _fd;
-			struct sockaddr_in _address;
+	private:
+		Server *_server;
+		int _fd;
+		struct sockaddr_in _address;
 
-			int			_mandatory:4;
-			bool		_operator;
-			stats 		_status;
-			std::string _mode;
-			std::string _nickname;
-			std::string _username;
-			std::string _realname;
-			std::string _hostaddr;
-			std::string _hostname;
+		int			_mandatory:4;
+		bool		_operator;
+		stats 		_status;
+		std::string _mode;
+		std::string _nickname;
+		std::string _username;
+		std::string _realname;
+		std::string _hostaddr;
+		std::string _hostname;
 
-			int			_chanLimit;
+		int			_chanLimit;
 
-			std::vector<Command *> _cmds;
+		std::vector<Command *> _cmds;
 
-			std::map<int, rpl_funct> _rpl;
-			std::map<std::string, cmd_funct> _funct;
+		std::map<int, rpl_funct> _rpl;
+		std::map<std::string, cmd_funct> _funct;
 
-			std::vector<std::string> _waitingSend;
-			std::string _reason;
-		public:
-			User(irc::Server *srv, int socket, sockaddr_in address);
-			~User();
+		std::vector<std::string> _waitingSend;
+		std::string _reason;
+	public:
+		User(irc::Server *srv, int socket, sockaddr_in address);
+		~User();
 
 		void setNickname(std::string nickname);
 		void setUsername(std::string username);
@@ -112,8 +112,8 @@ namespace irc
 		std::string getHostaddr();
 		std::string getClient();
 		std::string getReason();
-		bool		getOperator() {return (_operator);};
-	
+		bool	getOperator() const;
+
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();
 
@@ -151,5 +151,6 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif

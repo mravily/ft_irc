@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 21:58:25 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/16 22:12:56 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ std::string irc::User::getClient() {return (getNickname() + "!" + getUsername() 
 irc::stats irc::User::getStatus() {return (_status);};
 irc::Server* irc::User::getServer() {return (_server);};
 
-void irc::User::setOper(bool x) {this->_operator = x;}
+void irc::User::setOper(bool x) { this->_operator = x; }
 void irc::User::setStatus(irc::stats newStatus) {this->_status = newStatus;};
 void irc::User::setNickname(std::string nick) {this->_nickname = nick;};
 void irc::User::setUsername(std::string usrname) {this->_username = usrname;};
@@ -74,7 +74,7 @@ void irc::User::setModes(std::string modestring)
 		else
 		{
 			_mode.erase(_mode.find((*it)));
-			addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + (*it) + CRLF);	
+			addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + (*it) + CRLF);
 		}
 	}
 }
@@ -234,6 +234,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("NOTICE", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
 }
 
 void irc::User::setReplies()
@@ -252,6 +253,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(332, RPL_TOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
+	_rpl.insert(std::make_pair<int, rpl_funct>(381, RPL_YOUREOPER));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
 	_rpl.insert(std::make_pair<int, rpl_funct>(403, ERR_NOSUCHCHANNEL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(404, ERR_CANNOTSENDTOCHAN));
@@ -286,3 +288,4 @@ void irc::User::printUser()
 void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
 
 std::string irc::User::getReason() { return _reason; }
+bool	irc::User::getOperator() const { return this->_operator; }

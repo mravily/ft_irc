@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 20:11:04 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/16 22:07:06 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	usr->reply(366, chan);
 }
 
-irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iwo"), _chanMode("opsitnmlbvk")
+irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk"), _oper_name("operator"), _oper_password("password")
 {
    	setDatatime();
 	setSocketServer(AF_INET, SOCK_STREAM, 0);
@@ -286,7 +286,7 @@ void irc::Server::deleteUser(int fd)
 	while (it != _pollFds.end() && (*it).fd != fd)
 		it++;
 	_pollFds.erase(it);
-	
+
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
@@ -295,3 +295,6 @@ void irc::Server::deleteUser(int fd)
 	_users.erase(fd);
 	close(fd);
 }
+
+std::string irc::Server::getOperName() const { return this->_oper_name; }
+std::string irc::Server::getOperPassword() const { return this->_oper_password; }
