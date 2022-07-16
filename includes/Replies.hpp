@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/13 16:17:03 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/16 12:36:56 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,9 @@ std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {re
 
 // 402
 std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
+
+// 381
+
+std::string RPL_YOUREOPER(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("You are now an IRC operator"); (void)usr; (void)srv; (void)chan; }
 
 #endif

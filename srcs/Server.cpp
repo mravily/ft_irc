@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/14 18:33:05 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/14 19:00:39 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	usr->reply(366, chan);
 }
 
-irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk")
+irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk"), _oper_name("operator"), _oper_password("password")
 {
    	setDatatime();
 	setSocketServer(AF_INET, SOCK_STREAM, 0);
@@ -281,3 +281,6 @@ void irc::Server::deleteUser(int fd)
 	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
 	puts("out deleUser");
 }
+
+std::string irc::Server::getOperName() const { return this->_oper_name; }
+std::string irc::Server::getOperPassword() const { return this->_oper_password; }
