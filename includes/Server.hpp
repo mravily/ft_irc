@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-//   Updated: 2022/07/14 19:00:57 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 22:10:52 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,14 @@
 
 #define RPL_JOIN_ 011
 #define RPL_MODE_ 012
+
+irc::User* findUserSrv(irc::Server *srv, std::string toFind);
+irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind);
+irc::Channel* findChan(irc::Server *srv, std::string toFind);
+bool checkAllowMode(std::string allowMode, std::string toCheck);
+void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+bool isDigits(const std::string &str);
 
 namespace irc
 {
@@ -94,6 +102,7 @@ namespace irc
 
 		void createChan(std::string name, irc::User* usr);
 		void joinChan(irc::Channel* chan, irc::User* usr, std::string password = "");
+		void broadcast(std::string message);
 
 		void DisplayError(std::string message)
 			{

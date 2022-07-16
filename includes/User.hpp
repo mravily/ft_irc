@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:01:38 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 22:10:13 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,13 @@ namespace irc
 		void setRealname(std::string realname);
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
-		void setMode(std::string mode);
+		void setMode(char mode) {_mode += mode;};
+		void setModes(std::string mode);
 		void setReason(std::string trailer);
 		void setBits(int index);
 		void setOper(bool x);
+
+		bool checkBit(int index) {return (_mandatory & (1 << index));};
 
 		int			getFd();
 		stats		getStatus();
@@ -109,7 +112,7 @@ namespace irc
 		std::string getHostaddr();
 		std::string getClient();
 		std::string getReason();
-		bool	getOper() const;
+		bool	getOperator() const;
 
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();
@@ -130,7 +133,8 @@ namespace irc
 			std::cout << message << strerror(errn) << std::endl;
 			exit(1);
 		}
-
+		void addMode(std::string modestring) {addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + modestring + CRLF);};
+		void removeMode(std::string modestring) {{addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + modestring + CRLF);};}
 	};
 }
 

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 21:59:25 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 22:12:56 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::string irc::User::printStatus()
 	if (_status == 0)
 		return ("CONNECTED");
 	else if (_status == 1)
-		return ("AUTHENTICATED");
+		return ("AUTHENFICATED");
 	else if (_status == 2)
 		return ("REGISTERED");
 	else if (_status == 3)
@@ -42,12 +42,13 @@ std::string irc::User::getClient() {return (getNickname() + "!" + getUsername() 
 irc::stats irc::User::getStatus() {return (_status);};
 irc::Server* irc::User::getServer() {return (_server);};
 
+void irc::User::setOper(bool x) { this->_operator = x; }
 void irc::User::setStatus(irc::stats newStatus) {this->_status = newStatus;};
 void irc::User::setNickname(std::string nick) {this->_nickname = nick;};
 void irc::User::setUsername(std::string usrname) {this->_username = usrname;};
 void irc::User::setRealname(std::string realname) {this->_realname = realname;};
 void irc::User::setHostname(std::string hostname) {this->_hostname = hostname;};
-void irc::User::setMode(std::string modestring)
+void irc::User::setModes(std::string modestring)
 {
 	bool minus = false;
 	std::string::iterator it(modestring.begin());
@@ -58,9 +59,23 @@ void irc::User::setMode(std::string modestring)
 		else if ((*it) == '+')
 			minus = false;
 		else if (minus == false)
-			_mode += (*it);
+		{
+			if ((*it) == 'o' && _operator == false)
+				reply(481);
+			else
+			{
+				if (_mode.find((*it)) != std::string::npos)
+				{
+					_mode += (*it);
+					addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + (*it) + CRLF);
+				}
+			}
+		}
 		else
+		{
 			_mode.erase(_mode.find((*it)));
+			addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + (*it) + CRLF);
+		}
 	}
 }
 
@@ -98,12 +113,12 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	if (!(_server->getPassword().size()))
+	if (!checkBit(0) && getStatus() == irc::CONNECTED && _cmds.size())
 	{
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);
 	}
-	else if (_mandatory == 7 && getStatus() != REGISTERED && getStatus() != ONLINE && getStatus() != LEAVE)
+	else if (_mandatory == 7 && getStatus() != REGISTERED && getStatus() != ONLINE && getStatus() != LEAVE && getStatus() != ERROR)
 		registration();
 
 	// Bufferize toutes les réponses pour les envoyer avec send()
@@ -115,7 +130,8 @@ void irc::User::processReply()
 		std::cout << (*it) << std::endl;
 		buffer += (*it);
 	}
-	send(getFd(), buffer.c_str(), buffer.length(), 0);
+	if (buffer.length())
+		send(getFd(), buffer.c_str(), buffer.length(), 0);
 
 	_cmds.erase(_cmds.begin(), _cmds.end());
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
@@ -145,18 +161,6 @@ void irc::User::getMessages()
 		_cmds.push_back(new irc::Command((*it)));
 	}
 
-	// // Récupère le Nickname du client
-	// if (this->getStatus() == CONNECTED)
-	// {
-	// 	std::vector<Command *>::iterator its(_cmds.begin());
-	// 	std::map<std::string, cmd_funct>::iterator itm(_funct.find("NICK"));
-	// 	for (; its != _cmds.end(); its++)
-	// 	{
-	// 		if ((*its)->getPrefix() == "NICK")
-	// 			(*itm).second(getServer(), this, (*its));
-	// 	}
-	// }
-
 	// Compare les prefix des commandes reçu avec les commandes users disponible
 	std::vector<Command *>::iterator its(_cmds.begin());
 	for (; its != _cmds.end(); its++)
@@ -174,15 +178,11 @@ void irc::User::getMessages()
 			}
 		}
 	}
-
 }
 
-void irc::User::setBits(int index)
-{
-	_mandatory = _mandatory | (1 << index);
-}
+void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
-irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*")
+irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _operator(false), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
 {
 	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);
@@ -231,6 +231,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("NOTICE", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
@@ -255,6 +256,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(381, RPL_YOUREOPER));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
 	_rpl.insert(std::make_pair<int, rpl_funct>(403, ERR_NOSUCHCHANNEL));
+	_rpl.insert(std::make_pair<int, rpl_funct>(404, ERR_CANNOTSENDTOCHAN));
+	_rpl.insert(std::make_pair<int, rpl_funct>(412, ERR_NOTEXTTOSEND));
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(433, ERR_NICKNAMEINUSE));
@@ -264,6 +267,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(471, ERR_CHANNELISFULL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(475, ERR_BADCHANNELKEY));
+	_rpl.insert(std::make_pair<int, rpl_funct>(481, ERR_NOPRIVILEGES));
+	_rpl.insert(std::make_pair<int, rpl_funct>(482, ERR_CHANOPRIVSNEEDED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
 }
@@ -281,7 +286,6 @@ void irc::User::printUser()
 }
 
 void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
-void irc::User::setOper(bool x) { this->_operator = x; }
 
 std::string irc::User::getReason() { return _reason; }
-bool	irc::User::getOper() const { return this->_operator; }
+bool	irc::User::getOperator() const { return this->_operator; }

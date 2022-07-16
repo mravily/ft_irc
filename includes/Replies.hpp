@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 12:36:56 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 22:11:27 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ std::string RPL_UMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {re
 
 /* MODE Replies 401 502 501*/
 std::string ERR_NOSUCHNICK(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":No such nick/channel"); (void)srv; (void)usr; (void)chan;};
-std::string ERR_USERSDONTMATCH(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Cant change mode for other users"); (void)srv; (void)usr; (void)chan;};
+std::string ERR_USERSDONTMATCH(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Can't view modes for other users"); (void)srv; (void)usr; (void)chan;};
 std::string ERR_UMODEUNKNOWNFLAG(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Unknown MODE flag"); (void)srv; (void)usr; (void)chan;};
 
 /* PASS Replies 461 462 464 */
@@ -59,11 +59,17 @@ std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {
 std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :[+" + chan->getModes() + "] " + chan->getTopic()); (void)srv; (void)usr;}
 std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
 
-// 402
+// 402 - 482
 std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
+std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You're not channel operator"); (void)usr; (void)srv;}
 
 // 381
 
 std::string RPL_YOUREOPER(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("You are now an IRC operator"); (void)usr; (void)srv; (void)chan; }
 
+std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
+
+// (PRIVMSG/NOTICE)  412 - 404
+std::string ERR_NOTEXTTOSEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Not enough parameters given"); (void)usr; (void)srv; (void)chan;}
+std::string ERR_CANNOTSENDTOCHAN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You cannot send external messages to this channel whilst the +n (noextmsg) mode is set."); (void)usr; (void)srv;}
 #endif

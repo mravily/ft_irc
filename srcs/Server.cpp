@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/14 19:00:39 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/16 22:07:06 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,10 @@ void irc::Server::acceptClient()
 		DisplayError("Accept: ");
 
 	this->_users[socketClient] = new User(this, socketClient, addrClient);
+	//----met le premier user du serveur OPERATOR------
+	if (this->_users.size() == 1)
+		this->_users[socketClient]->setOper(true);
+	//------------------------------------------
 	std::cout << "[SERVER] Nouvelle connexion client sur le server\n"
 	<< "[SERVER] Socket [" << socketClient << "] | IP [" <<  _users[socketClient]->getHostaddr().c_str() << "]\n"
 	<< "[SERVER] Authentification en cours..." << std::endl;
@@ -240,7 +244,6 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
 	chan->addUser(usr);
 
-	puts("Replies to join exist chan");
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
 	usr->reply(331, chan);
 	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
@@ -266,20 +269,31 @@ irc::Server::~Server()
 		close((*it).fd);
 }
 
+void irc::Server::broadcast(std::string message)
+{
+	std::map<int, User *> users(this->getUsers());
+	std::map<int, User *>::iterator itUsers(users.begin());
+	for (; itUsers != users.end(); itUsers++)
+	{
+		(*itUsers).second->addWaitingSend(":" + (*itUsers).second->getClient() + message + CRLF);
+		(*itUsers).second->processReply();
+	}
+}
+
 void irc::Server::deleteUser(int fd)
 {
 	std::vector<pollfd>::iterator it = _pollFds.begin();
 	while (it != _pollFds.end() && (*it).fd != fd)
 		it++;
 	_pollFds.erase(it);
+
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
+	_users[fd]->processReply();
 	_users.erase(fd);
 	close(fd);
-	std::cout << "user.size_3: " << _users.size() << std::endl;
-	//BROADCAST :[NICK]-!d@localhost QUIT :Quit: [PARAM]
-	puts("out deleUser");
 }
 
 std::string irc::Server::getOperName() const { return this->_oper_name; }
