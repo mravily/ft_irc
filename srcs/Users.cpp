@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 20:17:59 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 18:56:59 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void irc::User::setNickname(std::string nick) {this->_nickname = nick;};
 void irc::User::setUsername(std::string usrname) {this->_username = usrname;};
 void irc::User::setRealname(std::string realname) {this->_realname = realname;};
 void irc::User::setHostname(std::string hostname) {this->_hostname = hostname;};
-void irc::User::setMode(std::string modestring)
+void irc::User::setModes(std::string modestring)
 {
 	bool minus = false;
 	std::string::iterator it(modestring.begin());

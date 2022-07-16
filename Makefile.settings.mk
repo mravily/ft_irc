@@ -6,7 +6,7 @@
 #    By: mravily <mravily@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/21 21:06:11 by rotrojan          #+#    #+#              #
-#    Updated: 2022/07/15 15:48:55 by mravily          ###   ########.fr        #
+#    Updated: 2022/07/16 20:10:20 by mravily          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRC =	Channel.cpp \
 		Server.cpp \
 		Users.cpp \
 		Utils.cpp \
-		MODE.cpp
+		MODE/MODE.cpp MODE/CHAN/modeChan.cpp MODE/USER/modeUser.cpp
 
 # path of sources
 PATH_SRCS = ./srcs

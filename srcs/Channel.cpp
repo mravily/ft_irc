@@ -6,11 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 21:27:19 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 21:34:01 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "Server.hpp"
 
 bool irc::Channel::isOperator(irc::User *usr)
 {
@@ -69,7 +69,7 @@ std::string irc::Channel::getUserSize()
 	return (ss.str());
 }
 
-void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;};
+void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr);};
 
 /*
 ** @brief Chercher un user dans le list donner et le retire
@@ -77,7 +77,7 @@ void irc::Channel::addUser(irc::User *usr) {_users.push_back(usr); _capacity++;}
 ** @param toFind User à trouver
 ** @return Renvoi true si l'user a été trouver
 */
-bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan, std::string message)
+bool findEraseUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *chan, std::string message)
 {
 	std::vector<irc::User *>::iterator itOpe(list.begin());
 	for (; itOpe != list.end(); itOpe++)
@@ -94,11 +94,95 @@ bool findUser(std::vector<irc::User *> &list, irc::User *toFind, irc::Channel *c
 	return (false);
 }
 
+void irc::Channel::eraseUser(std::vector<irc::User *>& list, std::string toFind)
+{
+	std::vector<irc::User *>::iterator it(list.begin());
+	for (; it != list.end(); it++)
+	{
+		std::cout << (*it)->getNickname() << std::endl;
+		if (!toFind.compare((*it)->getNickname()))
+			break;
+	}
+	list.erase(it);
+}
+
+void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
+{
+	std::vector<std::string>::iterator ita(arg.begin());
+	std::string::iterator it(modestring.begin());
+	std::string::iterator ite(modestring.end());
+	ita++;
+	std::vector<std::string>::iterator itt(arg.begin());
+	for (; itt != arg.end(); itt++)
+		std::cout << "ARG: " << (*itt) << std::endl;
+	for (; it != ite; it++)
+	{
+		if ((*it) == 'o' && isOperator(usr) == false)
+		{
+			usr->reply(481); 
+			modestring.erase(modestring.find('o'));
+		}
+		if ((*it) == 'o' && isOperator(usr) == true)
+		{
+			irc::User* toModif = findUserChan(getUser(), (*ita++));
+			if (!toModif && usr != toModif)
+				usr->reply(401);   		// ERR_NOSUCHNICK
+			else if (usr != toModif)
+			{
+				toModif->setMode((*it));
+				_operator.push_back(toModif);
+				eraseUser(_users, toModif->getNickname());
+				usr->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " +o :" + toModif->getNickname() + CRLF);
+				toModif->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " +o :" + toModif->getNickname() + CRLF);
+			}
+			modestring.erase(modestring.find('o'));
+		}
+	}
+	if (modestring.size())
+		usr->addMode(modestring);
+}
+
+void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
+{
+	puts("rmv");
+	std::vector<std::string>::iterator ita(arg.begin());
+	ita++;
+	std::string::iterator it(modestring.begin());
+	std::string::iterator ite(modestring.end());
+	
+	std::vector<std::string>::iterator itt(arg.begin());
+	for (; itt != arg.end(); itt++)
+		std::cout << "ARG: " << (*itt) << std::endl;
+	for (; it != ite; it++)
+	{
+		if ((*it) == 'o' && isOperator(usr) == false)
+		{
+			usr->reply(481); 
+			modestring.erase(modestring.find('o'));
+		}
+		if ((*it) == 'o' && isOperator(usr) == true)
+		{
+			irc::User* toModif = findUserChan(getOperator(), (*ita++));
+			if (!toModif && usr != toModif)
+				usr->reply(401);   		// ERR_NOSUCHNICK
+			else if (usr != toModif)
+			{
+				toModif->getMode().erase(toModif->getMode().find('o'));
+				_users.push_back(toModif);
+				eraseUser(_operator, toModif->getNickname());
+				usr->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " -o :" + toModif->getNickname() + CRLF);
+				toModif->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " -o :" + toModif->getNickname() + CRLF);
+			}
+			modestring.erase(modestring.find((*it)));
+		}
+	}
+}
+
 void irc::Channel::removeUser(irc::User *usr, std::string message)
 {
 	bool find = false;
-	if (!(find = findUser(_operator, usr, this, message)))
-		find = findUser(_users, usr, this, message);
+	if (!(find = findEraseUser(_operator, usr, this, message)))
+		find = findEraseUser(_users, usr, this, message);
 	if (find == false)
 		usr->reply(442, this);
 }
@@ -114,7 +198,7 @@ bool irc::Channel::knowUser(irc::User* usr)
 	return (false);
 }
 
-irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _datatime(getCurrentDate()), _capacity(1)
+irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _datatime(getCurrentDate())
 {
 	this->_operator.push_back(ope);
 }

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 18:30:06 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 18:57:35 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ namespace irc
 		void setRealname(std::string realname);
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
-		void setMode(std::string mode);
+		void setMode(char mode) {_mode += mode;};
+		void setModes(std::string mode);
 		void setReason(std::string trailer);
 		void setBits(int index);
 
@@ -110,7 +111,8 @@ namespace irc
 		std::string getHostaddr();
 		std::string getClient();
 		std::string getReason();
-
+		bool		getOperator() {return (_operator);};
+	
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();
 
@@ -130,7 +132,8 @@ namespace irc
 			std::cout << message << strerror(errn) << std::endl;
 			exit(1);
 		}
-
+		void addMode(std::string modestring) {addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + modestring + CRLF);};
+		void removeMode(std::string modestring) {{addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + modestring + CRLF);};}
 	};
 }
 

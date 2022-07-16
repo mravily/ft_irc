@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 21:16:20 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 21:16:12 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 #include "User.hpp"
 
+irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind);
+
 namespace irc
 {
 	class User;
@@ -29,7 +31,8 @@ namespace irc
 		friend class User;
 		
 		private:
-			bool 				_private;
+			bool				_private;
+			
 			std::string			_name;
 			std::string			_mode;
 			std::string			_password;
@@ -39,9 +42,7 @@ namespace irc
 			std::vector<irc::User *> _operator;
 			std::vector<std::string> _listBan;
 			std::string			_datatime;
-			int					_capacity;
 			std::string			_lastTry;
-			// int test;
 			
 		public:
 			Channel(bool type, std::string name, irc::User* ope, std::string password = "");
@@ -56,7 +57,7 @@ namespace irc
 			std::string getPassword() {return (_password);};
 			std::string getListUsers();
 			std::string getDatatime() {return (_datatime);};
-			int			getCapacity() {return (_capacity);};
+
 			std::string getLastTry() {return (_lastTry);};
 			std::string getTopic() {return (_topic);}
 			std::vector<User *> getUser() {return (_users);};
@@ -73,7 +74,10 @@ namespace irc
 			void addUser(irc::User* usr);
 			void removeUser(irc::User* usr, std::string message);
 			bool knowUser(irc::User* usr);
-			void reassignMode();
+			
+			void addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);
+			void removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);
+			void eraseUser(std::vector<irc::User *>& list, std::string toFind);
 	};
 }
 #endif

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/15 15:48:06 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 20:11:59 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (!usr->getMode().find('o'))
 		usr->reply(481); //ERR_NOPRIVILEGES
 	irc::User* user = NULL;
-	if (!(user = findUser(srv, cmd->getParams()[0])))
+	if (!(user = findUserSrv(srv, cmd->getParams()[0])))
 		usr->reply(401);
 	else
 	{
