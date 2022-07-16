@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 20:11:59 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 21:57:02 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,21 +199,34 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	std::vector<std::string> Targets = split(cmd->getParams()[0], ",");
 	std::string msg = cmd->getTrailer();
 
+	if (!msg.size())
+	{
+		usr->reply(412);
+		return;	
+	}
 	irc::Channel* chan;
 	irc::User* userTarget;
 	// si arg n'est pas channel, go msg prive to user
 	for (std::vector<std::string>::iterator it = Targets.begin(); it != Targets.end(); it++)
 	{
 		if ((chan = findChan(srv, (*it))) != nullptr) // si channel diffusion message dans le channel
-			usr->broadcast(chan, ":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF, usr);
+		{
+			//si usr n'est pas dans le channel et que le chan est mode +n et qu'il n'est pas ops
+			if (chan->knowUser(usr) == false && chan->findMode("n") == true && usr->getOperator() == false)
+				usr->reply(404, chan);
+			else
+				usr->broadcast(chan, ":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF, usr);
+		}
 		else // sinon msg prive to user
 		{
 			userTarget = srv->getUserByNick(*it);
 			if (userTarget != nullptr)
 			{
-				userTarget->addWaitingSend(":" + usr->getClient() + " PRIVMSG " + (*it) + " :" + msg + CRLF);
+				userTarget->addWaitingSend(":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF);
 				userTarget->processReply();
 			}
+			else
+				usr->reply(401);
 		}
 	}
 }

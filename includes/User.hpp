@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 18:57:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 21:56:30 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ namespace irc
 		void setModes(std::string mode);
 		void setReason(std::string trailer);
 		void setBits(int index);
+		void setOper(bool x);
 
 		bool checkBit(int index) {return (_mandatory & (1 << index));};
 

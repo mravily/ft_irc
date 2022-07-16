@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 18:56:59 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/16 21:58:25 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ std::string irc::User::getClient() {return (getNickname() + "!" + getUsername() 
 irc::stats irc::User::getStatus() {return (_status);};
 irc::Server* irc::User::getServer() {return (_server);};
 
+void irc::User::setOper(bool x) {this->_operator = x;}
 void irc::User::setStatus(irc::stats newStatus) {this->_status = newStatus;};
 void irc::User::setNickname(std::string nick) {this->_nickname = nick;};
 void irc::User::setUsername(std::string usrname) {this->_username = usrname;};
@@ -181,7 +182,7 @@ void irc::User::getMessages()
 
 void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
-irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
+irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _operator(false), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
 {
 	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);
@@ -230,6 +231,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PRIVMSG", PRIVMSG));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("NOTICE", PRIVMSG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 }
@@ -252,6 +254,8 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
 	_rpl.insert(std::make_pair<int, rpl_funct>(403, ERR_NOSUCHCHANNEL));
+	_rpl.insert(std::make_pair<int, rpl_funct>(404, ERR_CANNOTSENDTOCHAN));
+	_rpl.insert(std::make_pair<int, rpl_funct>(412, ERR_NOTEXTTOSEND));
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(433, ERR_NICKNAMEINUSE));
