@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 18:12:48 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 19:35:16 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ irc::User* irc::Server::getUserByNick(std::string nick)
 		if (nick.compare(it->second->getNickname()) == 0)
 			return (it->second);
 	}
-	return (nullptr);
+	return (NULL);
 }
 
 /*
@@ -242,6 +242,19 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	// 	usr->reply(475, chan); return ;  //ERR_CHANNELISFULL
 	// if (chan->getModes().find('k') && password.compare(chan->getPassword()))
 	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
+	if (chan->findMode("i") == true) // si channel sur invitation
+	{
+		if (usr->getOperator() == false)
+		{
+			if (usr->haveInvitation(chan->getName()) == false)
+			{
+				usr->reply(473, chan);
+				return;
+			}
+			else
+				usr->delInvitation(chan->getName());
+		}
+	}
 	chan->addUser(usr);
 
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);

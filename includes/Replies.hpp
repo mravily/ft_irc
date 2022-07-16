@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:11:27 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 18:20:13 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ std::string RPL_CREATIONTIME(irc::Server *srv, irc::User usr, irc::Channel *chan
 
 std::string ERR_BADCHANNELKEY(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (incorrect channel key)"; (void)usr; (void)srv;};
 std::string ERR_CHANNELISFULL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :Cannot join channel (channel is full)"; (void)usr; (void)srv;};
+
+// 441 - 442 - 443
+std::string ERR_USERNOTINCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("target " + chan->getName()) + " :They are not on that channel"; (void)usr; (void)srv;};
 std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName()) + " :You're not on that channel"; (void)usr; (void)srv;};
+std::string ERR_USERONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("user " + chan->getName()) + " :is already on channel"; (void)srv; (void)usr;};
 
 // (LIST) 321 - 322 - 323
 std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\002Channels List: "); (void)srv; (void)usr; (void)chan;}
@@ -68,6 +72,9 @@ std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *
 std::string RPL_YOUREOPER(irc::Server *srv, irc::User usr, irc::Channel *chan) { return ("You are now an IRC operator"); (void)usr; (void)srv; (void)chan; }
 
 std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Permission Denied- You're not an IRC operator"); (void)usr; (void)srv; (void)chan;};
+
+//473
+std::string ERR_INVITEONLYCHAN(irc::Server *srv, irc::User usr, irc::Channel *chan) { return (chan->getName() + " :Cannot join channel (+i) invitation only."); (void)usr; (void)srv;}
 
 // (PRIVMSG/NOTICE)  412 - 404
 std::string ERR_NOTEXTTOSEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Not enough parameters given"); (void)usr; (void)srv; (void)chan;}
