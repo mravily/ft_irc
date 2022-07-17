@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 20:18:02 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 20:22:06 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,9 +332,11 @@ void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	srv->setRestart(true);
-	(void)usr;
 	(void)cmd;
+	if (usr->getOperator() == true)
+		srv->setRestart(true);
+	else
+		usr->reply(481);
 }
 
 void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
