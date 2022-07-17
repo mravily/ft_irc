@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:07:06 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 19:50:43 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	usr->reply(366, chan);
 }
 
-irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk"), _oper_name("operator"), _oper_password("password")
+irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk"), _oper_name("operator"), _oper_password("password"), _on(true), _restart(false)
 {
    	setDatatime();
 	setSocketServer(AF_INET, SOCK_STREAM, 0);
@@ -262,11 +262,21 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 	listenAddress();
 }
 
+/*irc::Server &irc::Server::operator=(const irc::Server& x)
+{
+	this->~Server();
+	this->_version = x.getVersion();
+	this->_password = x.getPassword();
+	return *this;
+}
+*/
 irc::Server::~Server()
 {
-	close(this->_socketServer);
-	for (std::vector<pollfd>::iterator it(_pollFds.begin()); it != _pollFds.end(); it++)
-		close((*it).fd);
+    for (std::vector<pollfd>::reverse_iterator it(_pollFds.rbegin()); it != _pollFds.rend(); it++)
+        close((*it).fd);
+    for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
+        deleteUser((*itu).second->getFd());
+    close(this->_socketServer);
 }
 
 void irc::Server::broadcast(std::string message)
@@ -298,3 +308,35 @@ void irc::Server::deleteUser(int fd)
 
 std::string irc::Server::getOperName() const { return this->_oper_name; }
 std::string irc::Server::getOperPassword() const { return this->_oper_password; }
+
+bool irc::Server::on(void) const { return this->_on; }
+void irc::Server::turnOff() { this->_on = false; }
+bool irc::Server::getRestart(void) const { return this->_restart; }
+void irc::Server::setRestart(bool x) { this->_restart = x; }
+void irc::Server::restart(char *port, char *pass)
+{
+	std::vector<pollfd>::iterator it(_pollFds.begin());
+    while (it != _pollFds.end())
+	{
+        close((*it).fd);
+		_pollFds.erase(it++);
+	}
+    for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
+        deleteUser((*itu).second->getFd());
+    close(this->_socketServer);
+	this->_version = "1.42";
+	_password = pass;
+	_usrMode = "iswo";
+	_chanMode = "opsitnmlbvk";
+	_oper_name ="operator";
+	_oper_password = "password";
+	_on = true;
+	_restart = false;
+   	setDatatime();
+	setSocketServer(AF_INET, SOCK_STREAM, 0);
+	addSocket(this->_socketServer);
+	configSocketServer();
+	setAddressServer(port);
+	bindAddress();
+	listenAddress();
+}

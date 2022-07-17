@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:11:27 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 14:00:45 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {retur
 std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
 
 // 402 - 482
-std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
+//std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
 std::string ERR_CHANOPRIVSNEEDED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You're not channel operator"); (void)usr; (void)srv;}
 
 // 381
@@ -72,4 +72,8 @@ std::string ERR_NOPRIVILEGES(irc::Server *srv, irc::User usr, irc::Channel *chan
 // (PRIVMSG/NOTICE)  412 - 404
 std::string ERR_NOTEXTTOSEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Not enough parameters given"); (void)usr; (void)srv; (void)chan;}
 std::string ERR_CANNOTSENDTOCHAN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :You cannot send external messages to this channel whilst the +n (noextmsg) mode is set."); (void)usr; (void)srv;}
+
+//402 && 723
+std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (/*server name +*/" :No such server"); (void)usr; (void)srv; (void)chan;}
+std::string ERR_NOPRIVS(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (/*priv + */" :Insufficient oper privileges."); (void)usr; (void)srv; (void)chan;}
 #endif

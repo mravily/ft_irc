@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:07:23 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 16:38:29 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,20 @@
 
 void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	std::cout << "PASS Funct:" << std::endl;
-	std::cout << usr->printStatus() << std::endl;
-	std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
-	std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
-	// std::cout << "cmd->getPrefix(): " << cmd->getPrefix() << std::endl;
-	if (!cmd->getParams()[0].compare(srv->getPassword()))
-		puts("ici la");
-	if (!cmd->getParams().size())
-		usr->reply(461);
-	else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
-	{
-		usr->setStatus(irc::AUTHENTICATED);
-		usr->setBits(0);
-	}
-	else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
-		usr->reply(462);
-	else
-		usr->reply(464);
+    usr->setBits(0);
+    std::cout << "PASS Funct:" << std::endl;
+    std::cout << usr->printStatus() << std::endl;
+    std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
+    std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
+    // std::cout << "cmd->getPrefix(): " << cmd->getPrefix() << std::endl;
+    if (!cmd->getParams().size())
+        usr->reply(461);
+    else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
+        usr->setStatus(irc::AUTHENTICATED);
+    else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
+        usr->reply(462);
+    else
+        usr->reply(464);
 }
 
 bool checkNickname(irc::Server *srv, std::string nickname)
@@ -299,7 +295,6 @@ void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		srv->broadcast("Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")");
 		user->addWaitingSend(":" + user->getClient() + " ERROR: Closing link: IRC Hobbs Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")" + CRLF);
 	}
-
 }
 
 void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
@@ -314,4 +309,29 @@ void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 	else
 		usr->reply(464);
+}
+
+void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)srv;
+	if (cmd->getParams().size() < 2)
+		usr->reply(461);
+	else if (usr->getOperator() == true)
+	{
+		//verify oper master
+		std::string server = cmd->getParams()[0];
+		if (!server.compare("localhost") || !server.compare("127.0.0.1") || !server.compare("::1"))
+			srv->turnOff();
+		else
+			usr->reply(402);
+	}
+	else
+		usr->reply(481);
+}
+
+void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	srv->setRestart(true);
+	(void)usr;
+	(void)cmd;
 }
