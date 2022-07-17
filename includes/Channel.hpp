@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 19:11:47 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 19:34:26 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,9 @@ namespace irc
 			void addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);
 			void removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);
 			void eraseUser(std::vector<irc::User *>& list, std::string toFind);
+			void kickUser(irc::User *usr, irc::User *target, std::string reason);
+			void deleteUser(irc::User *target);
+			void reassignMode();
 	};
 }
 #endif
