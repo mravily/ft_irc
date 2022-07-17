@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:10:13 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 18:41:09 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,11 @@ namespace irc
 		void setBits(int index);
 		void setOper(bool x);
 
+		/*
+		** @brief Verifie si le bit est allumer
+		** @param index index du bit a checker
+		** @return renvoi true si le bit est allumer
+		*/
 		bool checkBit(int index) {return (_mandatory & (1 << index));};
 
 		int			getFd();

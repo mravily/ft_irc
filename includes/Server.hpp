@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:10:52 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 17:51:06 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ namespace irc
 		std::string _datatime;
 		std::string _usrMode;
 		std::string _chanMode;
-		int 		_chanLimit;
 		std::string	_oper_name;
 		std::string	_oper_password;
 

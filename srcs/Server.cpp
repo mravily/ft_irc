@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:07:06 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 18:12:48 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,9 +264,11 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 
 irc::Server::~Server()
 {
-	close(this->_socketServer);
 	for (std::vector<pollfd>::iterator it(_pollFds.begin()); it != _pollFds.end(); it++)
 		close((*it).fd);
+	for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
+		deleteUser((*itu).second->getFd());
+	close(this->_socketServer);
 }
 
 void irc::Server::broadcast(std::string message)

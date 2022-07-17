@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:07:23 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 18:29:55 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,17 @@ void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	std::cout << usr->printStatus() << std::endl;
 	std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
 	std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
-	// std::cout << "cmd->getPrefix(): " << cmd->getPrefix() << std::endl;
-	if (!cmd->getParams()[0].compare(srv->getPassword()))
-		puts("ici la");
 	if (!cmd->getParams().size())
-		usr->reply(461);
+		usr->reply(461);    	// ERR_NEEDMOREPARAMS
 	else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
 	{
 		usr->setStatus(irc::AUTHENTICATED);
 		usr->setBits(0);
 	}
 	else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
-		usr->reply(462);
+		usr->reply(462);		// ERR_ALREADYREGISTERED
 	else
-		usr->reply(464);
+		usr->reply(464);		// ERR_PASSWDMISMATCH
 }
 
 bool checkNickname(irc::Server *srv, std::string nickname)
@@ -64,7 +61,6 @@ bool checkChar(std::string nickname)
 
 void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	usr->setBits(1);
 	// std::cout << "[" << srv->getDatatime() << "]" << std::endl;
 	std::cout << "NICK Funct" << std::endl;
 	std::cout << "Nickname: " << cmd->getParams()[0]  << "\n" << std::endl;
@@ -88,6 +84,7 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
 	usr->setNickname(cmd->getParams()[0]);
+	usr->setBits(1);
 	if (usr->checkBit(0))
 		usr->setStatus(irc::AUTHENTICATED);
 }

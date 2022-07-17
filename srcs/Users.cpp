@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:12:56 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/17 18:36:58 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void irc::User::registration()
 
 void irc::User::processReply()
 {
-	if (!checkBit(0) && getStatus() == irc::CONNECTED && _cmds.size())
+	if (checkBit(1) && checkBit(2) && !checkBit(0))
 	{
 		this->setStatus(irc::LEAVE);
 		this->addWaitingSend((std::string)"ERROR :Need password" + CRLF);

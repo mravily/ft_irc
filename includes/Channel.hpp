@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 21:16:12 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 19:11:47 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ namespace irc
 			void setLastTry(std::string value) {this->_lastTry = value;};
 			void setDateTopic() {this->_topicDate = getCurrentDate();}
 			void setTopic(std::string newTopic) {setDateTopic(); this->_topic = newTopic;}
-			
+			void setModes(irc::User* usr, std::string modestring);
+			void rmModes(irc::User* usr, std::string modestring);
 			void addUser(irc::User* usr);
 			void removeUser(irc::User* usr, std::string message);
 			bool knowUser(irc::User* usr);
