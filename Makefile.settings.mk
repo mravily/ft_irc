@@ -6,12 +6,12 @@
 #    By: mravily <mravily@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/21 21:06:11 by rotrojan          #+#    #+#              #
-#    Updated: 2022/07/16 20:10:20 by mravily          ###   ########.fr        #
+#    Updated: 2022/07/17 19:32:44 by mravily          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # The name of the binary
-NAME = ft_irc
+NAME = ircserv
 
 # Port to host the server
 PORT = 6667

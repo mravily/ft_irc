@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 19:19:24 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 20:07:48 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ namespace irc
 		std::string _datatime;
 		std::string _usrMode;
 		std::string _chanMode;
-		int 		_chanLimit;
 		std::string	_oper_name;
 		std::string	_oper_password;
 		bool		_on;
@@ -70,7 +69,6 @@ namespace irc
 	public:
 		Server(char *port, char *password);
 		~Server();
-//		Server &operator=(const Server &x);
 
 		std::vector<irc::Channel *> getChannels();
 		std::string getPassword();

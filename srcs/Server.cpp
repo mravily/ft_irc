@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 19:50:43 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 19:58:38 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ irc::User* irc::Server::getUserByNick(std::string nick)
 		if (nick.compare(it->second->getNickname()) == 0)
 			return (it->second);
 	}
-	return (nullptr);
+	return (NULL);
 }
 
 /*
@@ -242,6 +242,19 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string passw
 	// 	usr->reply(475, chan); return ;  //ERR_CHANNELISFULL
 	// if (chan->getModes().find('k') && password.compare(chan->getPassword()))
 	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
+	if (chan->findMode("i") == true) // si channel sur invitation
+	{
+		if (usr->getOperator() == false)
+		{
+			if (usr->haveInvitation(chan->getName()) == false)
+			{
+				usr->reply(473, chan);
+				return;
+			}
+			else
+				usr->delInvitation(chan->getName());
+		}
+	}
 	chan->addUser(usr);
 
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
@@ -272,11 +285,11 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 */
 irc::Server::~Server()
 {
-    for (std::vector<pollfd>::reverse_iterator it(_pollFds.rbegin()); it != _pollFds.rend(); it++)
-        close((*it).fd);
-    for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
-        deleteUser((*itu).second->getFd());
-    close(this->_socketServer);
+	for (std::vector<pollfd>::iterator it(_pollFds.begin()); it != _pollFds.end(); it++)
+		close((*it).fd);
+	for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
+		deleteUser((*itu).second->getFd());
+	close(this->_socketServer);
 }
 
 void irc::Server::broadcast(std::string message)

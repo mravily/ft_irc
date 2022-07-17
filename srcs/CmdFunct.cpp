@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 16:38:29 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 20:18:02 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 
 void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-    usr->setBits(0);
-    std::cout << "PASS Funct:" << std::endl;
-    std::cout << usr->printStatus() << std::endl;
-    std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
-    std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
-    // std::cout << "cmd->getPrefix(): " << cmd->getPrefix() << std::endl;
-    if (!cmd->getParams().size())
-        usr->reply(461);
-    else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
-        usr->setStatus(irc::AUTHENTICATED);
-    else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
-        usr->reply(462);
-    else
-        usr->reply(464);
+	std::cout << "PASS Funct:" << std::endl;
+	std::cout << usr->printStatus() << std::endl;
+	std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
+	std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
+	if (!cmd->getParams().size())
+		usr->reply(461);    	// ERR_NEEDMOREPARAMS
+	else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
+	{
+		usr->setStatus(irc::AUTHENTICATED);
+		usr->setBits(0);
+	}
+	else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
+		usr->reply(462);		// ERR_ALREADYREGISTERED
+	else
+		usr->reply(464);		// ERR_PASSWDMISMATCH
 }
 
 bool checkNickname(irc::Server *srv, std::string nickname)
@@ -60,7 +61,6 @@ bool checkChar(std::string nickname)
 
 void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	usr->setBits(1);
 	// std::cout << "[" << srv->getDatatime() << "]" << std::endl;
 	std::cout << "NICK Funct" << std::endl;
 	std::cout << "Nickname: " << cmd->getParams()[0]  << "\n" << std::endl;
@@ -84,6 +84,7 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
 	usr->setNickname(cmd->getParams()[0]);
+	usr->setBits(1);
 	if (usr->checkBit(0))
 		usr->setStatus(irc::AUTHENTICATED);
 }
@@ -219,7 +220,7 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			if (userTarget != nullptr)
 			{
 				userTarget->addWaitingSend(":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF);
-				userTarget->processReply();
+			//	userTarget->processReply();
 			}
 			else
 				usr->reply(401);
@@ -254,7 +255,7 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	irc::Channel *chan;
 
-	if ((chan = findChan(srv, cmd->getParams()[0])) == nullptr)
+	if ((chan = findChan(srv, cmd->getParams()[0])) == NULL)
 	{
 		usr->reply(461, chan); // no parametres
 		return;
@@ -268,7 +269,7 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		if (chan->knowUser(usr) == false) // si user pas present dans channel
 			usr->reply(442, chan);
-		else if (chan->findMode("t") == true && chan->isOperator(usr) == false) // si channel mode +t et usr n'est pas operator
+		else if (chan->findMode("t") == true && chan->isOperator(usr) == false) // si channel mode +t et usr n'est pas operator(A REGLER !!)
 			usr->reply(482, chan);
 		else
 		{
@@ -334,4 +335,111 @@ void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	srv->setRestart(true);
 	(void)usr;
 	(void)cmd;
+}
+
+void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams()[0].size() || !cmd->getParams()[1].size())
+	{
+		usr->reply(461);
+		return;
+	}
+	irc::Channel *chan;
+	irc::User *target;
+	std::string channelName = cmd->getParams()[0];
+	std::vector<std::string> names = split(cmd->getParams()[1], ",");
+	std::string reason = cmd->getTrailer();
+	if (!reason.size())
+		reason = "no reason";
+
+	if ((chan = findChan(srv, channelName)) == NULL)
+	{
+		usr->reply(401, chan);
+		return;
+	}
+	else if (chan->knowUser(usr) == false)
+	{
+		usr->reply(442, chan);
+		return;
+	}
+
+	for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); it++)
+	{
+		if ((target = srv->getUserByNick(*it)) == NULL)
+			usr->reply(403, chan);
+		else if (chan->knowUser(target) == false)
+			usr->reply(441, chan);
+		else
+		{
+			//mode operator channel a rajouter
+			// si n'est pas operator
+			//	usr->reply(482, chan);
+			//return;
+			chan->kickUser(usr, target, reason);
+		}
+	}
+}
+
+void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	if (!cmd->getParams()[0].size() || !cmd->getParams()[1].size())
+	{
+		usr->reply(461);
+		return;
+	}
+	std::string nameTarget = cmd->getParams()[0];
+	std::string nameChannel = cmd->getParams()[1];
+	irc::User *target;
+	irc::Channel *chan = findChan(srv, nameChannel);
+	if (chan == NULL)
+	{
+		usr->reply(401); // devrait etre 403 NOSUCHCHANNEL
+		return;
+	}
+	else if (chan->knowUser(usr) == false)
+	{
+		usr->reply(442);
+		return;
+	}
+	else if ((target = srv->getUserByNick(nameTarget)) == NULL)
+	{
+		usr->reply(401);
+		return;
+	}
+	else if (chan->knowUser(target) == true)
+	{
+		usr->reply(443, chan);
+		return;
+	}
+	else if (chan->isOperator(usr) == false)
+	{
+		usr->reply(482, chan);
+		return;
+	}
+	else
+	{
+		std::string response = ":" + usr->getClient() + " INVITE " + nameTarget + " " + nameChannel + CRLF;
+		send(target->getFd(), response.c_str(), response.length(), 0);
+		usr->addWaitingSend(":" + usr->getClient() + " 341 " + usr->getNickname() + " " + nameTarget + " :" + nameChannel + CRLF);
+		if (target->haveInvitation(nameChannel) == false) //eviter doublon
+			target->addInvitation(nameChannel);
+	}
+
+}
+
+void NAMES(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	std::vector<std::string> channelNames = cmd->getParams();
+
+	irc::Channel *chan;
+	for (std::vector<std::string>::iterator it = channelNames.begin(); it != channelNames.end(); it++)
+	{
+		if ((chan = findChan(srv, *it)) != NULL)
+		{
+			usr->reply(353, chan);
+			usr->reply(366, chan);
+		}
+		else
+			usr->reply(401);
+	}
 }

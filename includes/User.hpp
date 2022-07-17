@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 16:10:25 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/17 20:07:04 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ namespace irc
 		std::map<std::string, cmd_funct> _funct;
 
 		std::vector<std::string> _waitingSend;
+		std::vector<std::string> _invitation;
 		std::string _reason;
 	public:
 		User(irc::Server *srv, int socket, sockaddr_in address);
@@ -99,6 +100,11 @@ namespace irc
 		void setBits(int index);
 		void setOper(bool x);
 
+		/*
+		** @brief Verifie si le bit est allumer
+		** @param index index du bit a checker
+		** @return renvoi true si le bit est allumer
+		*/
 		bool checkBit(int index) {return (_mandatory & (1 << index));};
 
 		int			getFd();
@@ -119,6 +125,9 @@ namespace irc
 
 		void setReplies();
 		void setCmd();
+		void addInvitation(std::string channelName) {this->_invitation.push_back(channelName);}
+		void delInvitation(std::string channelName);
+		bool haveInvitation(std::string channelName);
 		std::string getReplies(int code, irc::Channel *chan);
 		void getMessages();
 		void reply(int code, irc::Channel *chan = NULL);
@@ -154,5 +163,8 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void NAMES(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
 #endif
