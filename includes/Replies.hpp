@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-//   Updated: 2022/07/16 22:11:27 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/19 12:48:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ std::string ERR_PASSWDMISMATCH(irc::Server *srv, irc::User usr, irc::Channel *ch
 /* NICK Replies 431 432 433 */
 std::string ERR_NONICKNAMEGIVEN(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":No nickname given"); (void)srv; (void)usr; (void)chan;};
 std::string ERR_ERRONEUSNICKNAME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Erroneus nickname"); (void)srv; (void)usr; (void)chan;};
-std::string ERR_NICKNAMEINUSE(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":" + usr.getNickname()); (void)srv; (void)usr; (void)chan;};
+std::string ERR_NICKNAMEINUSE(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getNickname() + " Nickname is already in use :" + usr.getNickname()); (void)srv; (void)usr; (void)chan;};
 
 // (JOIN) 331 - 353 - 366 - 324 - 403
 std::string RPL_NOTOPIC(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " :No topic is set"); (void)srv; (void)usr;}

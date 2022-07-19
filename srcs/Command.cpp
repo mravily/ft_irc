@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:25:35 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/12 18:52:07 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 21:19:17 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ std::string irc::Command::getPrefix() {return (_prefix);};
 std::string irc::Command::getTrailer() {return (_trailer);};
 std::vector<std::string> irc::Command::getParams() {return (_params);};
 
-irc::Command::Command(std::string message) : _message(message)
+irc::Command::Command(std::string message) : _message(message), _params()
 {
 	std::string::iterator ite(--message.end());
 	if (*ite == '\n')	

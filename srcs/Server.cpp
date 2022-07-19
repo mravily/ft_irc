@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 18:12:48 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 20:28:07 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,11 @@ bool getType(std::string name) {return (name[0] == '&');};
 
 void irc::Server::createChan(std::string name, irc::User* usr)
 {
+	
+	if (name.find('#') == std::string::npos)
+		name.insert(name.begin(), '#');
+	std::cout << "Name: " << name << std::endl;
+	
 	_channels.push_back(Channel(getType(name), name, usr));
 
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);
@@ -278,7 +283,7 @@ void irc::Server::broadcast(std::string message)
 	for (; itUsers != users.end(); itUsers++)
 	{
 		(*itUsers).second->addWaitingSend(":" + (*itUsers).second->getClient() + message + CRLF);
-		(*itUsers).second->processReply();
+		// (*itUsers).second->processReply();
 	}
 }
 

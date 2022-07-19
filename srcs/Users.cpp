@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 18:36:58 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 19:38:18 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,8 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("KILL", KILL));
+	
 }
 
 void irc::User::setReplies()
