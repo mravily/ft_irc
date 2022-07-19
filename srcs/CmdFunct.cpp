@@ -6,63 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 18:20:02 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/19 19:15:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-bool chanExist(irc::Server *srv, std::string toFind)
-{
-
-	std::vector<irc::Channel *> Chan(srv->getChannels());
-	std::vector<irc::Channel *>::iterator it(Chan.begin());
-	for (; it != Chan.end(); it++)
-	{
-		std::cout << (*it)->getName() << std::endl;
-		if (!toFind.compare((*it)->getName()))
-			return (true);
-	}
-	return (false);
-}
-
-void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	if (cmd->getParams().empty())
-	{
-		usr->reply(461);
-		return ;
-	}
-	std::vector<std::string> keys;
-	std::vector<std::string>::iterator itPass;
-	if (cmd->getParams().size() > 1)
-	{
-		std::vector<std::string> keys = split(cmd->getParams()[1], ",");
-		itPass = keys.begin();
-	}
-	else
-	{
-		std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
-		std::vector<std::string>::iterator itNames(chanNames.begin());
-		irc::Channel* chan = nullptr;
-		for (; itNames != chanNames.end(); itNames++)
-		{
-			if (!(chan = findChan(srv, (*itNames))))
-				srv->createChan((*itNames), usr);
-			else
-				srv->joinChan(chan, usr);
-		}
-	}
-}
-
-void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	(void)srv;
-	if (!cmd->getParams().size())
-		usr->reply(461);
-	usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " " + "PONG :" + cmd->getParams()[0] + CRLF);
-	usr->setStatus(irc::ONLINE);
-}
 
 
 /* @brief Recherche dans les channels existant et quitte le channel avec une reason
@@ -72,12 +20,13 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (cmd->getParams().empty())
+	{
 		usr->reply(461);
-	puts("RIP");
+		return ;
+	}
 
 	irc::Channel* chan = nullptr;
 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
-	puts("RIP_2");
 	std::vector<std::string>::iterator itNames(chanNames.begin());
 	for (; itNames != chanNames.end(); itNames++)
 	{
