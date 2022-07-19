@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 18:19:32 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 18:51:17 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,7 +314,7 @@ void irc::Server::deleteUser(int fd)
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
-	delete _users[fd];
+	delete _users.find(fd)->second;
 //	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
 //	_users[fd]->processReply();
 	_users.erase(fd);
