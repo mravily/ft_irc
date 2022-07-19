@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 22:47:47 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 23:07:10 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,6 +344,7 @@ bool irc::Server::on(void) const { return this->_on; }
 void irc::Server::turnOff() { this->_on = false; }
 bool irc::Server::getRestart(void) const { return this->_restart; }
 void irc::Server::setRestart(bool x) { this->_restart = x; }
+std::string irc::Server::getHostaddr() const { return this->_hostaddr; }
 void irc::Server::restart(char *port, char *pass)
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());

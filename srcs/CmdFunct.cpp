@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:15:19 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/19 23:20:45 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 	else
 		channels = srv->getChannels();
-	
+
 	for (std::vector<irc::Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true) // si channel prive (&) affiche seulement si user dedans
@@ -184,7 +184,8 @@ void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		//verify oper master
 		std::string server = cmd->getParams()[0];
-		if (!server.compare("localhost") || !server.compare("127.0.0.1") || !server.compare("::1"))
+		std::cout << srv->getHostaddr() << std::endl;
+		if (!server.compare(srv->getHostaddr()))
 			srv->turnOff();
 		else
 			usr->reply(402);
