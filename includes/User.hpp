@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 18:20:33 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/19 18:49:17 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ namespace irc
 		std::string getClient();
 		std::string getReason();
 		bool	getOperator() const;
+		bool	cmdNeedParams(std::string cmdName);
 
 		void addWaitingSend(std::string newReply);
 		std::string printStatus();

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 19:57:51 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 22:47:47 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,10 @@ std::vector<irc::Channel *> irc::Server::getChannels()
     std::vector<Channel *> vec;
 
     for (std::vector<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		std::cout << "pushback -> " << it->getName() << std::endl;
         vec.push_back(&(*it));
+	}
 
     return (vec);
 }
@@ -320,6 +323,18 @@ void irc::Server::deleteUser(int fd)
 //	_users[fd]->processReply();
 	_users.erase(fd);
 	close(fd);
+}
+
+void irc::Server::removeChan(std::string name)
+{
+	for (std::vector<irc::Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
+	{
+		if (it->getName() == name)
+		{
+			this->_channels.erase(it);
+			return;
+		}
+	}
 }
 
 std::string irc::Server::getOperName() const { return this->_oper_name; }
