@@ -6,11 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/07/17 19:38:45 by mravily          ###   ########.fr       */
-=======
-/*   Updated: 2022/07/17 19:34:38 by nayache          ###   ########.fr       */
->>>>>>> 9a15f297e52259bf04d349be5df312ab635c31ac
+/*   Updated: 2022/07/19 16:09:41 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,12 +161,9 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
-<<<<<<< HEAD
 void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd);
-=======
 void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void NAMES(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 
->>>>>>> 9a15f297e52259bf04d349be5df312ab635c31ac
 #endif

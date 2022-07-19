@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 15:49:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 17:20:51 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ bool chanExist(irc::Server *srv, std::string toFind)
 
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams().size())
+	if (cmd->getParams().empty())
+	{
 		usr->reply(461);
-
-	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+		return ;
+	}
 	std::vector<std::string> keys;
 	std::vector<std::string>::iterator itPass;
 	if (cmd->getParams().size() > 1)
@@ -39,19 +40,19 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		std::vector<std::string> keys = split(cmd->getParams()[1], ",");
 		itPass = keys.begin();
 	}
-	std::vector<std::string>::iterator itNames(chanNames.begin());
-	irc::Channel* chan = nullptr;
-	for (; itNames != chanNames.end(); itNames++)
+	else
 	{
-		if (!(chan = findChan(srv, (*itNames))))
-			srv->createChan((*itNames), usr);
-		else
+		std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+		std::vector<std::string>::iterator itNames(chanNames.begin());
+		irc::Channel* chan = nullptr;
+		for (; itNames != chanNames.end(); itNames++)
 		{
-			puts("JOIN CHANNEL");
-			srv->joinChan(chan, usr);
+			if (!(chan = findChan(srv, (*itNames))))
+				srv->createChan((*itNames), usr);
+			else
+				srv->joinChan(chan, usr);
 		}
 	}
-	puts("OUT JOIN");
 }
 
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
