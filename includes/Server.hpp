@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 19:13:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 19:15:11 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ namespace irc
 		std::string	_oper_name;
 		std::string	_oper_password;
 		std::string _hostaddr;
-		
+		bool		_on;
+		bool		_restart;
+
 	public:
 		Server(char *port, char *password);
 		~Server();
@@ -82,6 +84,9 @@ namespace irc
 		std::vector<irc::Channel *> getListChannelByName(std::vector<std::string> name);
 		std::string getOperName() const;
 		std::string getOperPassword() const;
+		bool on(void) const;
+		bool getRestart(void) const;
+		void restart(char *a, char *b);
 
 
 		void setDatatime();
@@ -111,6 +116,8 @@ namespace irc
 				exit(1);
 			}
 		void deleteUser(int fd);
+		void turnOff(void);
+		void setRestart(bool x);
 	};
 }
 #endif

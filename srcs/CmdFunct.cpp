@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 18:37:42 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 19:15:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		if (!(chan = findChan(srv, (*itNames))))
 		{
-			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
-			usr->reply(403, tmp);
-			delete tmp;
+//			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
+			irc::Channel tmp(false, (*itNames), usr);
+//			usr->reply(403, tmp);
+			usr->reply(403, &tmp);
+//			delete tmp;
 		}
 		else
 			chan->removeUser(usr, (" PART :" + chan->getName()));
@@ -170,6 +172,33 @@ void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(464);
 }
 
+void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)srv;
+	if (cmd->getParams().size() < 2)
+		usr->reply(461);
+	else if (usr->getOperator() == true)
+	{
+		//verify oper master
+		std::string server = cmd->getParams()[0];
+		if (!server.compare("localhost") || !server.compare("127.0.0.1") || !server.compare("::1"))
+			srv->turnOff();
+		else
+			usr->reply(402);
+	}
+	else
+		usr->reply(481);
+}
+
+void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
+{
+	(void)cmd;
+	if (usr->getOperator() == true)
+		srv->setRestart(true);
+	else
+		usr->reply(481);
+}
+
 void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (!cmd->getParams()[0].size() || !cmd->getParams()[1].size())
@@ -184,12 +213,12 @@ void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	std::string reason = cmd->getTrailer();
 	if (!reason.size())
 		reason = "no reason";
-	
+
 	if ((chan = findChan(srv, channelName)) == NULL)
 	{
 		usr->reply(401, chan);
 		return;
-	}	
+	}
 	else if (chan->knowUser(usr) == false)
 	{
 		usr->reply(442, chan);
@@ -254,7 +283,7 @@ void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		std::string response = ":" + usr->getClient() + " INVITE " + nameTarget + " " + nameChannel + CRLF;
 		send(target->getFd(), response.c_str(), response.length(), 0);
 		usr->addWaitingSend(":" + usr->getClient() + " 341 " + usr->getNickname() + " " + nameTarget + " :" + nameChannel + CRLF);
-		if (target->haveInvitation(nameChannel) == false) //eviter doublon 
+		if (target->haveInvitation(nameChannel) == false) //eviter doublon
 			target->addInvitation(nameChannel);
 	}
 
