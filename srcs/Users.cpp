@@ -6,7 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/07/17 19:38:18 by mravily          ###   ########.fr       */
+=======
+/*   Updated: 2022/07/17 19:35:28 by nayache          ###   ########.fr       */
+>>>>>>> 9a15f297e52259bf04d349be5df312ab635c31ac
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +83,27 @@ void irc::User::setModes(std::string modestring)
 	}
 }
 
+bool irc::User::haveInvitation(std::string channelName)
+{
+	for (std::vector<std::string>::iterator it = this->_invitation.begin(); it != this->_invitation.end(); it++)
+	{
+		if (*it == channelName)
+			return (true);
+	}
+	return (false);
+}
+
+void irc::User::delInvitation(std::string channelName)
+{
+	for (std::vector<std::string>::iterator it = this->_invitation.begin(); it != this->_invitation.end(); it++)
+	{
+		if (*it == channelName)
+		{
+			this->_invitation.erase(it);
+			return;
+		}
+	}
+}
 
 void irc::User::addWaitingSend(std::string newReply)
 {
@@ -236,7 +261,9 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("KILL", KILL));
-	
+	_funct.insert(std::make_pair<std::string, cmd_funct>("KICK", KICK));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("INVITE", INVITE));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("NAMES", NAMES));
 }
 
 void irc::User::setReplies()
@@ -263,11 +290,14 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(431, ERR_NONICKNAMEGIVEN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(432, ERR_ERRONEUSNICKNAME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(433, ERR_NICKNAMEINUSE));
+	_rpl.insert(std::make_pair<int, rpl_funct>(441, ERR_USERNOTINCHANNEL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(442, ERR_NOTONCHANNEL));
+	_rpl.insert(std::make_pair<int, rpl_funct>(443, ERR_USERONCHANNEL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(461, ERR_NEEDMOREPARAMS));
 	_rpl.insert(std::make_pair<int, rpl_funct>(462, ERR_ALREADYREGISTERED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(464, ERR_PASSWDMISMATCH));
 	_rpl.insert(std::make_pair<int, rpl_funct>(471, ERR_CHANNELISFULL));
+	_rpl.insert(std::make_pair<int, rpl_funct>(473, ERR_INVITEONLYCHAN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(475, ERR_BADCHANNELKEY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(481, ERR_NOPRIVILEGES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(482, ERR_CHANOPRIVSNEEDED));

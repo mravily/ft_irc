@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 19:26:56 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/17 19:34:51 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,32 @@ void irc::Channel::removeUser(irc::User *usr, std::string message)
 		find = findEraseUser(_users, usr, this, message);
 	if (find == false)
 		usr->reply(442, this);
+}
+
+void irc::Channel::deleteUser(irc::User *target)
+{
+	for (std::vector<User *>::iterator it = this->_operator.begin(); it != this->_operator.end(); it++)
+	{
+		if (*it == target)
+		{
+			this->_operator.erase(it);
+			return;
+		}
+	}
+	for (std::vector<User *>::iterator it = this->_users.begin(); it != this->_users.end(); it++)
+	{
+		if (*it == target)
+		{
+			this->_users.erase(it);
+			return;
+		}
+	}
+}
+
+void irc::Channel::kickUser(irc::User *usr, irc::User *target, std::string reason)
+{
+	usr->broadcast(this, " KICK " + this->_name + " " + target->getNickname() + " " + reason, 0);
+	deleteUser(target);
 }
 
 bool irc::Channel::knowUser(irc::User* usr)
