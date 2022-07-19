@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:48:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 19:06:57 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:04:10 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool is_digits(const std::string &str)
 ** @brief Recherche sur le server donner un user
 ** @param server sur le quel rechercher l'user
 ** @param toFind User portant le nickname contenu dans toFind
-** @return Renvoi l'user si il est trouver, sinon nullptr
+** @return Renvoi l'user si il est trouver, sinon NULL
 */
 irc::User* findUserSrv(irc::Server *srv, std::string toFind)
 {
@@ -41,7 +41,7 @@ irc::User* findUserSrv(irc::Server *srv, std::string toFind)
 ** @brief Recherche sur le channel donner un user
 ** @param channel sur le quel rechercher l'user
 ** @param toFind User portant le nickname contenu dans toFind
-** @return Renvoi l'user si il est trouver, sinon nullptr
+** @return Renvoi l'user si il est trouver, sinon NULL
 */
 irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind)
 {
@@ -66,5 +66,5 @@ irc::Channel* findChan(irc::Server *srv, std::string toFind)
 		if (!toFind.compare((*it)->getName()))
 			return (*it);
 	}
-	return (nullptr);
+	return (NULL);
 }
