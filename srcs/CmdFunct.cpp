@@ -6,106 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/18 19:25:03 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 18:20:02 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-void PASS(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	std::cout << "PASS Funct:" << std::endl;
-	std::cout << usr->printStatus() << std::endl;
-	std::cout << "Serv.Pass: [" << srv->getPassword() << "]" << std::endl;
-	std::cout << "cmd->getParams()[0]: [" << cmd->getParams()[0] << "]" << std::endl;
-	if (!cmd->getParams().size())
-		usr->reply(461);    	// ERR_NEEDMOREPARAMS
-	else if (usr->getStatus() == irc::CONNECTED && !cmd->getParams()[0].compare(srv->getPassword()))
-	{
-		usr->setStatus(irc::AUTHENTICATED);
-		usr->setBits(0);
-	}
-	else if (usr->getStatus() != irc::CONNECTED && usr->getStatus() != irc::LEAVE)
-		usr->reply(462);		// ERR_ALREADYREGISTERED
-	else
-		usr->reply(464);		// ERR_PASSWDMISMATCH
-}
-
-bool checkNickname(irc::Server *srv, std::string nickname)
-{
-	std::map<int, irc::User *> Users(srv->getUsers());
-	std::map<int, irc::User *>::iterator it(Users.begin());
-	for (; it != Users.end(); it++)
-	{
-		if (!nickname.compare((*it).second->getNickname()))
-			return (false);
-	}
-	return (true);
-}
-
-bool isLetter(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
-bool isSpecial(char c) { return (c >= '[' && c <= '`') || (c >= '{' && c <= '}'); }
-// bool isDigit(char c) { return (c >= '0' && c <= '9'); }
-
-bool checkChar(std::string nickname)
-{
-	if (nickname.length() > 9)
-		return (false);
-	std::string::iterator it(nickname.begin());
-	std::string::iterator ite(nickname.end());
-	for (; it != ite; ++it)
-		if (!isalnum((*it)) && (*it) != '_')
-			return (false);
-	return (true);
-}
-
-void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	// std::cout << "[" << srv->getDatatime() << "]" << std::endl;
-	std::cout << "NICK Funct" << std::endl;
-	std::cout << "Nickname: " << cmd->getParams()[0]  << "\n" << std::endl;
-	if (!cmd->getParams().size())
-	{
-		usr->reply(431);  // ERR_NONICKNAMEGIVEN
-		usr->setStatus(irc::ERROR);
-	}
-	else if (!checkChar(cmd->getParams()[0]))
-	{
-		usr->reply(432);  // ERR_ERRONEUSNICKNAME
-		usr->setStatus(irc::ERROR);
-	}
-	else if (!checkNickname(srv, cmd->getParams()[0]))
-	{
-		usr->setNickname(cmd->getParams()[0]);
-		usr->reply(433);  // ERR_NICKNAMEINUSE
-		usr->setStatus(irc::ERROR);
-		return ;
-	}
-	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
-		usr->addWaitingSend(":" + usr->getClient() + " " + "NICK :" + cmd->getParams()[0] + CRLF);
-	usr->setNickname(cmd->getParams()[0]);
-	usr->setBits(1);
-	if (usr->checkBit(0))
-		usr->setStatus(irc::AUTHENTICATED);
-}
-
-void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
-{
-	usr->setBits(2);
-	// std::cout << "USER Funct" << std::endl;
-	// std::cout << "Username: " << cmd->getParams()[0] << std::endl;
-	// std::cout << "Realname: " << cmd->getTrailer() << std::endl;
-	if (cmd->getParams().size() < 3)
-		usr->reply(461);
-	else if (usr->getStatus() == irc::REGISTERED)
-		usr->reply(462);
-	else
-	{
-		usr->setUsername(cmd->getParams()[0]);
-		usr->setRealname(cmd->getTrailer());
-	}
-	(void)srv;
-}
 
 bool chanExist(irc::Server *srv, std::string toFind)
 {
@@ -123,10 +28,11 @@ bool chanExist(irc::Server *srv, std::string toFind)
 
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams().size())
+	if (cmd->getParams().empty())
+	{
 		usr->reply(461);
-
-	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+		return ;
+	}
 	std::vector<std::string> keys;
 	std::vector<std::string>::iterator itPass;
 	if (cmd->getParams().size() > 1)
@@ -134,19 +40,19 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		std::vector<std::string> keys = split(cmd->getParams()[1], ",");
 		itPass = keys.begin();
 	}
-	std::vector<std::string>::iterator itNames(chanNames.begin());
-	irc::Channel* chan = nullptr;
-	for (; itNames != chanNames.end(); itNames++)
+	else
 	{
-		if (!(chan = findChan(srv, (*itNames))))
-			srv->createChan((*itNames), usr);
-		else
+		std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+		std::vector<std::string>::iterator itNames(chanNames.begin());
+		irc::Channel* chan = nullptr;
+		for (; itNames != chanNames.end(); itNames++)
 		{
-			puts("JOIN CHANNEL");
-			srv->joinChan(chan, usr);
+			if (!(chan = findChan(srv, (*itNames))))
+				srv->createChan((*itNames), usr);
+			else
+				srv->joinChan(chan, usr);
 		}
 	}
-	puts("OUT JOIN");
 }
 
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
@@ -165,11 +71,13 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 */
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams().size())
+	if (cmd->getParams().empty())
 		usr->reply(461);
+	puts("RIP");
 
 	irc::Channel* chan = nullptr;
 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+	puts("RIP_2");
 	std::vector<std::string>::iterator itNames(chanNames.begin());
 	for (; itNames != chanNames.end(); itNames++)
 	{
@@ -284,20 +192,21 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
+	irc::User* user = NULL;
 	if (!cmd->getParams().size() || cmd->getParams().size() != 2)
 		usr->reply(461); //ERR_NEEDMOREPARAMS
-	if (!usr->getMode().find('o'))
+	else if (!usr->getOperator())
 		usr->reply(481); //ERR_NOPRIVILEGES
-	irc::User* user = NULL;
-	if (!(user = findUserSrv(srv, cmd->getParams()[0])))
+	else if (!(user = findUserSrv(srv, cmd->getParams()[0])))
 		usr->reply(401);
 	else
 	{
 		user->setStatus(irc::LEAVE);
-		user->setReason(cmd->getParams()[1]);
-		srv->broadcast("Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")");
+		user->setReason(" Killed (" + usr->getNickname() + " " + cmd->getTrailer() + ")");
+		srv->broadcast(" Killed (" + usr->getNickname() + " " + cmd->getTrailer() + ")");
 		user->addWaitingSend(":" + user->getClient() + " ERROR: Closing link: IRC Hobbs Killed (" + usr->getNickname() + " " + cmd->getParams()[1] + ")" + CRLF);
 	}
+	puts("OUT KILL");
 }
 
 void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd)

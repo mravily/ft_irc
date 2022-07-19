@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/18 19:58:02 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 18:17:51 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("SQUIT", SQUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("RESTART", RESTART));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("KILL", KILL));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("KICK", KICK));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("INVITE", INVITE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("NAMES", NAMES));
