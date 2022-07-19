@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 18:59:29 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 21:25:21 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:04:39 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 
 void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	irc::Channel* chan = nullptr;
+	irc::Channel* chan = NULL;
 	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
 		usr->reply(403);

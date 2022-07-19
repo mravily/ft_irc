@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 19:00:40 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 20:14:01 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:04:51 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 void displayMode(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 {
-	irc::User* user = nullptr;
+	irc::User* user = NULL;
 	user = findUserSrv(srv, cmd->getParams()[0]);
 
 	if (user != usr)
@@ -31,7 +31,7 @@ void displayMode(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 
 void changeModeUser(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 {
-	irc::User* user = nullptr;
+	irc::User* user = NULL;
 	user = findUserSrv(srv, cmd->getParams()[0]);
 	if (user != usr)
 		usr->reply(502);  		// ERR_USERSDONTMATCH
