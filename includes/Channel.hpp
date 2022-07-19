@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 19:34:26 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:14:14 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ namespace irc
 			std::string getPassword() {return (_password);};
 			std::string getListUsers();
 			std::string getDatatime() {return (_datatime);};
-
 			std::string getLastTry() {return (_lastTry);};
 			std::string getTopic() {return (_topic);}
 			std::vector<User *> getUser() {return (_users);};

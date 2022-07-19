@@ -6,12 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 19:15:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:13:42 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
 
 /* @brief Recherche dans les channels existant et quitte le channel avec une reason
 ** @param channel list des channels à quitter
