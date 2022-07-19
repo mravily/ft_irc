@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 19:15:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 19:51:12 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,11 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 //			delete tmp;
 		}
 		else
+		{
 			chan->removeUser(usr, (" PART :" + chan->getName()));
+			if (chan->getUserSize() == "0")
+				srv->removeChan(chan->getName());
+		}
 	}
 }
 
@@ -94,14 +98,14 @@ void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 	std::vector<irc::Channel *> channels; // va devenir la list des channels a afficher
 
-	if (cmd->getParams()[0].size() != 0) // si il y a arguments (LIST <channel>,<channel>...)
+	if (!cmd->getParams().empty() && !cmd->getParams()[0].empty()) // si il y a arguments (LIST <channel>,<channel>...)
 	{
-		std::vector<std::string> channelNames = split(cmd->getParams()[0], ","); //recup les differents names channel
+		std::vector<std::string> channelNames = split(cmd->getParams()[0], ",");
 		channels = srv->getListChannelByName(channelNames);
 	}
-	else // sinon recup all channels du serveur pour les afficher
+	else
 		channels = srv->getChannels();
-
+	
 	for (std::vector<irc::Channel *>::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		if ((*it)->isPrivate() == false || (*it)->knowUser(usr) == true) // si channel prive (&) affiche seulement si user dedans
@@ -116,7 +120,7 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 	if ((chan = findChan(srv, cmd->getParams()[0])) == NULL)
 	{
-		usr->reply(461, chan); // no parametres
+		usr->reply(401); // no such chan(must be 403 !!)
 		return;
 	}
 
@@ -201,7 +205,7 @@ void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 
 void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams()[0].size() || !cmd->getParams()[1].size())
+	if (cmd->getParams().size() < 2)
 	{
 		usr->reply(461);
 		return;
@@ -233,18 +237,21 @@ void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(441, chan);
 		else
 		{
-			//mode operator channel a rajouter
-			// si n'est pas operator
-			//	usr->reply(482, chan);
-			//return;
-			chan->kickUser(usr, target, reason);
+			if (chan->isOperator(usr) == false)
+				usr->reply(482, chan);
+			else
+			{
+				chan->kickUser(usr, target, reason);
+				if (chan->getUserSize() == "0")
+					srv->removeChan(chan->getName());
+			}
 		}
 	}
 }
 
 void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams()[0].size() || !cmd->getParams()[1].size())
+	if (cmd->getParams().size() < 2)
 	{
 		usr->reply(461);
 		return;

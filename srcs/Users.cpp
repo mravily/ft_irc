@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 18:17:51 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/19 18:50:43 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,11 @@ void irc::User::processReply()
 	buffer.clear();
 }
 
+bool irc::User::cmdNeedParams(std::string cmd)
+{
+	return (cmd == "TOPIC" || cmd == "PRIVMSG" || cmd == "PART" || cmd == "JOIN"
+	|| cmd == "KICK" || cmd == "INVITE");
+}
 
 /*
 ** @brief Récupère les messages de l'utilisateur envoyer sur le socket
@@ -195,7 +200,10 @@ void irc::User::getMessages()
 			// std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
 			{
-				(*itm).second(getServer(), this, (*its));
+				if ((*its)->getParams().empty() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
+					this->reply(461);
+				else
+					(*itm).second(getServer(), this, (*its));
 			}
 		}
 	}
