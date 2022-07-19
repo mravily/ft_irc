@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 17:44:43 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 19:13:21 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,6 +265,7 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 	setAddressServer(port);
 	bindAddress();
 	listenAddress();
+	_hostaddr = inet_ntoa(_addrServer.sin_addr);
 }
 
 irc::Server::~Server()

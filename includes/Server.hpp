@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 17:45:05 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 19:13:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ namespace irc
 		std::string _chanMode;
 		std::string	_oper_name;
 		std::string	_oper_password;
-
+		std::string _hostaddr;
+		
 	public:
 		Server(char *port, char *password);
 		~Server();

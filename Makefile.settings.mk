@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mravily <mravily@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/10/21 21:06:11 by rotrojan          #+#    #+#              #
-#    Updated: 2022/07/19 16:10:12 by mravily          ###   ########.fr        #
+#    Created: 2021/10/21 21:06:11 by mravily           #+#    #+#              #
+#    Updated: 2022/07/19 18:39:02 by mravily          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRC =	Channel.cpp \
 		Users.cpp \
 		Utils.cpp \
 		MODE/MODE.cpp MODE/CHAN/modeChan.cpp MODE/USER/modeUser.cpp \
-		PASS.cpp NICK.cpp USER.cpp
+		PASS.cpp NICK.cpp USER.cpp JOIN.cpp PING.cpp
 
 # path of sources
 PATH_SRCS = ./srcs
@@ -37,7 +37,7 @@ PATH_SRCS = ./srcs
 INCLUDES =	./includes/
 
 # flags for compilation
-CXXFLAGS = -Wall -Wextra -Werror# -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 # compiler used
 CXX = c++
