@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 17:22:40 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 17:44:43 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,27 +224,16 @@ bool getType(std::string name) {return (name[0] == '&');};
 
 void irc::Server::createChan(std::string name, irc::User* usr)
 {
-	
 	if (name.find('#') == std::string::npos)
 		name.insert(name.begin(), '#');
-	std::cout << "Name: " << name << std::endl;
-	
 	_channels.push_back(Channel(getType(name), name, usr));
-
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);
 	usr->reply(353, &_channels.back());
 	usr->reply(366, &_channels.back());
-
-	std::cout << "[SERVER] " + usr->getNickname() + " à créer le channel " + _channels.back().getName() << std::endl;
 }
 
-void irc::Server::joinChan(irc::Channel* chan, irc::User* usr, std::string password)
+void irc::Server::joinChan(irc::Channel* chan, irc::User* usr)
 {
-	(void)password;
-	// if (chan->getModes().find('l') && chan->getCapacity() >= _chanLimit)
-	// 	usr->reply(475, chan); return ;  //ERR_CHANNELISFULL
-	// if (chan->getModes().find('k') && password.compare(chan->getPassword()))
-	// 	usr->reply(471, chan); return ;  //ERR_BADCHANNELKEY
 	if (chan->findMode("i") == true) // si channel sur invitation
 	{
 		if (usr->getOperator() == false)

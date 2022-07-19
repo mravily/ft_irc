@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:19:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 17:51:06 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 17:45:05 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ namespace irc
 		void runtime();
 
 		void createChan(std::string name, irc::User* usr);
-		void joinChan(irc::Channel* chan, irc::User* usr, std::string password = "");
+		void joinChan(irc::Channel* chan, irc::User* usr);
 		void broadcast(std::string message);
 
 		void DisplayError(std::string message)
