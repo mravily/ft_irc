@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 16:09:41 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/19 18:20:33 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,8 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void LIST(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void OPER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void SQUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void RESTART(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd);

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 16:09:55 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/19 18:17:51 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,9 +235,9 @@ void irc::User::broadcast(irc::Channel *chan, std::string message, irc::User *wi
 
 irc::User::~User()
 {
-	// std::vector<Command *>::iterator it(_cmds.begin());
-	// for (; it != _cmds.end(); it++)
-	// 	delete (*it);
+//	std::vector<Command *>::iterator it(_cmds.begin());
+//	while (it != _cmds.end())
+//	 	delete (*(it++));
 };
 
 void irc::User::setCmd()
@@ -256,6 +256,8 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("LIST", LIST));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("TOPIC", TOPIC));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("OPER", OPER));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("SQUIT", SQUIT));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("RESTART", RESTART));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("KILL", KILL));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("KICK", KICK));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("INVITE", INVITE));
@@ -280,6 +282,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(381, RPL_YOUREOPER));
 	_rpl.insert(std::make_pair<int, rpl_funct>(401, ERR_NOSUCHNICK));
+	_rpl.insert(std::make_pair<int, rpl_funct>(402, ERR_NOSUCHSERVER));
 	_rpl.insert(std::make_pair<int, rpl_funct>(403, ERR_NOSUCHCHANNEL));
 	_rpl.insert(std::make_pair<int, rpl_funct>(404, ERR_CANNOTSENDTOCHAN));
 	_rpl.insert(std::make_pair<int, rpl_funct>(412, ERR_NOTEXTTOSEND));
@@ -299,6 +302,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(482, ERR_CHANOPRIVSNEEDED));
 	_rpl.insert(std::make_pair<int, rpl_funct>(501, ERR_UMODEUNKNOWNFLAG));
 	_rpl.insert(std::make_pair<int, rpl_funct>(502, ERR_USERSDONTMATCH));
+	_rpl.insert(std::make_pair<int, rpl_funct>(723, ERR_NOPRIVS));
 }
 
 void irc::User::printUser()

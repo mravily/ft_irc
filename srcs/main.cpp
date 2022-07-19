@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 14:50:12 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/14 18:26:14 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/17 19:18:23 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ std::vector<std::string> split(std::string s, std::string delimiter)
 
 	size_t pos = 0;
 	std::string token;
-	while ((pos = s.find(delimiter)) != std::string::npos) 
+	while ((pos = s.find(delimiter)) != std::string::npos)
 	{
 		token = s.substr(0, pos);
 		subString.push_back(token);
@@ -37,7 +37,7 @@ bool checkArgs(int ac, char *port)
 		<< "./irc [port] [password]" << STOP << std::endl;
 		return (false);
 	}
-	
+
 	int i = 0;
 	while (port[i])
 	{
@@ -64,13 +64,15 @@ int main(int ac, char **av)
 	if (!checkArgs(ac, av[1]))
 		return (1);
 
-	irc::Server Server(av[1], av[2]);
-	
+	irc::Server server(av[1], av[2]);
+
 	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
 
-	while (1)
+	while (server.on())
 	{
-		Server.runtime();
+		server.runtime();
+		if (server.getRestart())
+			server.restart(av[1], av[2]);
 	}
 	return (0);
 }
