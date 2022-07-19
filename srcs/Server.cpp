@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 22:08:09 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/19 18:10:46 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,10 +285,19 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 */
 irc::Server::~Server()
 {
-	for (std::vector<pollfd>::iterator it(_pollFds.begin()); it != _pollFds.end(); it++)
-		close((*it).fd);
-	for (std::map<int, irc::User *>::iterator itu(_users.begin()); itu != _users.end(); itu++)
-		deleteUser((*itu).second->getFd());
+	std::vector<pollfd>::iterator it(_pollFds.begin());
+	std::map<int, irc::User *>::iterator itu(_users.begin());
+	std::vector<irc::Channel>::iterator itc(_channels.begin());
+
+	while (itu != _users.end())
+		deleteUser((*itu++).second->getFd());
+	while (itc != _channels.end())
+		_channels.erase(itc++);
+	while (_pollFds.size())
+	{
+        close((*it).fd);
+		_pollFds.erase(it++);
+	}
 	close(this->_socketServer);
 }
 
@@ -313,6 +322,7 @@ void irc::Server::deleteUser(int fd)
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+	delete _users[fd];
 //	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
 //	_users[fd]->processReply();
 	_users.erase(fd);
@@ -329,19 +339,18 @@ void irc::Server::setRestart(bool x) { this->_restart = x; }
 void irc::Server::restart(char *port, char *pass)
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
-    while (it != _pollFds.end())
+	std::map<int, irc::User *>::iterator itu(_users.begin());
+	std::vector<irc::Channel>::iterator itc(_channels.begin());
+
+	while (itu != _users.end())
+		deleteUser((*itu++).second->getFd());
+	while (itc != _channels.end())
+		_channels.erase(itc++);
+	while (_pollFds.size())
 	{
         close((*it).fd);
 		_pollFds.erase(it++);
 	}
-	std::map<int, irc::User *>::iterator itu(_users.begin());
-    while (itu != _users.end())
-	{
-        deleteUser((*itu++).second->getFd());
-	}
-	std::vector<irc::Channel>::iterator itc(_channels.begin());
-	while (itc != _channels.end())
-		_channels.erase(itc++);
     close(this->_socketServer);
 	this->_version = "1.42";
 	_password = pass;

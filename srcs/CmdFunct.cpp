@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 20:22:06 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/18 19:25:03 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,9 +175,11 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	{
 		if (!(chan = findChan(srv, (*itNames))))
 		{
-			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
-			usr->reply(403, tmp);
-			delete tmp;
+//			irc::Channel* tmp = new irc::Channel(false, (*itNames), usr);
+			irc::Channel tmp(false, (*itNames), usr);
+//			usr->reply(403, tmp);
+			usr->reply(403, &tmp);
+//			delete tmp;
 		}
 		else
 			chan->removeUser(usr, (" PART :" + chan->getName()));

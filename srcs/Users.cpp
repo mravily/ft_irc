@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 19:58:01 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/18 19:58:02 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,9 +235,9 @@ void irc::User::broadcast(irc::Channel *chan, std::string message, irc::User *wi
 
 irc::User::~User()
 {
-	// std::vector<Command *>::iterator it(_cmds.begin());
-	// for (; it != _cmds.end(); it++)
-	// 	delete (*it);
+//	std::vector<Command *>::iterator it(_cmds.begin());
+//	while (it != _cmds.end())
+//	 	delete (*(it++));
 };
 
 void irc::User::setCmd()
