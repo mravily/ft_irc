@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 21:39:05 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 12:52:14 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/19 17:52:53 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ bool checkNickname(irc::Server *srv, std::string nickname)
 
 bool isLetter(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
 bool isSpecial(char c) { return (c >= '[' && c <= '`') || (c >= '{' && c <= '}'); }
-// bool isDigit(char c) { return (c >= '0' && c <= '9'); }
-
 bool checkChar(std::string nickname)
 {
 	if (nickname.length() > 9)
