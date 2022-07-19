@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 18:50:43 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:03:57 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ void irc::User::addWaitingSend(std::string newReply)
 
 std::string irc::User::getReplies(int code, irc::Channel *chan)
 {
-	std::string scode = std::to_string(code);
+	//std::string scode = std::to_string(code);
+	std::stringstream ss;
+	ss << code;
+	std::string scode(ss.str());
 	while (scode.length() < 3)
 		scode = "0" + scode;
 	std::string toSent(":" + getClient() + " " + scode + " " + getNickname() + " " + _rpl.find(code)->second(getServer(), *this, chan));

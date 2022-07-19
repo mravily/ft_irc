@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 19:48:30 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 19:51:12 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/19 20:03:21 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		return ;
 	}
 
-	irc::Channel* chan = nullptr;
+	irc::Channel* chan = NULL;
 	std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
 	std::vector<std::string>::iterator itNames(chanNames.begin());
 	for (; itNames != chanNames.end(); itNames++)
@@ -69,7 +69,7 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	// si arg n'est pas channel, go msg prive to user
 	for (std::vector<std::string>::iterator it = Targets.begin(); it != Targets.end(); it++)
 	{
-		if ((chan = findChan(srv, (*it))) != nullptr) // si channel diffusion message dans le channel
+		if ((chan = findChan(srv, (*it))) != NULL) // si channel diffusion message dans le channel
 		{
 			//si usr n'est pas dans le channel et que le chan est mode +n et qu'il n'est pas ops
 			if (chan->knowUser(usr) == false && chan->findMode("n") == true && usr->getOperator() == false)
@@ -80,7 +80,7 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		else // sinon msg prive to user
 		{
 			userTarget = srv->getUserByNick(*it);
-			if (userTarget != nullptr)
+			if (userTarget != NULL)
 			{
 				userTarget->addWaitingSend(":" + usr->getClient() + " " + cmd->getPrefix() + " " + (*it) + " :" + msg + CRLF);
 			//	userTarget->processReply();
