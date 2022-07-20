@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 08:10:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/20 09:59:16 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,7 @@ void irc::Server::deleteUser(int fd)
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
 		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
-	delete _users[fd];
+	delete _users.find(fd)->second;
 //	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
 //	_users[fd]->processReply();
 	_users.erase(fd);
@@ -344,6 +344,7 @@ bool irc::Server::on(void) const { return this->_on; }
 void irc::Server::turnOff() { this->_on = false; }
 bool irc::Server::getRestart(void) const { return this->_restart; }
 void irc::Server::setRestart(bool x) { this->_restart = x; }
+std::string irc::Server::getHostaddr() const { return this->_hostaddr; }
 void irc::Server::restart(char *port, char *pass)
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
