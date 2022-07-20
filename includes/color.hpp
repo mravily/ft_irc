@@ -6,7 +6,7 @@
 /*   By: lusokol <lusokol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 17:32:43 by lusokol           #+#    #+#             */
-/*   Updated: 2022/04/26 14:33:05 by lusokol          ###   ########.fr       */
+/*   Updated: 2022/07/20 16:40:18 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define MAGENTA "\033[35m"
 # define CYAN "\033[36m"
 # define LGRAY "\033[37m"
+# define BGREY "\033[40m"
 # define GRAY "\033[90m"
 # define LRED "\033[91m"
 # define LGREEN "\e[38;5;118m"
@@ -42,6 +43,6 @@
 
 // RESET
 
-# define STOP "\033[0m"
+# define STOP "\033[0;0m"
 
 #endif

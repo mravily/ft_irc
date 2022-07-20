@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-//   Updated: 2022/07/19 18:25:02 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/20 17:09:37 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 /*
 ** Réponses minimum à renvoyer lors d'une connexion au server
 */
-std::string RPL_WELCOME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Welcome to the IRC Hobbs Network, " + usr.getNickname() + "!" + usr.getUsername() + "@" + usr.getHostname()); (void)srv; (void)chan;}
-std::string RPL_YOURHOST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Your Host is " + usr.getHostname() + ", running version " + srv->getVersion()); (void)chan;}
-std::string RPL_CREATED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":This server was created " + srv->getDatatime() + ""); (void)usr; (void)chan;}
+std::string RPL_WELCOME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\e[1;32m:Welcome to the IRC Hobbs Network\e[0m, " + usr.getNickname() + "!" + usr.getUsername() + "@" + LYELLOW + usr.getHostname() + STOP); (void)srv; (void)chan;}
+std::string RPL_YOURHOST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Your Host is \e[93m" + usr.getHostname() + STOP + ", running version " + srv->getVersion()); (void)chan;}
+std::string RPL_CREATED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":This server was created \e[1;94m" + srv->getDatatime() + "\e[0m"); (void)usr; (void)chan;}
 std::string RPL_MYINFO(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getHostname() + " IRCHobbs-" + srv->getVersion() + " " + srv->getUsrMode() + " " + srv->getChanMode() + " :FIJLXabefghjkloqv"); (void)chan;};
-std::string RPL_UMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getMode()); (void)srv; (void)chan;};
+std::string RPL_UMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (CYAN + usr.getMode() + STOP); (void)srv; (void)chan;};
 
 /* MODE Replies 401 502 501*/
 std::string ERR_NOSUCHNICK(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":No such nick/channel"); (void)srv; (void)usr; (void)chan;};
@@ -59,9 +59,9 @@ std::string ERR_NOTONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan
 std::string ERR_USERONCHANNEL(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("user " + chan->getName()) + " :is already on channel"; (void)srv; (void)usr;};
 
 // (LIST) 321 - 322 - 323
-std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\002Channels List: "); (void)srv; (void)usr; (void)chan;}
-std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (chan->getName() + " " + chan->getUserSize() + " :[+" + chan->getModes() + "] " + chan->getTopic()); (void)srv; (void)usr;}
-std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":\002End of List"); (void)srv; (void)usr; (void)chan;}
+std::string RPL_LISTSTART(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\e[1;40mChannels List:\e[0m"); (void)srv; (void)usr; (void)chan;}
+std::string RPL_LIST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (BOLD + chan->getName() + STOP + " " + chan->getUserSize() + " :[+" + CYAN + chan->getModes() + STOP + "] " + ITALIC + YELLOW + chan->getTopic() + STOP); (void)srv; (void)usr;}
+std::string RPL_LISTEND(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\e[1;40mEnd of List\e[0m"); (void)srv; (void)usr; (void)chan;}
 
 // 402 - 482
 //std::string ERR_NOSUCHSERVER(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (" :Cannot find"); (void)usr; (void)srv; (void)chan;}
