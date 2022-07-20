@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 09:30:16 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 09:31:18 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/20 16:20:24 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(401, chan);
 			return;
 		}
-		else if (chan->knowUser(usr) == false)
+		else if (chan->knowUser(usr) == false && usr->getOperator() == false)
 		{
 			usr->reply(442, chan);
 			return;
@@ -48,7 +48,7 @@ void KICK(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 				usr->reply(441, chan);
 			else
 			{
-				if (chan->isOperator(usr) == false)
+				if (chan->isOperator(usr) == false && usr->getOperator() == false)
 					usr->reply(482, chan);
 				else
 				{
