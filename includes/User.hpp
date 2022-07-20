@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 18:49:17 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/20 17:53:02 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ namespace irc
 		void processCommand();
 		void broadcast(irc::Channel *chan, std::string message, irc::User *without);
 		void printUser();
+		void cleanCmd();
 		void DisplayError(std::string message)
 		{
 			int errn = errno;

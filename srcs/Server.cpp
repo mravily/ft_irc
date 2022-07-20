@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/20 17:13:47 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/20 18:22:39 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,17 +194,27 @@ void irc::Server::runtime()
 	else
 	{
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
+		{
 			if ((*it).revents == POLLIN)
+			{
 				this->_users[(*it).fd]->getMessages();
+			}
+		}
 	}
 
 	std::map<int, irc::User *>::iterator it(_users.begin());
 	while( it != _users.end())
 	{
 		if ((*it).second->getStatus() == LEAVE)
+		{
+			//(*it).second->cleanCmd();
 			this->deleteUser((*(it++)).second->getFd());
+		}
 		else
+		{
 			(*(it++)).second->processReply();
+			//(*it).second->cleanCmd();
+		}
 		if (!_users.size())
 			break ;
 	}
