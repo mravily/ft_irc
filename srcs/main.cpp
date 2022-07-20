@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 14:50:12 by mravily           #+#    #+#             */
-//   Updated: 2022/07/17 19:18:23 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/20 08:25:09 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int main(int ac, char **av)
 	irc::Server server(av[1], av[2]);
 
 	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
-
+	
 	while (server.on())
 	{
 		server.runtime();

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:15:29 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/20 08:10:35 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,7 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr)
 	usr->reply(366, chan);
 }
 
-irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitnmlbvk"), _oper_name("operator"), _oper_password("password"), _on(true), _restart(false)
+irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass), _usrMode("iswo"), _chanMode("opsitn"), _oper_name("operator"), _oper_password("password"), _on(true), _restart(false)
 {
    	setDatatime();
 	setSocketServer(AF_INET, SOCK_STREAM, 0);
@@ -363,7 +363,7 @@ void irc::Server::restart(char *port, char *pass)
 	this->_version = "1.42";
 	_password = pass;
 	_usrMode = "iswo";
-	_chanMode = "opsitnmlbvk";
+	_chanMode = "opsitn";
 	_oper_name ="operator";
 	_oper_password = "password";
 	_on = true;

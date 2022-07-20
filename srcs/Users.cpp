@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:03:57 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/20 08:52:02 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,12 +195,9 @@ void irc::User::getMessages()
 	for (; its != _cmds.end(); its++)
 	{
 		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
-		// std::cout << "Get Message->prefix: " << (*its)->getPrefix() << std::endl;
 		for(; itm != _funct.end(); itm++)
 		{
-			// std::cout << "(*itm).first: " << (*itm).first << std::endl;
-			// std::cout << "(*its)->getPrefix(): " << (*its)->getPrefix() << std::endl;
-			// std::cout << (*itm).first <<  " " << (*itm).second << " ;) " << std::endl;
+
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
 			{
 				if ((*its)->getParams().empty() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
