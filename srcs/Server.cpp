@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:49:07 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 17:44:55 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,14 +207,11 @@ void irc::Server::runtime()
 	{
 		if ((*it).second->getStatus() == LEAVE)
 		{
-			//(*it).second->cleanCmd();
+			(*it).second->cleanCmd();
 			this->deleteUser((*(it++)).second->getFd());
 		}
 		else
-		{
 			(*(it++)).second->processReply();
-			//(*it).second->cleanCmd();
-		}
 		if (!_users.size())
 			break ;
 	}
@@ -298,14 +295,14 @@ irc::Server::~Server()
 
 	while (itu != _users.end())
 		deleteUser((*itu++).second->getFd());
-	while (itc != _channels.end())
-		_channels.erase(itc++);
+	_channels.clear();
 	while (_pollFds.size())
 	{
         close((*it).fd);
 		_pollFds.erase(it++);
 	}
 	close(this->_socketServer);
+	std::cout << "destructor debug\n";
 }
 
 void irc::Server::broadcast(std::string message)

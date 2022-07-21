@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:57:14 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 17:33:51 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ void irc::User::getMessages()
 		if (!(*it).length())
 			continue ;
 		_cmds.push_back(new irc::Command(*it));
-//		std::cout << *it << " lol---" << std::endl;
+		std::cout << *it << " lol---" << std::endl;
 	}
 
 	// Compare les prefix des commandes reçu avec les commandes users disponible

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:59:09 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 17:06:27 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 	ita++;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
-	
+
 	std::vector<std::string>::iterator itt(arg.begin());
 	for (; itt != arg.end(); itt++)
 		std::cout << "ARG: " << (*itt) << std::endl;
@@ -175,7 +175,7 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)
 		{
-			usr->reply(481); 
+			usr->reply(481);
 			modestring.erase(modestring.find('o'));
 		}
 		if ((*it) == 'o' && isOperator(usr) == true)
@@ -211,13 +211,16 @@ void irc::Channel::removeUser(irc::User *usr, std::string message)
 
 void irc::Channel::deleteUser(irc::User *target)
 {
-	for (std::vector<User *>::iterator it = this->_operator.begin(); it != this->_operator.end(); it++)
+	std::vector<User *>::iterator it = this->_operator.begin();
+	while (it != this->_operator.end())
 	{
 		if (*it == target)
 		{
-			this->_operator.erase(it);
+			this->_operator.erase(it++);
 			return;
 		}
+		else
+			++it;
 	}
 	for (std::vector<User *>::iterator it = this->_users.begin(); it != this->_users.end(); it++)
 	{

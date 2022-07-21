@@ -6,7 +6,7 @@
 #    By: lusokol <lusokol@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/07 15:08:42 by macbookpro        #+#    #+#              #
-#    Updated: 2022/03/02 19:58:08 by lusokol          ###   ########.fr        #
+#    Updated: 2022/07/21 16:45:05 by jiglesia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,15 +66,15 @@ endif
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -I $(INCLUDES) -MMD -MP -c $< -o $@
 	if [ '$(NUM_FILE_BEING_COMPILED)' -eq '$(NB_FILE_TO_COMPILE)' ]; then \
-		printf "$(MOVE_UP)$(_ORANGE)┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                      \n$(_R)"; \
+		printf "$(MOVE_UP)$(_ORANGE)┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                      \n$(_R)"; \
 		$(DRAW_PROGRESS_BAR); \
 		printf '\n'; \
-	fi; $(eval NUM_FILE_BEING_COMPILED = $(shell echo $$(($(NUM_FILE_BEING_COMPILED) + 1))))	
+	fi; $(eval NUM_FILE_BEING_COMPILED = $(shell echo $$(($(NUM_FILE_BEING_COMPILED) + 1))))
 
 project:
-	printf "$(_ORANGE)┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n$(_R)"
-	printf "$(_ORANGE)┃$(_BOLD) - %20s - 42 Project - $(_R)$(_ORANGE)┃$(_R)\n" $(NAME)
-	printf "$(_ORANGE)┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n$(_R)"
+	printf "$(_ORANGE)┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n$(_R)"
+	printf "$(_ORANGE)┃$(_BOLD) - %20s - 42 Project %7s - $(_R)$(_ORANGE)┃$(_R)\n" $(NAME)
+	printf "$(_ORANGE)┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n$(_R)"
 
 
 $(NAME): $(OBJ)
