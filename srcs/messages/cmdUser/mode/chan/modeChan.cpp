@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 18:59:29 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 08:33:11 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 22:45:51 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** @param channel le channel à modifier
 ** @param commande la commande avec les modestrings et arguments
 */
-void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd) 
+void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 {
 	bool minus = false;
 	std::string add;
@@ -57,7 +57,7 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 
 void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	puts("IN_CHANMODE");
+//	puts("IN_CHANMODE");
 	irc::Channel* chan = NULL;
 	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
@@ -69,7 +69,7 @@ void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 	else
 	{
-		puts("IN");
+//		puts("IN");
 		if (!checkAllowMode(srv->getChanMode(), cmd->getParams()[1]))
 			usr->reply(501);		// ERR_UMODEUNKNOWNFLAG
 		else

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-//   Updated: 2022/07/21 17:44:55 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/21 22:27:54 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ std::vector<irc::Channel *> irc::Server::getChannels()
 
     for (std::vector<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
 	{
-		std::cout << "pushback -> " << it->getName() << std::endl;
+//		std::cout << "pushback -> " << it->getName() << std::endl;
         vec.push_back(&(*it));
 	}
 
@@ -276,17 +276,8 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 	bindAddress();
 	listenAddress();
 	_hostaddr = inet_ntoa(_addrServer.sin_addr);
-	std::cout << "_hostaddr: " << _hostaddr << std::endl;
 }
 
-/*irc::Server &irc::Server::operator=(const irc::Server& x)
-{
-	this->~Server();
-	this->_version = x.getVersion();
-	this->_password = x.getPassword();
-	return *this;
-}
-*/
 irc::Server::~Server()
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
@@ -302,7 +293,6 @@ irc::Server::~Server()
 		_pollFds.erase(it++);
 	}
 	close(this->_socketServer);
-	std::cout << "destructor debug\n";
 }
 
 void irc::Server::broadcast(std::string message)
@@ -357,12 +347,10 @@ void irc::Server::restart(char *port, char *pass)
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
 	std::map<int, irc::User *>::iterator itu(_users.begin());
-	std::vector<irc::Channel>::iterator itc(_channels.begin());
 
 	while (itu != _users.end())
 		deleteUser((*itu++).second->getFd());
-	while (itc != _channels.end())
-		_channels.erase(itc++);
+	_channels.clear();
 	while (_pollFds.size())
 	{
         close((*it).fd);

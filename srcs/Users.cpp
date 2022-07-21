@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/21 17:33:51 by jiglesia         ###   ########.fr       //
+//   Updated: 2022/07/21 22:24:41 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void irc::User::setHostname(std::string hostname) {this->_hostname = hostname;};
 
 void irc::User::addMode(std::string modestring)
 {
-	std::cout << "Modestring: " << modestring << std::endl;
+//	std::cout << "Modestring: " << modestring << std::endl;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 	for (; it != ite; it++)
 		if (getMode().size() && getMode().find(*it) != std::string::npos)
 		{
-			puts("ici_ erase");
+//			puts("ici_ erase");
 			modestring.erase(modestring.find((*it)));
 		}
 	if (modestring.size())
@@ -70,7 +70,7 @@ void irc::User::addMode(std::string modestring)
 void irc::User::removeMode(std::string modestring)
 {
 	bool change = false;
-	std::cout << "getMode.size(): " << getMode().size() << std::endl;
+//	std::cout << "getMode.size(): " << getMode().size() << std::endl;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
 	{
@@ -220,7 +220,7 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
-	std::cout << "Buffer: " << buffer << std::endl;
+//	std::cout << "Buffer: " << buffer << std::endl;
 	std::string buf(buffer);
 	std::vector<std::string> messages(split(buf, CRLF));
 	std::vector<std::string>::iterator it(messages.begin());
@@ -229,7 +229,6 @@ void irc::User::getMessages()
 		if (!(*it).length())
 			continue ;
 		_cmds.push_back(new irc::Command(*it));
-		std::cout << *it << " lol---" << std::endl;
 	}
 
 	// Compare les prefix des commandes reçu avec les commandes users disponible

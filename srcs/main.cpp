@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 14:50:12 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 08:25:09 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 23:04:06 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool checkArgs(int ac, char *port)
 {
 	if (ac != 3)
 	{
-		std::cout << RED << "Error: Args provides isn't not well formatted\n"
+		std::cout << RED << "Error: Args provides is not well formatted\n"
 		<< "./irc [port] [password]" << STOP << std::endl;
 		return (false);
 	}
@@ -67,7 +67,7 @@ int main(int ac, char **av)
 	irc::Server server(av[1], av[2]);
 
 	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
-	
+
 	while (server.on())
 	{
 		server.runtime();

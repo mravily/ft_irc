@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:48:17 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 23:10:14 by mravily          ###   ########.fr       */
+//   Updated: 2022/07/21 23:56:23 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ irc::User* findUserSrv(irc::Server *srv, std::string toFind)
 	std::map<int, irc::User *>::iterator it(Users.begin());
 	for (; it != Users.end(); it++)
 	{
-		std::cout << (*it).second->getNickname() << std::endl;
+//		std::cout << (*it).second->getNickname() << std::endl;
 		if (!toFind.compare((*it).second->getNickname()))
 			return ((*it).second);
 	}
@@ -49,7 +49,7 @@ irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind)
 	std::vector<irc::User *>::iterator it(list.begin());
 	for (; it != list.end(); it++)
 	{
-		std::cout << (*it)->getNickname() << std::endl;
+//		std::cout << (*it)->getNickname() << std::endl;
 		if (!toFind.compare((*it)->getNickname()))
 			return ((*it));
 	}
@@ -57,12 +57,12 @@ irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind)
 }
 irc::Channel* findChan(irc::Server *srv, std::string toFind)
 {
-	std::cout << "FindUser->toFind: " << toFind << std::endl;
+//	std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
 	{
-		std::cout << (*it)->getName() << std::endl;
+//		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (*it);
 	}

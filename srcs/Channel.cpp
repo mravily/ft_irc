@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 18:18:30 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/21 23:07:30 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void irc::Channel::eraseUser(std::vector<irc::User *>& list, std::string toFind)
 	std::vector<irc::User *>::iterator it(list.begin());
 	for (; it != list.end(); it++)
 	{
-		std::cout << (*it)->getNickname() << std::endl;
+//		std::cout << (*it)->getNickname() << std::endl;
 		if (!toFind.compare((*it)->getNickname()))
 			break;
 	}
@@ -164,15 +164,15 @@ void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 
 void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
-	puts("rmv");
+//	puts("rmv");
 	std::vector<std::string>::iterator ita(arg.begin());
 	ita++;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 
-	std::vector<std::string>::iterator itt(arg.begin());
-	for (; itt != arg.end(); itt++)
-		std::cout << "ARG: " << (*itt) << std::endl;
+//	std::vector<std::string>::iterator itt(arg.begin());
+//	for (; itt != arg.end(); itt++)
+//		std::cout << "ARG: " << (*itt) << std::endl;
 	for (; it != ite; it++)
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)

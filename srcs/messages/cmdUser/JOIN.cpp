@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 18:05:31 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 16:07:07 by nayache          ###   ########.fr       */
+//   Updated: 2022/07/21 23:57:38 by jiglesia         ###   ########.fr       //
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool chanExist(irc::Server *srv, std::string toFind)
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
 	{
-		std::cout << (*it)->getName() << std::endl;
+//		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (true);
 	}
@@ -61,5 +61,5 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 					srv->joinChan(chan, usr);
 			}
 		}
-	}	
+	}
 }
