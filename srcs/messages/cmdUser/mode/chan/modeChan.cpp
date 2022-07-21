@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 18:59:29 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:04:39 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/21 08:33:11 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 
 void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
+	puts("IN_CHANMODE");
 	irc::Channel* chan = NULL;
 	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
@@ -67,7 +68,8 @@ void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 		usr->reply(329, chan);
 	}
 	else
-	{		
+	{
+		puts("IN");
 		if (!checkAllowMode(srv->getChanMode(), cmd->getParams()[1]))
 			usr->reply(501);		// ERR_UMODEUNKNOWNFLAG
 		else

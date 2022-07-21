@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 19:00:40 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:04:51 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/21 09:33:44 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void displayMode(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 		usr->reply(221);  		// RPL_UMODEIS
 }
 
+
 void changeModeUser(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 {
 	irc::User* user = NULL;
@@ -40,7 +41,7 @@ void changeModeUser(irc::Server* srv, irc::User* usr, irc::Command* cmd)
 	else if (!checkAllowMode(srv->getUsrMode(), cmd->getParams()[1]))
 		user->reply(501);		// ERR_UMODEUNKNOWNFLAG
 	else
-		user->setModes(cmd->getParams()[1]);
+		user->setModes(cmd->getParams());
 }
 
 void userMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)

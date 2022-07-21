@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 08:52:02 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/21 10:36:47 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,35 +48,74 @@ void irc::User::setNickname(std::string nick) {this->_nickname = nick;};
 void irc::User::setUsername(std::string usrname) {this->_username = usrname;};
 void irc::User::setRealname(std::string realname) {this->_realname = realname;};
 void irc::User::setHostname(std::string hostname) {this->_hostname = hostname;};
-void irc::User::setModes(std::string modestring)
+
+void irc::User::addMode(std::string modestring)
 {
-	bool minus = false;
+	std::cout << "Modestring: " << modestring << std::endl;
+	std::string::iterator it(modestring.begin());
+	std::string::iterator ite(modestring.end());
+	for (; it != ite; it++)
+		if (getMode().size() && getMode().find(*it) != std::string::npos)
+		{
+			puts("ici_ erase");
+			modestring.erase(modestring.find((*it)));
+		}
+	if (modestring.size())
+	{
+		_mode += modestring;
+		addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + _mode + CRLF);
+	}
+};
+
+void irc::User::removeMode(std::string modestring)
+{
+	bool change = false;
+	std::cout << "getMode.size(): " << getMode().size() << std::endl;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
 	{
-		if ((*it) == '-')
-			minus = true;
-		else if ((*it) == '+')
-			minus = false;
-		else if (minus == false)
+		if (getMode().size())
 		{
-			if ((*it) == 'o' && _operator == false)
-				reply(481);
-			else
+			_mode.erase(_mode.find((*it)));
+			change = true;
+		}
+	}
+	if (change == true && modestring.size())
+		addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + modestring + CRLF);
+}
+
+void irc::User::setModes(std::vector<std::string> list)
+{
+	bool minus = false;
+	std::string add;
+	std::string rmv;
+	std::vector<std::string> arg;
+	std::vector<std::string>::iterator it(list.begin());
+	std::vector<std::string>::iterator ite(list.end());
+	for (; it != ite; it++)
+	{
+		if ((*it).find('+') != std::string::npos || (*it).find('-') != std::string::npos)
+		{
+			std::string::iterator its((*it).begin());
+			for (; its != (*it).end(); its++)
 			{
-				if (_mode.find((*it)) != std::string::npos)
-				{
-					_mode += (*it);
-					addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + (*it) + CRLF);
-				}
+				if ((*its) == '-')
+					minus = true;
+				else if ((*its) == '+')
+					minus = false;
+				else if (minus == false)
+					add += (*its);
+				else if (minus == true)
+					rmv += (*its);
 			}
 		}
 		else
-		{
-			_mode.erase(_mode.find((*it)));
-			addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + (*it) + CRLF);
-		}
+			arg.push_back((*it));
 	}
+	if (add.size())
+		addMode(add);
+	if (rmv.size())
+		removeMode(rmv);
 }
 
 bool irc::User::haveInvitation(std::string channelName)

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 20:14:14 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/21 09:35:52 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ namespace irc
 			
 			std::string			_name;
 			std::string			_mode;
-			std::string			_password;
 			std::string			_topic;
 			std::string			_topicDate;
 			std::vector<irc::User *> _users;
@@ -45,7 +44,7 @@ namespace irc
 			std::string			_lastTry;
 			
 		public:
-			Channel(bool type, std::string name, irc::User* ope, std::string password = "");
+			Channel(bool type, std::string name, irc::User* ope);
 			~Channel();
 
 			bool		isOperator(irc::User *usr);
@@ -54,7 +53,6 @@ namespace irc
 			std::string getModes() {return (_mode);};
 			bool 		getMode(char toFind) {return (_mode.find(toFind));};
 			bool		isPrivate() {return (this->_private);}
-			std::string getPassword() {return (_password);};
 			std::string getListUsers();
 			std::string getDatatime() {return (_datatime);};
 			std::string getLastTry() {return (_lastTry);};

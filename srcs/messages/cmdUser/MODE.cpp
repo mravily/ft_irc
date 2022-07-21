@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:47:22 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/16 19:00:27 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/21 08:46:46 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@ bool checkAllowMode(std::string allowMode, std::string toCheck)
 		if ((*it) == '-' || (*it) == '+')
 			continue;
 		if (allowMode.find((*it)) == std::string::npos)
+		{
+			puts("OUT CHECKALLOWMODE FALSE");
 			return (false);
+		}
 	}
+	puts("OUT CHECKALLOWMODE TRUE");
 	return (true);
 }
 

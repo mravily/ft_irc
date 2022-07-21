@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/19 18:49:17 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/21 09:44:21 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ namespace irc
 		void setStatus(stats newStatus);
 		void setHostname(std::string hostname);
 		void setMode(char mode) {_mode += mode;};
-		void setModes(std::string mode);
+		void setModes(std::vector<std::string> list);
 		void setReason(std::string trailer);
 		void setBits(int index);
 		void setOper(bool x);
@@ -143,8 +143,8 @@ namespace irc
 			std::cout << message << strerror(errn) << std::endl;
 			exit(1);
 		}
-		void addMode(std::string modestring) {addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :+" + modestring + CRLF);};
-		void removeMode(std::string modestring) {{addWaitingSend(":" + getClient() + " MODE " + getNickname() + " :-" + modestring + CRLF);};}
+		void addMode(std::string modestring);
+		void removeMode(std::string modestring);
 	};
 }
 

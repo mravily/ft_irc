@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/17 19:34:51 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/21 10:37:43 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,6 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 	ita++;
-	std::vector<std::string>::iterator itt(arg.begin());
-	for (; itt != arg.end(); itt++)
-		std::cout << "ARG: " << (*itt) << std::endl;
 	for (; it != ite; it++)
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)
@@ -133,10 +130,12 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 			}
 			modestring.erase(modestring.find('o'));
 		}
+		if (getModes().find(*it) != std::string::npos)
+			modestring.erase(modestring.find((*it)));
 	}
 	if (modestring.size() && isOperator(usr))
 		setModes(usr, modestring);
-	else
+	else if (!isOperator(usr))
 		usr->reply(482, this);
 }
 
@@ -148,10 +147,16 @@ void irc::Channel::setModes(irc::User* usr, std::string modestring)
 
 void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 {
+	bool change = false;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
-		_mode.erase(_mode.find((*it)));
-	usr->broadcast(this, " MODE " + getName() + " -" + modestring + " :" + usr->getNickname(), 0);
+		if (getModes().size())
+		{
+			_mode.erase(_mode.find((*it)));
+			change = true;
+		}
+	if (change == true && modestring.size())
+		usr->broadcast(this, " MODE " + getName() + " -" + modestring + " :" + usr->getNickname(), 0);
 }
 
 void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
@@ -233,14 +238,12 @@ bool irc::Channel::knowUser(irc::User* usr)
 {
 	std::vector<User *> users = getUsers();
 	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
-	{
 		if ((*it) == usr)
 			return (true);
-	}
 	return (false);
 }
 
-irc::Channel::Channel(bool type, std::string name, irc::User* ope, std::string pass) : _private(type), _name(name), _mode("nt"), _password(pass), _datatime(getCurrentDate())
+irc::Channel::Channel(bool type, std::string name, irc::User* ope) : _private(type), _name(name), _mode("nt"), _datatime(getCurrentDate())
 {
 	this->_operator.push_back(ope);
 }
