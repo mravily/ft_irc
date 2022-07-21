@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:37:43 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/21 10:59:09 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ bool irc::Channel::findMode(std::string modes)
 {
 	for (std::string::iterator it = modes.begin(); it != modes.end(); it++)
 	{
-		if (this->_mode.find(*it) == std::string::npos)
-			return (false);
+		if (_mode.size())
+			if (this->_mode.find(*it) == std::string::npos)
+				return (false);
 	}
 	return (true);
 }
@@ -112,7 +113,7 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)
 		{
-			usr->reply(481); 
+			usr->reply(481);
 			modestring.erase(modestring.find('o'));
 		}
 		if ((*it) == 'o' && isOperator(usr) == true)
@@ -150,7 +151,7 @@ void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 	bool change = false;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
-		if (getModes().size())
+		if (getModes().size() && _mode.find((*it)) != std::string::npos)
 		{
 			_mode.erase(_mode.find((*it)));
 			change = true;

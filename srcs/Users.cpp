@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:49:16 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/21 10:57:14 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void irc::User::removeMode(std::string modestring)
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
 	{
-		if (getMode().size())
+		if (getMode().size() && _mode.find((*it)) != std::string::npos)
 		{
 			_mode.erase(_mode.find((*it)));
 			change = true;
