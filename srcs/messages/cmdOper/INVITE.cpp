@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/20 09:32:19 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 09:32:31 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/20 16:22:47 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(401); // devrait etre 403 NOSUCHCHANNEL
 			return;
 		}
-		else if (chan->knowUser(usr) == false)
+		else if (chan->knowUser(usr) == false && usr->getOperator() == false)
 		{
 			usr->reply(442);
 			return;
@@ -46,7 +46,7 @@ void INVITE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(443, chan);
 			return;
 		}
-		else if (chan->isOperator(usr) == false)
+		else if (chan->isOperator(usr) == false && usr->getOperator() == false)
 		{
 			usr->reply(482, chan);
 			return;

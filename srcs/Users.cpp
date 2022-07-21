@@ -6,7 +6,11 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/07/21 10:36:47 by mravily          ###   ########.fr       */
+=======
+//   Updated: 2022/07/20 19:27:18 by jiglesia         ###   ########.fr       //
+>>>>>>> 298fb8deb9fd3c6467ae1f335cf3931bb29acbe0
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +178,8 @@ void irc::User::registration()
 	setStatus(irc::REGISTERED);
 }
 
+#include <algorithm>
+
 void irc::User::processReply()
 {
 	if (checkBit(1) && checkBit(2) && !checkBit(0))
@@ -196,7 +202,7 @@ void irc::User::processReply()
 	if (buffer.length())
 		send(getFd(), buffer.c_str(), buffer.length(), 0);
 
-	_cmds.erase(_cmds.begin(), _cmds.end());
+	this->cleanCmd();
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
 	buffer.clear();
 }
@@ -226,7 +232,8 @@ void irc::User::getMessages()
 	{
 		if (!(*it).length())
 			continue ;
-		_cmds.push_back(new irc::Command((*it)));
+		_cmds.push_back(new irc::Command(*it));
+//		std::cout << *it << " lol---" << std::endl;
 	}
 
 	// Compare les prefix des commandes reçu avec les commandes users disponible
@@ -368,3 +375,18 @@ void irc::User::setReason(std::string trailer) { this->_reason = trailer; }
 
 std::string irc::User::getReason() { return _reason; }
 bool	irc::User::getOperator() const { return this->_operator; }
+void	irc::User::cleanCmd(void)
+{
+	std::vector<Command *>::iterator it = this->_cmds.begin();
+	Command *tmp;
+
+	while (it != _cmds.end())
+	{
+		tmp = *it;
+		++it;
+		delete tmp;
+		if (!_cmds.size())
+			break ;
+	}
+	_cmds.erase(_cmds.begin(), _cmds.end());
+}

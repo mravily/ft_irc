@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   JOIN.CPP                                           :+:      :+:    :+:   */
+/*   JOIN.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 18:05:31 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 08:41:55 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/20 16:07:07 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
 			std::vector<std::string>::iterator itNames(chanNames.begin());
 			irc::Channel* chan = NULL;
+			for (; itNames != chanNames.end(); itNames++)
+			{
+				if (itNames->find("#") == std::string::npos)
+					itNames->insert(itNames->begin(), '#');
+			}
+			itNames = chanNames.begin();
 			for (; itNames != chanNames.end(); itNames++)
 			{
 				if (!(chan = findChan(srv, (*itNames))))
