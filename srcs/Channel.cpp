@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-//   Updated: 2022/07/21 17:06:27 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/21 18:18:30 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ bool irc::Channel::isOperator(irc::User *usr)
 
 bool irc::Channel::findMode(std::string modes)
 {
+	if (!this->_mode.size())
+		return (false);
 	for (std::string::iterator it = modes.begin(); it != modes.end(); it++)
 	{
 		if (_mode.size())
