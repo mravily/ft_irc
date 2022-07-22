@@ -22,7 +22,7 @@ void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(461);
 			return ;
 		}
-		usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " " + "PONG :" + cmd->getParams()[0] + CRLF);
+		usr->addWaitingSend(":" + usr->getClient() + " " + "PONG :" + cmd->getParams()[0] + CRLF);
 		usr->setStatus(irc::ONLINE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 12:34:38 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 16:34:58 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ irc::Channel* irc::Server::getChannelByName(std::string name)
 	for (std::vector<irc::Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
 	{
 		std::string currentName = it->getName();
-		if (currentName == name || !currentName.compare(1, name.size(), name))
+		if (currentName == name)
 			return (&(*it));
 	}
 	return (NULL);
@@ -258,7 +258,10 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr)
 	chan->addUser(usr);
 
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
-	usr->reply(331, chan);
+	if (chan->getTopic().size())
+		usr->reply(332, chan);
+	else
+		usr->reply(331, chan);
 	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, chan);
 	usr->reply(366, chan);
@@ -314,7 +317,13 @@ void irc::Server::deleteUser(int fd)
 
 	std::vector<Channel>::iterator chit = _channels.begin();
 	while (chit != _channels.end())
-		(*chit++).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+	{
+		(*chit).removeUser(_users[fd], (" QUIT :" + _users[fd]->getReason()));
+		if (chit->getUserSize() == "0")
+			removeChan((chit)->getName());
+		if (_channels.size())
+			chit++;
+	}
 	delete _users.find(fd)->second;
 //	_users[fd]->addWaitingSend(":" + _users[fd]->getClient() + " QUIT :" + _users[fd]->getReason() + CRLF);
 //	_users[fd]->processReply();

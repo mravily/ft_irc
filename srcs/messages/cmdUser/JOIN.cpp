@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 18:05:31 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 16:07:07 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/22 15:37:15 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
+		puts("lol");
 		if (cmd->getParams().empty())
 		{
 			usr->reply(461);
