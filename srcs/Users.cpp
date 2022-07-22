@@ -242,7 +242,7 @@ void irc::User::getMessages()
 
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
 			{
-				if ((*its)->getParams().empty() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
+				if ((*its)->getParams().empty() && !(*its)->getParams().size() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
 					this->reply(461);
 				else
 					(*itm).second(getServer(), this, (*its));

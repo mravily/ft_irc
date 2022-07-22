@@ -195,7 +195,6 @@ void irc::Server::runtime()
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
-
 	std::map<int, irc::User *>::iterator it(_users.begin());
 	while( it != _users.end())
 	{
@@ -273,14 +272,6 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 	std::cout << "_hostaddr: " << _hostaddr << std::endl;
 }
 
-/*irc::Server &irc::Server::operator=(const irc::Server& x)
-{
-	this->~Server();
-	this->_version = x.getVersion();
-	this->_password = x.getPassword();
-	return *this;
-}
-*/
 irc::Server::~Server()
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
@@ -341,7 +332,7 @@ void irc::Server::removeChan(std::string name)
 std::string irc::Server::getOperName() const { return this->_oper_name; }
 std::string irc::Server::getOperPassword() const { return this->_oper_password; }
 
-bool irc::Server::on(void) const { return this->_on; }
+bool irc::Server::on(void) const {return this->_on;}
 void irc::Server::turnOff() { this->_on = false; }
 bool irc::Server::getRestart(void) const { return this->_restart; }
 void irc::Server::setRestart(bool x) { this->_restart = x; }

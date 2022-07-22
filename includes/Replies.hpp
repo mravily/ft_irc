@@ -23,7 +23,7 @@
 std::string RPL_WELCOME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (WELCOMEART + usr.getNickname() + "!" + usr.getUsername() + "@" + LYELLOW + usr.getHostname() + STOP); (void)srv; (void)chan;}
 std::string RPL_YOURHOST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Your Host is \e[93m" + usr.getHostname() + STOP + ", running version " + srv->getVersion()); (void)chan;}
 std::string RPL_CREATED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":This server was created \e[1;94m" + srv->getDatatime() + "\e[0m"); (void)usr; (void)chan;}
-std::string RPL_MYINFO(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getHostname() + " IRCHobbs-" + srv->getVersion() + " " + srv->getUsrMode() + " " + srv->getChanMode() + " :FIJLXabefghjkloqv"); (void)chan;};
+std::string RPL_MYINFO(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getHostname() + " IRCHobbs-" + srv->getVersion() + " " + srv->getUsrMode() + " " + srv->getChanMode()); (void)chan;};
 std::string RPL_UMODEIS(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (CYAN + usr.getMode() + STOP); (void)srv; (void)chan;};
 
 /* MODE Replies 401 502 501*/

@@ -24,6 +24,7 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <cctype>
+#include <signal.h>
 
 #include "Channel.hpp"
 #include "User.hpp"
