@@ -17,7 +17,7 @@ void KILL(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
 		irc::User* user = NULL;
-		if (!cmd->getParams().size() || !cmd->getTrailer().size())
+		if (cmd->getParams().size() < 2 || !cmd->getTrailer().size())
 			usr->reply(461); // ERR_NEEDMOREPARAMS
 		else if (!usr->getOperator())
 			usr->reply(481); // ERR_NOPRIVILEGES
