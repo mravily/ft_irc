@@ -51,7 +51,6 @@ void irc::User::setHostname(std::string hostname) {this->_hostname = hostname;};
 
 void irc::User::addMode(std::string modestring)
 {
-	std::cout << "Modestring: " << modestring << std::endl;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 	for (; it != ite; it++)
@@ -184,27 +183,21 @@ void irc::User::processReply()
 		registration();
 
 	// Bufferize toutes les réponses pour les envoyer avec send()
-	// std::cout << "[SERVER] Réponse du server" << std::endl;
 	std::string buffer;
 	std::vector<std::string>::iterator it(_waitingSend.begin());
 	for (; it != _waitingSend.end(); it++)
-	{
-		std::cout << (*it) << std::endl;
 		buffer += (*it);
-	}
 	if (buffer.length())
+	{
+		std::cout << "[SERVER] Réponse du server" << std::endl;
 		send(getFd(), buffer.c_str(), buffer.length(), 0);
+	}
 
 	this->cleanCmd();
 	_waitingSend.erase(_waitingSend.begin(), _waitingSend.end());
 	buffer.clear();
 }
 
-bool irc::User::cmdNeedParams(std::string cmd)
-{
-	return (cmd == "TOPIC" || cmd == "PRIVMSG" || cmd == "PART" || cmd == "JOIN"
-	|| cmd == "KICK" || cmd == "INVITE");
-}
 
 /*
 ** @brief Récupère les messages de l'utilisateur envoyer sur le socket
@@ -231,7 +224,6 @@ void irc::User::getMessages()
 			if (!(*it).length())
 				continue ;
 			_cmds.push_back(new irc::Command(*it));
-			std::cout << *it << " lol---" << std::endl;
 		}
 		// Compare les prefix des commandes reçu avec les commandes users disponible
 		std::vector<Command *>::iterator its(_cmds.begin());
