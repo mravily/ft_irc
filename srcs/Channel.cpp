@@ -107,21 +107,35 @@ void irc::Channel::eraseUser(std::vector<irc::User *>& list, std::string toFind)
 	}
 }
 
+void printStrVector(std::vector<std::string> list)
+{
+	std::vector<std::string>::iterator it(list.begin());
+	for(; it != list.end(); it++)
+		std::cout << "list: " << (*it) << std::endl;
+}
+
 void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
 	puts("ADDMODE");
 	bool change = false;
+	printStrVector(arg);
 	std::vector<std::string>::iterator ita(arg.begin());
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 	for (; it != ite; it++)
 	{
-		if ((*it) == 'o' && isOperator(usr) == false)
+		if ((*it) == 'o' && !arg.size())
+		{
+			usr->reply(461);
+			modestring.erase(modestring.find('o'));
+			return ;
+		}
+		else if ((*it) == 'o' && isOperator(usr) == false)
 		{
 			usr->reply(481);
 			modestring.erase(modestring.find('o'));
 		}
-		if ((*it) == 'o' && isOperator(usr) == true)
+		else if ((*it) == 'o' && isOperator(usr) == true)
 		{
 			irc::User* toModif = findUserChan(getUser(), (*ita));
 			std::cout << "test_1: " << usr << std::endl;
@@ -187,16 +201,19 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 	// 	std::cout << "ARG: " << (*itt) << std::endl;
 	for (; it != ite; it++)
 	{
-		if ((*it) == 'o' && isOperator(usr) == false)
+		if ((*it) == 'o' && !arg.size())
+		{
+			usr->reply(461);
+			modestring.erase(modestring.find('o'));
+			return ;
+		}
+		else if ((*it) == 'o' && isOperator(usr) == false)
 		{
 			change = true;
 			usr->reply(481); 
 			modestring.erase(modestring.find('o'));
 		}
-		std::cout << "arg.size(): " << arg.size() << std::endl;
-		std::cout << "(*it): " << (*it) << std::endl;
-		
-		if ((*it) == 'o' && isOperator(usr) == true)
+		else if ((*it) == 'o' && isOperator(usr) == true)
 		{
 			std::cout << "ARG: " << (*itt) << std::endl;
 			irc::User* toModif = findUserChan(getOperator(), (*itt++));

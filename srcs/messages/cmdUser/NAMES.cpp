@@ -16,8 +16,10 @@ void NAMES(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
-		std::vector<std::string> channelNames = cmd->getParams();
-
+		if (!cmd->getParams().size())
+			usr->reply(361);
+		
+		std::vector<std::string> channelNames = split(cmd->getParams()[0], ",");
 		irc::Channel *chan;
 		for (std::vector<std::string>::iterator it = channelNames.begin(); it != channelNames.end(); it++)
 		{

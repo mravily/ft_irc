@@ -188,7 +188,6 @@ void irc::Server::acceptClient()
 void irc::Server::runtime()
 {
 	monitoring();
-	//check time out user
 	if (this->_pollFds[0].revents == POLLIN)
 		acceptClient();
 	else
