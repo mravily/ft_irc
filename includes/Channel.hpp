@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 12:12:38 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 17:33:41 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ namespace irc
 			std::string			_mode;
 			std::string			_topic;
 			std::string			_topicDate;
+			std::string			_creatorTopic;
 			std::vector<irc::User *> _users;
 			std::vector<irc::User *> _operator;
 			std::vector<std::string> _listBan;
@@ -57,16 +58,18 @@ namespace irc
 			std::string getDatatime() {return (_datatime);};
 			std::string getLastTry() {return (_lastTry);};
 			std::string getTopic() {return (_topic);}
+			std::string getCreator(){return(_creatorTopic);}
 			std::vector<User *> getUser() {return (_users);};
 			std::vector<User *> getOperator() {return (_operator);};
 			std::vector<User *> getUsers();
 			std::string getUserSize();
 			std::string getCurrentDate();
-			std::string getDate() {return (this->_datatime);}
+			std::string getDate() {return (this->_topicDate);}
 			
 			void setLastTry(std::string value) {this->_lastTry = value;};
 			void setDateTopic() {this->_topicDate = getCurrentDate();}
-			void setTopic(std::string newTopic) {setDateTopic(); this->_topic = newTopic;}
+			void setTopic(std::string newTopic, std::string creator) {setDateTopic(); this->_topic = newTopic; this->_creatorTopic = creator;}
+			void unsetTopic(){this->_topic = "";}
 			void setModes(irc::User* usr, std::string modestring);
 			void rmModes(irc::User* usr, std::string modestring);
 			void addUser(irc::User* usr);
