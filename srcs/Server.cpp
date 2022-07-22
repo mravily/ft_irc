@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 16:34:58 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 17:29:59 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,8 +258,11 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr)
 	chan->addUser(usr);
 
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
-	if (chan->getTopic().size())
+	if (chan->getTopic() != "")
+	{
 		usr->reply(332, chan);
+		usr->reply(333, chan);
+	}
 	else
 		usr->reply(331, chan);
 	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
@@ -284,7 +287,8 @@ irc::Server::~Server()
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
 	std::map<int, irc::User *>::iterator itu(_users.begin());
-	
+//	std::vector<irc::Channel>::iterator itc(_channels.begin());
+
 	while (itu != _users.end())
 		deleteUser((*itu++).second->getFd());
 	_channels.clear();
