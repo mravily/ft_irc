@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 12:17:35 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 12:34:38 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,10 @@ void irc::Server::runtime()
 	while( it != _users.end())
 	{
 		if ((*it).second->getStatus() == LEAVE)
+		{
+			(*it).second->cleanCmd();
 			this->deleteUser((*(it++)).second->getFd());
+		}
 		else
 			(*(it++)).second->processReply();
 		if (!_users.size())
@@ -282,18 +285,17 @@ irc::Server::~Server()
 {
 	std::vector<pollfd>::iterator it(_pollFds.begin());
 	std::map<int, irc::User *>::iterator itu(_users.begin());
-	std::vector<irc::Channel>::iterator itc(_channels.begin());
-
+	
 	while (itu != _users.end())
 		deleteUser((*itu++).second->getFd());
-	while (itc != _channels.end())
-		_channels.erase(itc++);
+	_channels.clear();
 	while (_pollFds.size())
 	{
         close((*it).fd);
 		_pollFds.erase(it++);
 	}
 	close(this->_socketServer);
+	std::cout << "destructor debug\n";
 }
 
 void irc::Server::broadcast(std::string message)

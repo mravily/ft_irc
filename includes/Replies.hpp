@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 21:25:38 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 17:09:37 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/21 16:59:03 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 /*
 ** Réponses minimum à renvoyer lors d'une connexion au server
 */
-std::string RPL_WELCOME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return ("\e[1;32m:Welcome to the IRC Hobbs Network\e[0m, " + usr.getNickname() + "!" + usr.getUsername() + "@" + LYELLOW + usr.getHostname() + STOP); (void)srv; (void)chan;}
+std::string RPL_WELCOME(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (WELCOMEART + usr.getNickname() + "!" + usr.getUsername() + "@" + LYELLOW + usr.getHostname() + STOP); (void)srv; (void)chan;}
 std::string RPL_YOURHOST(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":Your Host is \e[93m" + usr.getHostname() + STOP + ", running version " + srv->getVersion()); (void)chan;}
 std::string RPL_CREATED(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (":This server was created \e[1;94m" + srv->getDatatime() + "\e[0m"); (void)usr; (void)chan;}
 std::string RPL_MYINFO(irc::Server *srv, irc::User usr, irc::Channel *chan) {return (usr.getHostname() + " IRCHobbs-" + srv->getVersion() + " " + srv->getUsrMode() + " " + srv->getChanMode() + " :FIJLXabefghjkloqv"); (void)chan;};
