@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 16:37:08 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 19:47:33 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,27 +220,34 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
-	std::cout << "Buffer: " << buffer << std::endl;
+	std::cout << "Buffer: " << buffer;
 	std::string buf(buffer);
-	std::vector<std::string> messages(split(buf, CRLF));
-	std::vector<std::string>::iterator it(messages.begin());
-	for (; it != messages.end(); it++)
+	if (buf.find("\n") == std::string::npos)
+		_buffer += buf;
+	else
 	{
-		if (!(*it).length())
-			continue ;
-		_cmds.push_back(new irc::Command(*it));
-		std::cout << *it << " lol---" << std::endl;
+		buf = _buffer += buf;
+		_buffer.erase(_buffer.begin(), _buffer.end());
+		std::vector<std::string> messages(split(buf, CRLF));
+		std::vector<std::string>::iterator it(messages.begin());
+		for (; it != messages.end(); it++)
+		{
+			if (!(*it).length())
+				continue ;
+			_cmds.push_back(new irc::Command(*it));
+			std::cout << *it << " lol---" << std::endl;
+		}
+		// Compare les prefix des commandes reçu avec les commandes users disponible
+		std::vector<Command *>::iterator its(_cmds.begin());
+		for (; its != _cmds.end(); its++)
+		{
+			std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
+			for(; itm != _funct.end(); itm++)
+				if ((*itm).first.compare((*its)->getPrefix()) == 0)
+						(*itm).second(getServer(), this, (*its));
+		}
 	}
 
-	// Compare les prefix des commandes reçu avec les commandes users disponible
-	std::vector<Command *>::iterator its(_cmds.begin());
-	for (; its != _cmds.end(); its++)
-	{
-		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
-		for(; itm != _funct.end(); itm++)
-			if ((*itm).first.compare((*its)->getPrefix()) == 0)
-					(*itm).second(getServer(), this, (*its));
-	}
 }
 
 void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}

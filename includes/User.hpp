@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:48:58 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 19:42:43 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ namespace irc
 		std::string _realname;
 		std::string _hostaddr;
 		std::string _hostname;
-
+		std::string _buffer;
 		int			_chanLimit;
 
 		std::vector<Command *> _cmds;
