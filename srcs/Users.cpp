@@ -229,7 +229,6 @@ void irc::User::getMessages()
 		if (!(*it).length())
 			continue ;
 		_cmds.push_back(new irc::Command(*it));
-		std::cout << *it << " lol---" << std::endl;
 	}
 
 	// Compare les prefix des commandes reçu avec les commandes users disponible
@@ -238,16 +237,8 @@ void irc::User::getMessages()
 	{
 		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
 		for(; itm != _funct.end(); itm++)
-		{
-
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
-			{
-				// if ((*its)->getParams().empty() && (*its)->getParams().size() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
-				// 	this->reply(461);
-				// else
 					(*itm).second(getServer(), this, (*its));
-			}
-		}
 	}
 }
 

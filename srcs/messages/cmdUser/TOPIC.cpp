@@ -17,6 +17,11 @@ void TOPIC(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
+		if (cmd->getParams().size())
+		{
+			usr->reply(461);
+			return ;
+		}
 		irc::Channel *chan;
 
 		if ((chan = findChan(srv, cmd->getParams()[0])) == NULL)
