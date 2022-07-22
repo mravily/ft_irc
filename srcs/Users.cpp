@@ -255,6 +255,7 @@ void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
 irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _operator(false), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
 {
+	_lastpong = this->getTime();
 	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);
 
@@ -386,3 +387,17 @@ void	irc::User::cleanCmd(void)
 	}
 	_cmds.erase(_cmds.begin(), _cmds.end());
 }
+
+long	irc::User::getTime()
+{
+	struct timeval	time;
+	long			a;
+
+	gettimeofday(&time, NULL);
+	a = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (a);
+}
+
+long	irc::User::getLastPong() const { return _lastpong; }
+
+void	irc::User::setLastPong() { _lastpong = this->getTime(); }

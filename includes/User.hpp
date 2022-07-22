@@ -29,6 +29,7 @@
 #include <cerrno> // errno
 #include <cstdlib> // exit
 #include <cstdio> // puts
+# include <sys/time.h>
 
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
@@ -85,6 +86,7 @@ namespace irc
 		std::vector<std::string> _waitingSend;
 		std::vector<std::string> _invitation;
 		std::string _reason;
+		long		_lastpong;
 	public:
 		User(irc::Server *srv, int socket, sockaddr_in address);
 		~User();
@@ -146,6 +148,9 @@ namespace irc
 		}
 		void addMode(std::string modestring);
 		void removeMode(std::string modestring);
+		long getTime();
+		long getLastPong() const;
+		void setLastPong();
 	};
 }
 

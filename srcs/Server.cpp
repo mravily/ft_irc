@@ -161,6 +161,19 @@ void irc::Server::monitoring()
 		DisplayError("Poll: ");
 }
 
+
+void checkPing(irc::User *usr)
+{
+	if (usr->getStatus() == irc::ONLINE)
+	{
+		usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " PING :" + usr->getNickname() + CRLF);
+		if ((usr->getTime() - usr->getLastPong()) > 5000000)
+		{
+			usr->setStatus(irc::LEAVE);
+		}
+	}
+}
+
 /*
 ** Si le socketServer est en attente de donnée de lecture
 ** Ajout du client a la list des socket surveiler par poll
@@ -204,7 +217,10 @@ void irc::Server::runtime()
 			this->deleteUser((*(it++)).second->getFd());
 		}
 		else
-			(*(it++)).second->processReply();
+		{
+			(*(it)).second->processReply();
+			checkPing((*(it++)).second);
+		}
 		if (!_users.size())
 			break ;
 	}
