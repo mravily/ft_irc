@@ -51,10 +51,6 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 				arg.push_back((*it));
 		}
 	}
-	std::cout << "rmv: " << rmv << std::endl;
-	std::vector<std::string>::iterator ita(arg.begin());
-	for (; ita != arg.end(); ita++)
-		std::cout << "ARG: " << (*ita) << std::endl;
 	if (add.size())
 		chan->addMode(usr, add, arg);
 	if (rmv.size())

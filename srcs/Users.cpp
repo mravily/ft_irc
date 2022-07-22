@@ -56,10 +56,7 @@ void irc::User::addMode(std::string modestring)
 	std::string::iterator ite(modestring.end());
 	for (; it != ite; it++)
 		if (getMode().size() && getMode().find(*it) != std::string::npos)
-		{
-			("ici_ erase");
 			modestring.erase(modestring.find((*it)));
-		}
 	if (modestring.size())
 	{
 		_mode += modestring;
@@ -220,10 +217,6 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
-<<<<<<< HEAD
-=======
-	std::cout << "Buffer: " << buffer;
->>>>>>> 73c82c1cf0e587a21e908ff0c03563d72f9a7870
 	std::string buf(buffer);
 	if (buf.find("\n") == std::string::npos)
 		_buffer += buf;

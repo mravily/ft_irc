@@ -220,10 +220,7 @@ std::vector<irc::Channel *> irc::Server::getChannels()
     std::vector<Channel *> vec;
 
     for (std::vector<Channel>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
-	{
-		std::cout << "pushback -> " << it->getName() << std::endl;
         vec.push_back(&(*it));
-	}
 
     return (vec);
 }
@@ -280,7 +277,6 @@ irc::Server::Server(char *port, char *pass) : _version("1.42"), _password(pass),
 	bindAddress();
 	listenAddress();
 	_hostaddr = inet_ntoa(_addrServer.sin_addr);
-	std::cout << "_hostaddr: " << _hostaddr << std::endl;
 }
 
 irc::Server::~Server()
@@ -298,7 +294,6 @@ irc::Server::~Server()
 		_pollFds.erase(it++);
 	}
 	close(this->_socketServer);
-	std::cout << "destructor debug\n";
 }
 
 void irc::Server::broadcast(std::string message)

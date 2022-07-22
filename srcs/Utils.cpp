@@ -25,15 +25,11 @@ bool is_digits(const std::string &str)
 */
 irc::User* findUserSrv(irc::Server *srv, std::string toFind)
 {
-	// std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::map<int, irc::User *> Users(srv->getUsers());
 	std::map<int, irc::User *>::iterator it(Users.begin());
 	for (; it != Users.end(); it++)
-	{
-		std::cout << (*it).second->getNickname() << std::endl;
 		if (!toFind.compare((*it).second->getNickname()))
 			return ((*it).second);
-	}
 	return (NULL);
 }
 
@@ -45,26 +41,18 @@ irc::User* findUserSrv(irc::Server *srv, std::string toFind)
 */
 irc::User* findUserChan(std::vector<irc::User *> list, std::string toFind)
 {
-	// std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::vector<irc::User *>::iterator it(list.begin());
 	for (; it != list.end(); it++)
-	{
-		std::cout << (*it)->getNickname() << std::endl;
 		if (!toFind.compare((*it)->getNickname()))
 			return ((*it));
-	}
 	return (NULL);
 }
 irc::Channel* findChan(irc::Server *srv, std::string toFind)
 {
-	std::cout << "FindUser->toFind: " << toFind << std::endl;
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
-	{
-		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (*it);
-	}
 	return (NULL);
 }

@@ -98,7 +98,6 @@ void irc::Channel::eraseUser(std::vector<irc::User *>& list, std::string toFind)
 	std::vector<irc::User *>::iterator it(list.begin());
 	for (; it != list.end(); it++)
 	{
-		std::cout << (*it)->getNickname() << std::endl;
 		if (!toFind.compare((*it)->getNickname()))
 		{
 			list.erase(it);
@@ -138,9 +137,6 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 		else if ((*it) == 'o' && isOperator(usr) == true)
 		{
 			irc::User* toModif = findUserChan(getUser(), (*ita));
-			std::cout << "test_1: " << usr << std::endl;
-			std::cout << "test_2: " << toModif << std::endl;
-		
 			if (!toModif && !knowOper(findUserChan(getOperator(), (*ita))))
 			{
 				usr->reply(401);   		// ERR_NOSUCHNICK
@@ -196,8 +192,6 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 	std::string::iterator ite(modestring.end());
 
 	std::vector<std::string>::iterator itt(arg.begin());
-	// for (; itt != arg.end(); itt++)
-	// 	std::cout << "ARG: " << (*itt) << std::endl;
 	for (; it != ite; it++)
 	{
 		if ((*it) == 'o' && !arg.size())
@@ -214,10 +208,7 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 		}
 		else if ((*it) == 'o' && isOperator(usr) == true)
 		{
-			std::cout << "ARG: " << (*itt) << std::endl;
 			irc::User* toModif = findUserChan(getOperator(), (*itt++));
-			std::cout << "test_1: " << usr << std::endl;
-			std::cout << "test_2: " << toModif << std::endl;
 			if (!toModif)
 			{
 				usr->reply(401);   		// ERR_NOSUCHNICK
@@ -233,7 +224,6 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 			}
 			else if (usr != toModif)
 			{
-				("IN_DIFF");
 				change = true;
 				_users.push_back(toModif);
 				eraseUser(_operator, toModif->getNickname());

@@ -18,11 +18,8 @@ bool chanExist(irc::Server *srv, std::string toFind)
 	std::vector<irc::Channel *> Chan(srv->getChannels());
 	std::vector<irc::Channel *>::iterator it(Chan.begin());
 	for (; it != Chan.end(); it++)
-	{
-		std::cout << (*it)->getName() << std::endl;
 		if (!toFind.compare((*it)->getName()))
 			return (true);
-	}
 	return (false);
 }
 
@@ -30,7 +27,6 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
-		("lol");
 		if (cmd->getParams().empty())
 		{
 			usr->reply(461);

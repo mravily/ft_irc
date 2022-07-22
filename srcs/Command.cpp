@@ -47,11 +47,11 @@ irc::Command::Command(std::string message) : _message(message), _params(), _unse
 
 	std::cout << "[CLIENT] Requête client (" << _prefix << ")" << std::endl;
 	
-	std::cout << "message: " << message << std::endl;
-	std::cout << "Prefix: " << _prefix << std::endl;
-	for (std::vector<std::string>::iterator it(_params.begin()); it != _params.end(); ++it)
-		std::cout << "Params: [" << (*it) << "]" << std::endl;
-	std::cout << "trailer: " << _trailer << "\n" << std::endl;
+	// std::cout << "message: " << message << std::endl;
+	// std::cout << "Prefix: " << _prefix << std::endl;
+	// for (std::vector<std::string>::iterator it(_params.begin()); it != _params.end(); ++it)
+	// 	std::cout << "Params: [" << (*it) << "]" << std::endl;
+	// std::cout << "trailer: " << _trailer << "\n" << std::endl;
 }
 
 irc::Command::~Command()
