@@ -157,21 +157,8 @@ void irc::Server::listenAddress()
 */
 void irc::Server::monitoring()
 {
-	if (poll(&(this->_pollFds[0]), (this->_pollFds.size()), (60 * 1000) / 10) < 0)
+	if (poll(&(this->_pollFds[0]), (this->_pollFds.size()), (160 * 1000) / 10) < 0)
 		DisplayError("Poll: ");
-}
-
-
-void checkPing(irc::User *usr)
-{
-	if (usr->getStatus() == irc::ONLINE)
-	{
-		usr->addWaitingSend(":" + usr->getNickname() + "!" + usr->getUsername() + "@" + usr->getHostname() + " PING :" + usr->getNickname() + CRLF);
-		if ((usr->getTime() - usr->getLastPong()) > 5000000)
-		{
-			usr->setStatus(irc::LEAVE);
-		}
-	}
 }
 
 /*
@@ -201,13 +188,18 @@ void irc::Server::acceptClient()
 void irc::Server::runtime()
 {
 	monitoring();
-	//check time out user
 	if (this->_pollFds[0].revents == POLLIN)
 		acceptClient();
 	else
+	{
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
+		{
 			if ((*it).revents == POLLIN)
 				this->_users[(*it).fd]->getMessages();
+			else if ((*it).revents == POLLERR || (*it).revents == POLLHUP)
+				this->_users[(*it).fd]->setStatus(irc::LEAVE);
+		}
+	}
 	std::map<int, irc::User *>::iterator it(_users.begin());
 	while( it != _users.end())
 	{
@@ -217,10 +209,7 @@ void irc::Server::runtime()
 			this->deleteUser((*(it++)).second->getFd());
 		}
 		else
-		{
-			(*(it)).second->processReply();
-			checkPing((*(it++)).second);
-		}
+			(*(it++)).second->processReply();
 		if (!_users.size())
 			break ;
 	}

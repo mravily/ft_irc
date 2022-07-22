@@ -17,7 +17,6 @@ void PONG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	(void)srv;
 	if (cmd->getTrailer().compare(usr->getNickname()) == 0)
 	{
-        std::cout << "DEBUG pong\n";
 		usr->setLastPong();
 		usr->setStatus(irc::ONLINE);
 	}

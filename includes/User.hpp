@@ -161,6 +161,7 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void PONG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);

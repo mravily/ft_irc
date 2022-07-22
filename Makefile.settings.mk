@@ -45,7 +45,8 @@ SRC =	Channel.cpp \
 		messages/registration/PASS.cpp \
 		messages/registration/USER.cpp \
 		messages/cmdUser/mode/chan/modeChan.cpp \
-		messages/cmdUser/mode/user/modeUser.cpp 
+		messages/cmdUser/mode/user/modeUser.cpp \
+		messages/PONG.cpp
 
 		
 

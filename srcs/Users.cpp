@@ -220,7 +220,7 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
-	std::cout << "Buffer: " << buffer << std::endl;
+	// std::cout << "Buffer: " << buffer << std::endl;
 	std::string buf(buffer);
 	std::vector<std::string> messages(split(buf, CRLF));
 	std::vector<std::string>::iterator it(messages.begin());
@@ -229,7 +229,7 @@ void irc::User::getMessages()
 		if (!(*it).length())
 			continue ;
 		_cmds.push_back(new irc::Command(*it));
-		std::cout << *it << " lol---" << std::endl;
+		// std::cout << *it << " lol---" << std::endl;
 	}
 
 	// Compare les prefix des commandes reçu avec les commandes users disponible
@@ -299,6 +299,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("USER", USER));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PONG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
