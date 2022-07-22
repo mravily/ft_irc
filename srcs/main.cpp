@@ -10,9 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "Server.hpp"
 #include "color.hpp"
 
+bool g_on = true;
 std::vector<std::string> split(std::string s, std::string delimiter)
 {
 	std::vector<std::string> subString;
@@ -59,6 +61,7 @@ bool checkArgs(int ac, char *port)
 	return (true);
 }
 
+
 int main(int ac, char **av)
 {
 	if (!checkArgs(ac, av[1]))
@@ -67,7 +70,6 @@ int main(int ac, char **av)
 	irc::Server server(av[1], av[2]);
 
 	std::cout << LGREEN << "Server Started !" << STOP << std::endl;
-	
 	while (server.on())
 	{
 		server.runtime();

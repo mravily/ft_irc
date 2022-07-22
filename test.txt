@@ -1,6 +1,19 @@
-PASS
+PASS        OK
 
-PASS							OK
+PASS NO ARGUMENT				OK
 PASS <wrg pwd>					OK
 PASS <wrg pwd> <true pwd>		OK
+
+NICK        OK
+
+NICK NO ARGUMENT                OK
+NICK CHAR NO ALLOWED            OK
+NICK ALREADY USE                OK
+
+USER        OK
+
+USER NO ARGUMENT                OK
+USER NOT ENOUGH PARAMS          OK
+
+JOIN
 
