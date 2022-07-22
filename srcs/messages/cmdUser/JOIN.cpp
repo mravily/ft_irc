@@ -30,7 +30,7 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
-		puts("lol");
+		("lol");
 		if (cmd->getParams().empty())
 		{
 			usr->reply(461);

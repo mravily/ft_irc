@@ -116,7 +116,7 @@ void printStrVector(std::vector<std::string> list)
 
 void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
-	puts("ADDMODE");
+
 	bool change = false;
 	printStrVector(arg);
 	std::vector<std::string>::iterator ita(arg.begin());
@@ -176,7 +176,6 @@ void irc::Channel::setModes(irc::User* usr, std::string modestring)
 
 void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 {
-	puts("IN_RMMODE_CHAN");
 	bool change = false;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
@@ -191,7 +190,7 @@ void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 
 void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
-	puts("rmv");
+
 	bool change = false;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
@@ -234,7 +233,7 @@ void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vecto
 			}
 			else if (usr != toModif)
 			{
-				puts("IN_DIFF");
+				("IN_DIFF");
 				change = true;
 				_users.push_back(toModif);
 				eraseUser(_operator, toModif->getNickname());
