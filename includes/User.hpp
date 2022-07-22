@@ -26,7 +26,6 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <stdarg.h>
-#include <cerrno> // errno
 #include <cstdlib> // exit
 #include <cstdio> // puts
 # include <sys/time.h>
@@ -142,8 +141,7 @@ namespace irc
 		void cleanCmd();
 		void DisplayError(std::string message)
 		{
-			int errn = errno;
-			std::cout << message << strerror(errn) << std::endl;
+			std::cout << message << std::endl;
 			exit(1);
 		}
 		void addMode(std::string modestring);

@@ -112,11 +112,10 @@ namespace irc
 		void broadcast(std::string message);
 
 		void DisplayError(std::string message)
-			{
-				int errn = errno;
-				std::cout << RED << message << strerror(errn) << STOP << std::endl;
-				exit(1);
-			}
+		{
+			std::cout << RED << message << STOP << std::endl;
+			exit(1);
+		}
 		void deleteUser(int fd);
 		void turnOff(void);
 		void setRestart(bool x);
