@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:19:02 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 07:55:27 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 15:03:02 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ namespace irc
 			std::string _prefix;
 			std::vector<std::string> _params;
 			std::string _trailer;
+			bool		_unset;
 		public:
 			Command(std::string message);
 			~Command();
@@ -35,6 +36,7 @@ namespace irc
 			std::string getPrefix();
 			std::string getTrailer();
 			std::vector<std::string> getParams();
+			bool		getUnset() {return _unset;};
 
 			void		setTrailer(std::string trailer) {_trailer = trailer;};
 	};

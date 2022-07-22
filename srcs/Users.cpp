@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-//   Updated: 2022/07/21 17:33:51 by jiglesia         ###   ########.fr       //
+/*   Updated: 2022/07/22 16:16:52 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,16 +238,8 @@ void irc::User::getMessages()
 	{
 		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
 		for(; itm != _funct.end(); itm++)
-		{
-
 			if ((*itm).first.compare((*its)->getPrefix()) == 0)
-			{
-				if ((*its)->getParams().empty() && cmdNeedParams((*its)->getPrefix()) == true) // si zero param et la commande en a besoin
-					this->reply(461);
-				else
 					(*itm).second(getServer(), this, (*its));
-			}
-		}
 	}
 }
 

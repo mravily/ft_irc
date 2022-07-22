@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 18:05:31 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/20 16:07:07 by nayache          ###   ########.fr       */
+/*   Updated: 2022/07/22 15:37:15 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,21 @@ void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 			usr->reply(461);
 			return ;
 		}
-		std::vector<std::string> keys;
-		std::vector<std::string>::iterator itPass;
-		if (cmd->getParams().size() > 1)
+		std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
+		std::vector<std::string>::iterator itNames(chanNames.begin());
+		irc::Channel* chan = NULL;
+		for (; itNames != chanNames.end(); itNames++)
 		{
-			std::vector<std::string> keys = split(cmd->getParams()[1], ",");
-			itPass = keys.begin();
+			if (itNames->find("#") == std::string::npos)
+				itNames->insert(itNames->begin(), '#');
 		}
-		else
+		itNames = chanNames.begin();
+		for (; itNames != chanNames.end(); itNames++)
 		{
-			std::vector<std::string> chanNames = split(cmd->getParams()[0], ",");
-			std::vector<std::string>::iterator itNames(chanNames.begin());
-			irc::Channel* chan = NULL;
-			for (; itNames != chanNames.end(); itNames++)
-			{
-				if (itNames->find("#") == std::string::npos)
-					itNames->insert(itNames->begin(), '#');
-			}
-			itNames = chanNames.begin();
-			for (; itNames != chanNames.end(); itNames++)
-			{
-				if (!(chan = findChan(srv, (*itNames))))
-					srv->createChan((*itNames), usr);
-				else
-					srv->joinChan(chan, usr);
-			}
+			if (!(chan = findChan(srv, (*itNames))))
+				srv->createChan((*itNames), usr);
+			else
+				srv->joinChan(chan, usr);
 		}
 	}	
 }
