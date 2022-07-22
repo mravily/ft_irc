@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:47:22 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 08:46:46 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 12:28:30 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (!cmd->getParams().size())
 		usr->reply(461);
-	if (cmd->getParams()[0].find("#") != std::string::npos)
+	else if (cmd->getParams()[0].find("#") != std::string::npos)
 		chanMode(srv, usr, cmd);
 	else
 		userMode(srv, usr, cmd);

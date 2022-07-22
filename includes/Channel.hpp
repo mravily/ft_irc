@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:21:57 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 09:35:52 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 12:12:38 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ namespace irc
 			void addUser(irc::User* usr);
 			void removeUser(irc::User* usr, std::string message);
 			bool knowUser(irc::User* usr);
+			bool knowOper(irc::User* usr);
 			
 			void addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);
 			void removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg);

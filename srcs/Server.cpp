@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 15:28:39 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:49:07 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 12:17:35 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,29 +192,17 @@ void irc::Server::runtime()
 	if (this->_pollFds[0].revents == POLLIN)
 		acceptClient();
 	else
-	{
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
-		{
 			if ((*it).revents == POLLIN)
-			{
 				this->_users[(*it).fd]->getMessages();
-			}
-		}
-	}
 
 	std::map<int, irc::User *>::iterator it(_users.begin());
 	while( it != _users.end())
 	{
 		if ((*it).second->getStatus() == LEAVE)
-		{
-			//(*it).second->cleanCmd();
 			this->deleteUser((*(it++)).second->getFd());
-		}
 		else
-		{
 			(*(it++)).second->processReply();
-			//(*it).second->cleanCmd();
-		}
 		if (!_users.size())
 			break ;
 	}
@@ -237,7 +225,7 @@ bool getType(std::string name) {return (name[0] == '&');};
 
 void irc::Server::createChan(std::string name, irc::User* usr)
 {
-	if (name.find('#') == std::string::npos)
+	if (name.find('#') == std::string::npos && name.find('&') == std::string::npos)
 		name.insert(name.begin(), '#');
 	_channels.push_back(Channel(getType(name), name, usr));
 	usr->addWaitingSend(":" + usr->getClient() + " JOIN :" + _channels.back().getName() + CRLF);

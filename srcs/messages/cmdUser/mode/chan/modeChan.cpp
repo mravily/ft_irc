@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 18:59:29 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 08:33:11 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 09:15:43 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,15 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 			}
 		}
 		else
-			arg.push_back((*it));
+		{
+			if ((*it).find("#") == std::string::npos)
+				arg.push_back((*it));
+		}
 	}
+	std::cout << "rmv: " << rmv << std::endl;
+	std::vector<std::string>::iterator ita(arg.begin());
+	for (; ita != arg.end(); ita++)
+		std::cout << "ARG: " << (*ita) << std::endl;
 	if (add.size())
 		chan->addMode(usr, add, arg);
 	if (rmv.size())

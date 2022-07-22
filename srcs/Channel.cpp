@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 15:42:04 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:59:09 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 12:23:46 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,20 @@ void irc::Channel::eraseUser(std::vector<irc::User *>& list, std::string toFind)
 	{
 		std::cout << (*it)->getNickname() << std::endl;
 		if (!toFind.compare((*it)->getNickname()))
-			break;
+		{
+			list.erase(it);
+			break ;
+		}
 	}
-	list.erase(it);
 }
 
 void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
+	puts("ADDMODE");
+	bool change = false;
 	std::vector<std::string>::iterator ita(arg.begin());
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
-	ita++;
 	for (; it != ite; it++)
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)
@@ -118,16 +121,25 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 		}
 		if ((*it) == 'o' && isOperator(usr) == true)
 		{
-			irc::User* toModif = findUserChan(getUser(), (*ita++));
-			if (!toModif && usr != toModif)
-				usr->reply(401);   		// ERR_NOSUCHNICK
-			else if (usr != toModif)
+			irc::User* toModif = findUserChan(getUser(), (*ita));
+			std::cout << "test_1: " << usr << std::endl;
+			std::cout << "test_2: " << toModif << std::endl;
+		
+			if (!toModif && !knowOper(findUserChan(getOperator(), (*ita))))
 			{
+				usr->reply(401);   		// ERR_NOSUCHNICK
+				ita++;
+				return ;
+			}
+			else if (toModif && usr != toModif)
+			{
+				change = true;
 				toModif->setMode((*it));
 				_operator.push_back(toModif);
 				eraseUser(_users, toModif->getNickname());
 				usr->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " +o :" + toModif->getNickname() + CRLF);
 				toModif->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " +o :" + toModif->getNickname() + CRLF);
+				ita++;
 			}
 			modestring.erase(modestring.find('o'));
 		}
@@ -136,7 +148,7 @@ void irc::Channel::addMode(irc::User* usr, std::string modestring, std::vector<s
 	}
 	if (modestring.size() && isOperator(usr))
 		setModes(usr, modestring);
-	else if (!isOperator(usr))
+	else if (!isOperator(usr) && change == false)
 		usr->reply(482, this);
 }
 
@@ -148,6 +160,7 @@ void irc::Channel::setModes(irc::User* usr, std::string modestring)
 
 void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 {
+	puts("IN_RMMODE_CHAN");
 	bool change = false;
 	std::string::iterator it(modestring.begin());
 	for (; it != modestring.end(); it++)
@@ -163,40 +176,58 @@ void irc::Channel::rmModes(irc::User* usr, std::string modestring)
 void irc::Channel::removeMode(irc::User* usr, std::string modestring, std::vector<std::string> arg)
 {
 	puts("rmv");
-	std::vector<std::string>::iterator ita(arg.begin());
-	ita++;
+	bool change = false;
 	std::string::iterator it(modestring.begin());
 	std::string::iterator ite(modestring.end());
 	
 	std::vector<std::string>::iterator itt(arg.begin());
-	for (; itt != arg.end(); itt++)
-		std::cout << "ARG: " << (*itt) << std::endl;
+	// for (; itt != arg.end(); itt++)
+	// 	std::cout << "ARG: " << (*itt) << std::endl;
 	for (; it != ite; it++)
 	{
 		if ((*it) == 'o' && isOperator(usr) == false)
 		{
+			change = true;
 			usr->reply(481); 
 			modestring.erase(modestring.find('o'));
 		}
+		std::cout << "arg.size(): " << arg.size() << std::endl;
+		std::cout << "(*it): " << (*it) << std::endl;
+		
 		if ((*it) == 'o' && isOperator(usr) == true)
 		{
-			irc::User* toModif = findUserChan(getOperator(), (*ita++));
-			if (!toModif && usr != toModif)
+			std::cout << "ARG: " << (*itt) << std::endl;
+			irc::User* toModif = findUserChan(getOperator(), (*itt++));
+			std::cout << "test_1: " << usr << std::endl;
+			std::cout << "test_2: " << toModif << std::endl;
+			if (!toModif)
+			{
 				usr->reply(401);   		// ERR_NOSUCHNICK
+				return ;
+			}
+			else if (usr == toModif)
+			{
+				change = true;
+				_users.push_back(usr);
+				eraseUser(_operator, usr->getNickname());
+				usr->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " -o :" + usr->getNickname() + CRLF);
+				modestring.erase(modestring.find((*it)));
+			}
 			else if (usr != toModif)
 			{
-				toModif->getMode().erase(toModif->getMode().find('o'));
+				puts("IN_DIFF");
+				change = true;
 				_users.push_back(toModif);
 				eraseUser(_operator, toModif->getNickname());
 				usr->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " -o :" + toModif->getNickname() + CRLF);
 				toModif->addWaitingSend(":" + usr->getClient() + " MODE " + getName() + " -o :" + toModif->getNickname() + CRLF);
+				modestring.erase(modestring.find((*it)));
 			}
-			modestring.erase(modestring.find((*it)));
 		}
 	}
 	if (modestring.size() && isOperator(usr))
 		rmModes(usr, modestring);
-	else
+	else if (change == false)
 		usr->reply(482, this);
 }
 
@@ -242,6 +273,15 @@ bool irc::Channel::knowUser(irc::User* usr)
 		if ((*it) == usr)
 			return (true);
 	return (false);
+}
+
+bool irc::Channel::knowOper(irc::User* usr)
+{
+	std::vector<User *> users = getOperator();
+	for (std::vector<User *>::iterator it = users.begin(); it != users.end(); it++)
+		if ((*it) == usr)
+			return (true);
+	return (false);	
 }
 
 irc::Channel::Channel(bool type, std::string name, irc::User* ope) : _private(type), _name(name), _mode("nt"), _datatime(getCurrentDate())
