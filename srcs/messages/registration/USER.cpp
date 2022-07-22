@@ -14,10 +14,9 @@
 
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	// std::cout << "USER Funct" << std::endl;
-	// std::cout << "Username: " << cmd->getParams()[0] << std::endl;
-	// std::cout << "Realname: " << cmd->getTrailer() << std::endl;
-	if (cmd->getParams().size() < 3)
+	if (cmd->getParams().size() < 3
+		|| cmd->getParams()[0].size() == 1
+		|| !cmd->getTrailer().size())
 		usr->reply(461);
 	else if (usr->getStatus() == irc::REGISTERED)
 		usr->reply(462);

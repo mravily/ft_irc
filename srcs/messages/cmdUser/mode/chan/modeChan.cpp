@@ -64,7 +64,6 @@ void changeModeChan(irc::User* usr, irc::Channel* chan, irc::Command* cmd)
 
 void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	puts("IN_CHANMODE");
 	irc::Channel* chan = NULL;
 	chan = findChan(srv, cmd->getParams()[0]);
 	if (!chan)
@@ -76,7 +75,6 @@ void chanMode(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 	}
 	else
 	{
-		puts("IN");
 		if (!checkAllowMode(srv->getChanMode(), cmd->getParams()[1]))
 			usr->reply(501);		// ERR_UMODEUNKNOWNFLAG
 		else

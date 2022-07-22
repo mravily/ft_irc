@@ -24,20 +24,14 @@ bool checkAllowMode(std::string allowMode, std::string toCheck)
 		if ((*it) == '-' || (*it) == '+')
 			continue;
 		if (allowMode.find((*it)) == std::string::npos)
-		{
-			puts("OUT CHECKALLOWMODE FALSE");
 			return (false);
-		}
 	}
-	puts("OUT CHECKALLOWMODE TRUE");
 	return (true);
 }
 
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
-	if (!cmd->getParams().size())
-		usr->reply(461);
-	else if (cmd->getParams()[0].find("#") != std::string::npos)
+	if (cmd->getParams()[0].find("#") != std::string::npos)
 		chanMode(srv, usr, cmd);
 	else
 		userMode(srv, usr, cmd);
