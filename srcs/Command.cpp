@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/26 15:25:35 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 15:34:14 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 17:46:31 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ std::string irc::Command::getPrefix() {return (_prefix);};
 std::string irc::Command::getTrailer() {return (_trailer);};
 std::vector<std::string> irc::Command::getParams() {return (_params);};
 
-irc::Command::Command(std::string message) : _message(message), _params()
+irc::Command::Command(std::string message) : _message(message), _params(), _unset(false)
 {
 	
 	std::string::iterator ite(--message.end());
@@ -42,8 +42,9 @@ irc::Command::Command(std::string message) : _message(message), _params()
 	for (size_t index = 0; index < _prefix.length(); ++index)
 		_prefix[index] = std::toupper(_prefix[index]);
 	
-	if (_prefix.compare("TOPIC") && delim == true)
+	if (_prefix == "TOPIC" && delim == true && _trailer.size() == 0)
 		_unset = true;
+
 	std::cout << "[CLIENT] Requête client (" << _prefix << ")" << std::endl;
 	
 	std::cout << "message: " << message << std::endl;

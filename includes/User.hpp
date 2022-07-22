@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 14:48:36 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/21 10:48:58 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 19:42:43 by mravily          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <cerrno> // errno
 #include <cstdlib> // exit
 #include <cstdio> // puts
+# include <sys/time.h>
 
 #define BUFFER_SIZE 4096
 #define CRLF "\r\n"
@@ -74,7 +75,7 @@ namespace irc
 		std::string _realname;
 		std::string _hostaddr;
 		std::string _hostname;
-
+		std::string _buffer;
 		int			_chanLimit;
 
 		std::vector<Command *> _cmds;
@@ -85,6 +86,7 @@ namespace irc
 		std::vector<std::string> _waitingSend;
 		std::vector<std::string> _invitation;
 		std::string _reason;
+		long		_lastpong;
 	public:
 		User(irc::Server *srv, int socket, sockaddr_in address);
 		~User();
@@ -146,6 +148,9 @@ namespace irc
 		}
 		void addMode(std::string modestring);
 		void removeMode(std::string modestring);
+		long getTime();
+		long getLastPong() const;
+		void setLastPong();
 	};
 }
 
@@ -156,6 +161,7 @@ void NICK(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void USER(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void MODE(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PING(irc::Server *srv, irc::User *usr, irc::Command *cmd);
+void PONG(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void JOIN(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void QUIT(irc::Server *srv, irc::User *usr, irc::Command *cmd);
 void PART(irc::Server *srv, irc::User *usr, irc::Command *cmd);

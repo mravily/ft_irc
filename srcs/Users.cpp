@@ -6,7 +6,7 @@
 /*   By: mravily <mravily@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/25 18:08:56 by mravily           #+#    #+#             */
-/*   Updated: 2022/07/22 16:37:08 by mravily          ###   ########.fr       */
+/*   Updated: 2022/07/22 20:40:23 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,31 +220,44 @@ void irc::User::getMessages()
 	size = recv(this->_fd, &buffer, BUFFER_SIZE, 0);
 	buffer[size] = '\0';
 
+<<<<<<< HEAD
+=======
+	std::cout << "Buffer: " << buffer;
+>>>>>>> 73c82c1cf0e587a21e908ff0c03563d72f9a7870
 	std::string buf(buffer);
-	std::vector<std::string> messages(split(buf, CRLF));
-	std::vector<std::string>::iterator it(messages.begin());
-	for (; it != messages.end(); it++)
+	if (buf.find("\n") == std::string::npos)
+		_buffer += buf;
+	else
 	{
-		if (!(*it).length())
-			continue ;
-		_cmds.push_back(new irc::Command(*it));
+		buf = _buffer += buf;
+		_buffer.erase(_buffer.begin(), _buffer.end());
+		std::vector<std::string> messages(split(buf, CRLF));
+		std::vector<std::string>::iterator it(messages.begin());
+		for (; it != messages.end(); it++)
+		{
+			if (!(*it).length())
+				continue ;
+			_cmds.push_back(new irc::Command(*it));
+			std::cout << *it << " lol---" << std::endl;
+		}
+		// Compare les prefix des commandes reçu avec les commandes users disponible
+		std::vector<Command *>::iterator its(_cmds.begin());
+		for (; its != _cmds.end(); its++)
+		{
+			std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
+			for(; itm != _funct.end(); itm++)
+				if ((*itm).first.compare((*its)->getPrefix()) == 0)
+						(*itm).second(getServer(), this, (*its));
+		}
 	}
 
-	// Compare les prefix des commandes reçu avec les commandes users disponible
-	std::vector<Command *>::iterator its(_cmds.begin());
-	for (; its != _cmds.end(); its++)
-	{
-		std::map<std::string, cmd_funct>::iterator itm(_funct.begin());
-		for(; itm != _funct.end(); itm++)
-			if ((*itm).first.compare((*its)->getPrefix()) == 0)
-					(*itm).second(getServer(), this, (*its));
-	}
 }
 
 void irc::User::setBits(int index){_mandatory = _mandatory | (1 << index);}
 
 irc::User::User(irc::Server *srv,int socket, sockaddr_in address) : _server(srv), _fd(socket), _address(address), _operator(false), _status(CONNECTED), _mode("w"), _nickname("*"), _reason("leaving")
 {
+	_lastpong = this->getTime();
 	_mandatory = 0;
 	fcntl(this->_fd, F_SETFL, O_NONBLOCK);
 
@@ -288,6 +301,7 @@ void irc::User::setCmd()
 	_funct.insert(std::make_pair<std::string, cmd_funct>("USER", USER));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("MODE", MODE));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PING));
+	_funct.insert(std::make_pair<std::string, cmd_funct>("PING", PONG));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("JOIN", JOIN));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("QUIT", QUIT));
 	_funct.insert(std::make_pair<std::string, cmd_funct>("PART", PART));
@@ -318,6 +332,7 @@ void irc::User::setReplies()
 	_rpl.insert(std::make_pair<int, rpl_funct>(329, RPL_CREATIONTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(331, RPL_NOTOPIC));
 	_rpl.insert(std::make_pair<int, rpl_funct>(332, RPL_TOPIC));
+	_rpl.insert(std::make_pair<int, rpl_funct>(333, RPL_TOPICWHOTIME));
 	_rpl.insert(std::make_pair<int, rpl_funct>(353, RPL_NAMEREPLY));
 	_rpl.insert(std::make_pair<int, rpl_funct>(366, RPL_ENDNAMES));
 	_rpl.insert(std::make_pair<int, rpl_funct>(381, RPL_YOUREOPER));
@@ -376,3 +391,17 @@ void	irc::User::cleanCmd(void)
 	}
 	_cmds.erase(_cmds.begin(), _cmds.end());
 }
+
+long	irc::User::getTime()
+{
+	struct timeval	time;
+	long			a;
+
+	gettimeofday(&time, NULL);
+	a = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (a);
+}
+
+long	irc::User::getLastPong() const { return _lastpong; }
+
+void	irc::User::setLastPong() { _lastpong = this->getTime(); }
