@@ -253,7 +253,10 @@ void irc::Server::joinChan(irc::Channel* chan, irc::User* usr)
 	chan->addUser(usr);
 
 	usr->broadcast(chan, (" JOIN :" + chan->getName()), 0);
-	usr->reply(331, chan);
+	if (chan->getTopic().size())
+		usr->reply(332, chan);
+	else
+		usr->reply(331, chan);
 	usr->addWaitingSend(":" + usr->getClient() + " MODE :" + chan->getName() + " +" + _channels.back().getModes() + CRLF);
 	usr->reply(353, chan);
 	usr->reply(366, chan);

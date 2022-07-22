@@ -16,14 +16,19 @@ void PRIVMSG(irc::Server *srv, irc::User *usr, irc::Command *cmd)
 {
 	if (usr->getStatus() == irc::REGISTERED || usr->getStatus() == irc::ONLINE)
 	{
-		std::vector<std::string> Targets = split(cmd->getParams()[0], ",");
+		if (!cmd->getParams().size())
+		{
+			usr->reply(461);
+			return ;
+		}
 		std::string msg = cmd->getTrailer();
-
 		if (!msg.size())
 		{
 			usr->reply(412);
 			return;
 		}
+
+		std::vector<std::string> Targets = split(cmd->getParams()[0], ",");
 		irc::Channel* chan;
 		irc::User* userTarget;
 		// si arg n'est pas channel, go msg prive to user
